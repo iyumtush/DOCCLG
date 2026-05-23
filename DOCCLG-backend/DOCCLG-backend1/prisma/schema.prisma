@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  name          String?
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(STUDENT)
+  collegeId     String?  
+  createdAt     DateTime @default(now())
+  requests      Request[]
+}
+
+model Request {
+  id             String   @id @default(uuid())
+  studentId      String
+  student        User     @relation(fields: [studentId], references: [id])
+  type           RequestType
+  details        String?
+  attachments    String?
+  status         RequestStatus @default(PENDING)
+  classInchargeId String?
+  hodId          String?
+  rejectReason   String?
+  certificateId  String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  issuedAt       DateTime?
+}
+
+enum Role {
+  STUDENT
+  CLASS_INCHARGE
+  HOD
+  ADMIN
+}
+
+enum RequestType {
+  BONAFIDE
+  ATTENDANCE
+  RECOMMENDATION
+  OTHER
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED_BY_INCHARGE
+  REJECTED_BY_INCHARGE
+  APPROVED
+  REJECTED
+}

@@ -1,0 +1,14 @@
+// /lib/constants.ts
+
+export const STATUS = {
+  PENDING: "PENDING",
+  CLASS_APPROVED: "CLASS_INCHARGE_APPROVED",
+  HOD_APPROVED: "HOD_APPROVED",
+  REJECTED: "REJECTED",
+};
+
+export const ROLE = {
+  STUDENT: "STUDENT",
+  CLASS_INCHARGE: "CLASS_INCHARGE",
+  HOD: "HOD",
+};
