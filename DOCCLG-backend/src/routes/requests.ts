@@ -104,7 +104,7 @@ router.get("/", authenticate, async (req: any, res) => {
     }
 
     // ✅ FORMAT RESPONSE (UNCHANGED)
-    const formatted = requests.map((r: any) => ({
+    const formatted = (requests || []).map((r: any) => ({
       id: r.id,
       documentType: r.type,
       customDocumentName: null,
