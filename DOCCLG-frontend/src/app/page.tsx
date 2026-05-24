@@ -76,6 +76,7 @@ const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const [isOnline, setIsOnline] = useState(true);
  
 
 useEffect(() => {
@@ -89,6 +90,22 @@ useEffect(() => {
 
   setAuthChecked(true);
 }, []); 
+
+useEffect(() => {
+  const updateStatus = () => {
+    setIsOnline(navigator.onLine);
+  };
+
+  updateStatus();
+
+  window.addEventListener("online", updateStatus);
+  window.addEventListener("offline", updateStatus);
+
+  return () => {
+    window.removeEventListener("online", updateStatus);
+    window.removeEventListener("offline", updateStatus);
+  };
+}, []);
 
 useEffect(() => {
   let interval: NodeJS.Timeout;
@@ -449,9 +466,12 @@ CollegeDocs          </h1>
       <div className="flex items-center space-x-4">
         <Badge
           variant="outline"
-          className="text-green-700 border-green-200 bg-green-50"
+          className={isOnline
+            ? "text-green-700 border-green-200 bg-green-50"
+            : "text-red-700 border-red-200 bg-red-50"
+          }
         >
-          System Online
+          {isOnline ? "System Online" : "System Offline"}
         </Badge>
       </div>
 

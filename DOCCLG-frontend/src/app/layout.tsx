@@ -43,7 +43,7 @@ export default function RootLayout({
 
         {/* ✅ THIS FIXES EVERYTHING */}
         <Toaster
-          position="top-right"
+          position="top-center"
           richColors
           closeButton
           expand
