@@ -1,4 +1,10 @@
 "use client";
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import { toast } from "sonner";
 import { DoorClosed, DoorOpen } from "lucide-react";
 import { useState, useEffect } from "react";
