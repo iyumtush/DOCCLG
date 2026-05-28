@@ -141,7 +141,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/api/auth/login`,
+      `https://docclg-backend.onrender.com/api/auth/login`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -338,7 +338,7 @@ const handleVerifyOtp = async () => {
   
 try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_BASE}/api/auth/verify-otp`,
+      `https://docclg-backend.onrender.com/api/auth/verify-otp`,
       {
         method: "POST",
         headers: {
