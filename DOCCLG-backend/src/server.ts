@@ -16,10 +16,7 @@ app.post("/test-otp", (req, res) => {
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://docclg.vercel.app",
-    ],
+    origin: true,
     credentials: true,
   })
 );

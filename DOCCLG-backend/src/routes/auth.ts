@@ -136,7 +136,7 @@ router.post("/send-otp", async (req, res) => {
     const { name, email, password, role, branch } = req.body;
 
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: email.trim().toLowerCase() },
     });
 
     if (!user) {
@@ -166,7 +166,7 @@ router.post("/send-otp", async (req, res) => {
 
     console.log("Sending OTP email now...");
     await sendEmail(
-      email,
+  email.trim().toLowerCase(),
       "Your OTP Code",
       `Your OTP is: ${otp} It Expires In 5 Minutes`
     );
