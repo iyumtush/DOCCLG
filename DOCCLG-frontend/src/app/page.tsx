@@ -410,7 +410,7 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
 
   try {
     const res = await fetch(
-      `https://docclg-backend.onrender.com/api/auth/register' , 
+  "https://docclg-backend.onrender.com/api/auth/register",
       {
         method: "POST",
         headers: {
