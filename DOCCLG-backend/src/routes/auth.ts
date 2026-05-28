@@ -127,8 +127,12 @@ router.post("/login", async (req, res) => {
  */
 router.post("/send-otp", async (req, res) => {
   console.log("🔥 SEND OTP HIT");
+  console.log("SEND OTP BODY:", req.body);
+  console.log("EMAIL_USER:", process.env.EMAIL_USER);
+  console.log("EMAIL_PASS EXISTS:", !!process.env.EMAIL_PASS);
 
   try {
+    console.log("Checking user in database...");
     const { name, email, password, role, branch } = req.body;
 
     const user = await prisma.user.findUnique({
@@ -138,12 +142,14 @@ router.post("/send-otp", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    console.log("User found:", user.email);
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid password" });
     }
+    console.log("Password matched successfully");
 
     if (user.role !== role) {
       return res.status(401).json({ message: "Invalid role selected" });
@@ -152,22 +158,29 @@ router.post("/send-otp", async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
+    console.log("Saving OTP to database...");
     await prisma.user.update({
       where: { email },
       data: { otp, otpExpiry },
     });
 
+    console.log("Sending OTP email now...");
     await sendEmail(
       email,
       "Your OTP Code",
       `Your OTP is: ${otp} It Expires In 5 Minutes`
     );
+    console.log("OTP EMAIL SENT SUCCESSFULLY");
 
     return res.json({ message: "OTP sent successfully" });
 
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Error sending OTP" });
+  } catch (err: any) {
+    console.error("SEND OTP ERROR:", err);
+
+    return res.status(500).json({
+      message: "Error sending OTP",
+      error: err?.message || "Unknown error",
+    });
   }
 });
 
