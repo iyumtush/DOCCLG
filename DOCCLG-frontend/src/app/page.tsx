@@ -185,7 +185,7 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 const handleForgotPassword = async (email: string) => {
-  const res = await fetch("http://localhost:4000/api/auth/forgot-password", {
+  const res = await fetch("https://docclg-backend.onrender.com/api/auth/forgot-password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -234,7 +234,7 @@ const handleSendOtp = async (email: string) => {
     }
 
     // 🚀 API CALL
-    const res = await fetch("http://localhost:4000/api/auth/send-otp", {
+    const res = await fetch("https://docclg-backend.onrender.com/api/auth/send-otp", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -300,7 +300,7 @@ toast.success("OTP sent! Check your email 📧");
 };
 
 const handleResetPassword = async () => {
-  const res = await fetch("http://localhost:4000/api/auth/reset-password", {
+  const res = await fetch("https://docclg-backend.onrender.com/api/auth/reset-password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

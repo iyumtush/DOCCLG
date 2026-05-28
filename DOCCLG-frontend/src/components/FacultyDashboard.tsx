@@ -91,7 +91,7 @@ useEffect(() => {
 
   const fetchUser = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/auth/me", {
+      const res = await fetch("https://docclg-backend.onrender.com/api/auth/me", {
         headers: {
           Authorization: `Bearer ${storedToken}`,
         },
@@ -131,7 +131,7 @@ useEffect(() => {
     if (!token) return;
 
     try {
-      const res = await fetch("http://localhost:4000/api/requests", {
+      const res = await fetch("https://docclg-backend.onrender.com/api/requests", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -182,7 +182,7 @@ useEffect(() => {
             : "HOD_APPROVED"
           : "REJECTED";
 
-      const res = await fetch(`http://localhost:4000/api/requests/${id}`, {
+      const res = await fetch(`https://docclg-backend.onrender.com/api/requests/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

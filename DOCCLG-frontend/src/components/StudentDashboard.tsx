@@ -127,7 +127,7 @@ export default function StudentDashboard({
     if (initialLoad) setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:4000/api/requests", {
+      const res = await fetch("https://docclg-backend.onrender.com/api/requests", {
         headers: {
           Authorization: `Bearer ${finalToken}`,
         },
@@ -217,7 +217,7 @@ export default function StudentDashboard({
   const handleCreateRequest = async () => {
     try {
       setCreating(true);
-      const res = await fetch("http://localhost:4000/api/requests", {
+      const res = await fetch("https://docclg-backend.onrender.com/api/requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

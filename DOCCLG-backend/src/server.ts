@@ -14,9 +14,20 @@ app.post("/test-otp", (req, res) => {
   res.json({ message: "Test OTP working" });
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://docclg.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("DOCCLG Backend Running ✅");
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/requests", requestsRoutes);
@@ -25,13 +36,6 @@ const PORT = process.env.PORT || 4000;
  
 import { sendEmail } from "./utils/sendEmail";
 
-sendEmail(
-  "yourgmail@gmail.com",
-  "Test Email",
-  "If you receive this, email is working"
-);
-
 app.listen(PORT, () => {
-  console.log(`Server running on https://docclg-backend.onrender.com }`);
+  console.log(`Server running on port ${PORT}`);
 });
-
