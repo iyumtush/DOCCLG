@@ -281,11 +281,12 @@ console.log("OTP API RESPONSE:", data);
   } 
 
   else {
-    console.log("Other error:", data.message);
-    alert(data.message);
-  }
+  console.log("Other error:", data.message);
+  alert(data.message);
+}
 
-  return;
+setOtpLoading(false);
+return;
 }
 
     // ✅ SUCCESS
@@ -354,9 +355,10 @@ try {
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.message);
-      return;
-    }
+  alert(data.message);
+  setOtpLoading(false);
+  return;
+}
 
     // ✅ Save login
     sessionStorage.setItem("token", data.token);
@@ -408,7 +410,7 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
 
   try {
     const res = await fetch(
-      `$https://docclg-backend.onrender.com/api/auth/register`,
+      `https://docclg-backend.onrender.com/api/auth/register' , 
       {
         method: "POST",
         headers: {
