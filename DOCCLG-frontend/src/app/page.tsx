@@ -248,8 +248,10 @@ const handleSendOtp = async (email: string) => {
 
     const data = await res.json();
 
+console.log("OTP API RESPONSE:", data);
+
     // 🧪 DEBUG 1 → WHAT BACKEND RETURNS
-    console.log("ERROR:", data.message);
+   console.log("Backend response:", data);
 
     // ❌ ERROR HANDLING
     if (!res.ok) {
@@ -287,13 +289,20 @@ const handleSendOtp = async (email: string) => {
 }
 
     // ✅ SUCCESS
-    setOtpEmail(email);
-    setOtpStep(true);
+console.log("OTP SUCCESS FLOW RUNNING");
+
+setOtpEmail(email);
+setOtp("");
+setOtpStep(true);
+
+setCanResend(false);
+setResendTimer(30);
 
 toast.success("OTP sent! Check your email 📧");
 
   } catch (err) {
-    console.error(err);
+    console.error("OTP ERROR:", err);
+alert("Failed to send OTP. Check backend/server logs.");
   } finally {
     setOtpLoading(false);
   }
