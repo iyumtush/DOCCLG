@@ -20,13 +20,14 @@ router.post("/register", async (req, res) => {
    console.log("REGISTER BODY:", req.body);
    
    const { name, email, password, role, branch } = req.body;
+   const cleanEmail = email?.trim();
 
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required" });
     }
 
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { email: cleanEmail },
     });
 
     if (existingUser) {
@@ -38,7 +39,7 @@ router.post("/register", async (req, res) => {
     const user = await prisma.user.create({
   data: {
     name,
-    email,
+    email: cleanEmail,
     passwordHash: hashedPassword,
     role: role || "STUDENT",
     branch,
@@ -47,7 +48,7 @@ router.post("/register", async (req, res) => {
 
 try {
   await sendEmail(
-    email,
+    cleanEmail,
     "Registration Successful",
     `Hello ${name},
 Role: ${user.role}`
@@ -77,9 +78,10 @@ Role: ${user.role}`
 router.post("/login", async (req, res) => {
   try {
     const { name, email, password, role, branch } = req.body;
+    const cleanEmail = email?.trim();
 
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: cleanEmail },
     });
 
     if (!user) {
@@ -134,9 +136,10 @@ router.post("/send-otp", async (req, res) => {
   try {
     console.log("Checking user in database...");
     const { name, email, password, role, branch } = req.body;
+    const cleanEmail = email?.trim();
 
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: cleanEmail },
     });
 
     if (!user) {
@@ -160,13 +163,13 @@ router.post("/send-otp", async (req, res) => {
 
     console.log("Saving OTP to database...");
     await prisma.user.update({
-      where: { email },
+      where: { email: cleanEmail },
       data: { otp, otpExpiry },
     });
 
     console.log("Sending OTP email now...");
     await sendEmail(
-      email,
+      cleanEmail,
       "Your OTP Code",
       `Your OTP is: ${otp} It Expires In 5 Minutes`
     );
