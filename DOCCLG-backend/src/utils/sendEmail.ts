@@ -10,15 +10,17 @@ export const sendEmail = async (
   console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
 
   try {
-    const transporter = nodemailer.createTransport({
-  service: "gmail",
-  secure: true,
-  port: 465,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+  console.log("🚀 USING GMAIL 465 CONFIG");
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    secure: true,
+    port: 465,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
 
     await transporter.sendMail({
       from: `"CollegeDocs" <${process.env.EMAIL_USER}>`,
