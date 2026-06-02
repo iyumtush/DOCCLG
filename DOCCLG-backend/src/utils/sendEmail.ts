@@ -14,6 +14,10 @@ export const sendEmail = async (
 
   const otp = text.match(/\d{6}/)?.[0] || "000000";
 
+  console.log("📨 RECIPIENT:", to);
+  console.log("📨 SUBJECT:", subject);
+  console.log("📨 NAME:", name);
+
   const data = await resend.emails.send({
   from: "CollegeDocs <onboarding@resend.dev>",
   to,
@@ -59,8 +63,13 @@ export const sendEmail = async (
 `,
 });
 
-    console.log("✅ Email sent:", data);
-    return data;
+   if ((data as any)?.error) {
+  console.error("❌ RESEND ERROR:", (data as any).error);
+  throw new Error(JSON.stringify((data as any).error));
+}
+
+console.log("✅ Email sent:", JSON.stringify(data, null, 2));
+return data;
   } catch (error) {
     console.error("❌ Email error:", error);
     throw error;
