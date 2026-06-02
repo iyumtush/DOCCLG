@@ -22,12 +22,11 @@ export const sendEmail = async (
     },
   });
 
-    await transporter.sendMail({
-      from: `"CollegeDocs" <${process.env.EMAIL_USER}>`,
-      to: to,
-      subject: subject,
-      text: text,
-    });
+    console.log("OTP EMAIL WOULD BE SENT TO:", to);
+console.log("SUBJECT:", subject);
+console.log("TEXT:", text);
+
+return;
 
     console.log("✅ Email sent to:", to);
   } catch (error) {
