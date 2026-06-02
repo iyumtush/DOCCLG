@@ -11,14 +11,14 @@ export const sendEmail = async (
 
   try {
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+  service: "gmail",
+  secure: true,
+  port: 465,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
     await transporter.sendMail({
       from: `"CollegeDocs" <${process.env.EMAIL_USER}>`,
@@ -29,6 +29,7 @@ export const sendEmail = async (
 
     console.log("✅ Email sent to:", to);
   } catch (error) {
-    console.error("❌ Email error:", error);
-  }
+  console.error("❌ Email error:", error);
+  throw error;
+}
 };
