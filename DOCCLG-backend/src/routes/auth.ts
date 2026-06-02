@@ -51,8 +51,7 @@ try {
   cleanEmail,
   "Registration Successful",
   `Registration Successful`,
-  user.name
-);
+   user.name || "User");
 } catch (err) {
   console.error("Email failed but user created:", err);
 }
@@ -172,8 +171,7 @@ router.post("/send-otp", async (req, res) => {
   cleanEmail,
   "Your OTP Code",
   `Your OTP is: ${otp} It Expires In 5 Minutes`,
-  user.name
-);
+  user.name || "User");
     console.log("OTP EMAIL SENT SUCCESSFULLY");
 
     return res.json({ message: "OTP sent successfully" });
@@ -266,8 +264,7 @@ await sendEmail(
   email,
   "Reset Password OTP",
   `OTP: ${otp}`,
-  user.name
-);
+   user.name || "User");
     return res.json({ message: "OTP sent" });
 
   } catch (err) {
