@@ -93,12 +93,12 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    if (user.role !== role) {
-      return res.status(401).json({
-        message: "Invalid role selected",
-      });
-    }
+    console.log("DATABASE ROLE:", user.role);
+    console.log("FRONTEND ROLE:", role);
 
+    if (user.role !== role) {
+    return res.status(401).json({ message: "Invalid role selected" });
+}
     const token = jwt.sign(
       { userId: user.id, role: user.role, branch: user.branch },
       JWT_SECRET,
@@ -153,9 +153,12 @@ router.post("/send-otp", async (req, res) => {
     }
     console.log("Password matched successfully");
 
-    if (user.role !== role) {
-      return res.status(401).json({ message: "Invalid role selected" });
-    }
+    console.log("DATABASE ROLE:", user.role);
+console.log("FRONTEND ROLE:", role);
+
+if (user.role !== role) {
+  return res.status(401).json({ message: "Invalid role selected" });
+}
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
@@ -172,7 +175,8 @@ router.post("/send-otp", async (req, res) => {
   "Your OTP Code",
   `Your OTP is: ${otp} It Expires In 5 Minutes`,
   user.name || "User");
-    console.log("OTP EMAIL SENT SUCCESSFULLY");
+    console.log("OTP SENT TO:", cleanEmail);
+    console.log("USER ROLE:", user.role);
 
     return res.json({ message: "OTP sent successfully" });
 
@@ -192,10 +196,11 @@ router.post("/send-otp", async (req, res) => {
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
+const cleanEmail = email?.trim();
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+const user = await prisma.user.findUnique({
+  where: { email: cleanEmail },
+});
 
     if (!user || !user.otp || !user.otpExpiry) {
       return res.status(400).json({ message: "Invalid request" });
@@ -210,7 +215,7 @@ router.post("/verify-otp", async (req, res) => {
     }
 
     await prisma.user.update({
-      where: { email },
+      where: { email: cleanEmail },
       data: { otp: null, otpExpiry: null },
     });
 
@@ -243,11 +248,11 @@ router.post("/verify-otp", async (req, res) => {
  */
 router.post("/forgot-password", async (req, res) => {
   try {
-    const { name, email, password, role, branch } = req.body;
-
+   const { name, email, password, role, branch } = req.body;
+   const cleanEmail = email?.trim();
     const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    where: { email: cleanEmail },
+      });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -255,13 +260,13 @@ router.post("/forgot-password", async (req, res) => {
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    await prisma.user.update({
-      where: { email },
-      data: { otp },
-    });
+   await prisma.user.update({
+  where: { email: cleanEmail },
+  data: { otp },
+});
 
 await sendEmail(
-  email,
+  cleanEmail,
   "Reset Password OTP",
   `OTP: ${otp}`,
    user.name || "User");
@@ -277,11 +282,13 @@ await sendEmail(
  */
 router.post("/reset-password", async (req, res) => {
   try {
+    
     const { email, otp, newPassword } = req.body;
+const cleanEmail = email?.trim();
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+const user = await prisma.user.findUnique({
+  where: { email: cleanEmail },
+});
 
     if (!user || user.otp !== otp) {
       return res.status(400).json({ message: "Invalid OTP" });
@@ -290,12 +297,12 @@ router.post("/reset-password", async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
     await prisma.user.update({
-      where: { email },
-      data: {
-        passwordHash: hashedPassword,
-        otp: null,
-      },
-    });
+  where: { email: cleanEmail },
+  data: {
+    passwordHash: hashedPassword,
+    otp: null,
+  },
+});
 
     return res.json({ message: "Password updated" });
 
