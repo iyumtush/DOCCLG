@@ -7,25 +7,30 @@ export const sendEmail = async (
 ) => {
   // ✅ Debug logs
   console.log("EMAIL_USER:", process.env.EMAIL_USER);
-  console.log("EMAIL_PASS:", process.env.EMAIL_PASS);
-
+console.log("EMAIL_PASS EXISTS:", !!process.env.EMAIL_PASS);
   try {
   console.log("🚀 USING GMAIL 465 CONFIG");
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
-    secure: true,
-    port: 465,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+  requireTLS: true,
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  family: 4,
+});
 
-    console.log("OTP EMAIL WOULD BE SENT TO:", to);
-console.log("SUBJECT:", subject);
-console.log("TEXT:", text);
+  await transporter.sendMail({
+  from: `"CollegeDocs" <${process.env.EMAIL_USER}>`,
+  to,
+  subject,
+  text,
+});
 
+console.log("✅ Email sent to:", to);
 return;
 
     console.log("✅ Email sent to:", to);
