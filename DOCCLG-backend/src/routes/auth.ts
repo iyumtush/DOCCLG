@@ -48,11 +48,11 @@ router.post("/register", async (req, res) => {
 
 try {
   await sendEmail(
-    cleanEmail,
-    "Registration Successful",
-    `Hello ${name},
-Role: ${user.role}`
-  );
+  cleanEmail,
+  "Registration Successful",
+  `Registration Successful`,
+  user.name
+);
 } catch (err) {
   console.error("Email failed but user created:", err);
 }
@@ -169,10 +169,11 @@ router.post("/send-otp", async (req, res) => {
 
     console.log("Sending OTP email now...");
     await sendEmail(
-      cleanEmail,
-      "Your OTP Code",
-      `Your OTP is: ${otp} It Expires In 5 Minutes`
-    );
+  cleanEmail,
+  "Your OTP Code",
+  `Your OTP is: ${otp} It Expires In 5 Minutes`,
+  user.name
+);
     console.log("OTP EMAIL SENT SUCCESSFULLY");
 
     return res.json({ message: "OTP sent successfully" });
@@ -261,8 +262,12 @@ router.post("/forgot-password", async (req, res) => {
       data: { otp },
     });
 
-    await sendEmail(email, "Reset Password OTP", `OTP: ${otp}`);
-
+await sendEmail(
+  email,
+  "Reset Password OTP",
+  `OTP: ${otp}`,
+  user.name
+);
     return res.json({ message: "OTP sent" });
 
   } catch (err) {
