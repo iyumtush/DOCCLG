@@ -2,32 +2,8 @@ import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { STATUS, ROLE } from "../lib/constants";
+import { sendEmail } from "../utils/sendEmail";
 
-import nodemailer from "nodemailer";
-
-const router = Router();
-const prisma = new PrismaClient();
-
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-const sendEmail = async (to: string, subject: string, text: string) => {
-  try {
-    await transporter.sendMail({
-      from: `CollegeDocs <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      text,
-    });
-  } catch (err) {
-    console.error("Email error:", err);
-  }
-};
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
@@ -173,11 +149,12 @@ router.post("/", authenticate, async (req: any, res) => {
       },
     });
 
-    ciUsers.forEach((ci) => {
-      sendEmail(
-        ci.email,
-        "New Request Submission Notification",
-        `New Request Submission Notification
+    await Promise.all(
+  ciUsers.map((ci) =>
+    sendEmail(
+      ci.email,
+      "New Request Submission Notification",
+      `New Request Submission Notification
 
 Dear Faculty,
 
@@ -192,8 +169,9 @@ Kindly log in to the CollegeDocs portal to review and take the necessary action.
 
 Regards,
 CollegeDocs Team`
-      );
-    });
+    )
+  )
+);
 
     // 🔔 Notify Student (confirmation)
     sendEmail(
@@ -292,12 +270,12 @@ router.patch("/:id", authenticate, async (req: any, res) => {
           branch: request.branch,
         },
       });
-
-      hods.forEach((hod) => {
-        sendEmail(
-          hod.email,
-          "Request Pending for Approval",
-          `Request Pending for Approval
+await Promise.all(
+  hods.map((hod) =>
+    sendEmail(
+      hod.email,
+      "Request Pending for Approval",
+      `Request Pending for Approval
 
 Dear HOD,
 
@@ -312,8 +290,9 @@ Please log in to the CollegeDocs portal to review and proceed with the approval 
 
 Regards,
 CollegeDocs Team`
-        );
-      });
+    )
+  )
+);
 
       // 🔔 Notify Student (CI approved)
       if (newStatus === "CLASS_INCHARGE_APPROVED" && student) {
