@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import * as SibApiV3Sdk from "@getbrevo/brevo";
 
 export const sendEmail = async (
   to: string,
@@ -7,29 +7,31 @@ export const sendEmail = async (
   name: string = "User"
 ) => {
   try {
-    console.log("📧 USING GMAIL SMTP");
+    console.log("📧 USING BREVO API");
     console.log("📨 RECIPIENT:", to);
-    console.log("📨 SUBJECT:", subject);
-    console.log("📨 NAME:", name);
 
-    const otp = text.match(/\d{6}/)?.[0] || "000000";
+    const otp = text.match(/\d{6}/)?.[0] || "";
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+
+    apiInstance.setApiKey(
+      SibApiV3Sdk.TransactionalEmailsApiApiKeys.apiKey,
+      process.env.BREVO_API_KEY || ""
+    );
+
+    const result = await apiInstance.sendTransacEmail({
+      sender: {
+        name: "CollegeDocs",
+        email: "noreply@brevo.com",
       },
-    });
-
-    await transporter.verify();
-    console.log("✅ SMTP VERIFIED");
-
-    const info = await transporter.sendMail({
-      from: `"CollegeDocs" <${process.env.EMAIL_USER}>`,
-      to,
+      to: [
+        {
+          email: to,
+          name: name,
+        },
+      ],
       subject,
-      html: `
+      htmlContent: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
 
   <div style="background:#2563eb;color:white;padding:15px;border-radius:8px 8px 0 0;">
@@ -37,10 +39,7 @@ export const sendEmail = async (
   </div>
 
   <div style="border:1px solid #e5e7eb;padding:30px;border-radius:0 0 8px 8px;">
-
     <h3>Hello, ${name || "User"} 👋</h3>
-
-    <p>Your One-Time Password (OTP) for CollegeDocs login is:</p>
 
     <div style="
       font-size:42px;
@@ -57,23 +56,20 @@ export const sendEmail = async (
 
     <p>This OTP will expire in <b>5 minutes</b>.</p>
 
-    <p>If you did not request this OTP, please ignore this email.</p>
-
-    <hr style="margin:20px 0;" />
+    <hr />
 
     <p style="font-size:12px;color:#6b7280;">
-      © CollegeDocs - College Document Management System
+      © CollegeDocs
     </p>
-
   </div>
 </div>
 `,
     });
 
-    console.log("✅ EMAIL SENT:", info.messageId);
-    return info;
+    console.log("✅ BREVO EMAIL SENT:", result);
+    return result;
   } catch (error) {
-    console.error("❌ EMAIL ERROR:", error);
+    console.error("❌ BREVO ERROR:", error);
     throw error;
   }
 };
