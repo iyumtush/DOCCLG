@@ -1,6 +1,4 @@
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import nodemailer from "nodemailer";
 
 export const sendEmail = async (
   to: string,
@@ -8,29 +6,38 @@ export const sendEmail = async (
   text: string,
   name: string = "User"
 ) => {
- 
   try {
-  console.log("📧 Sending email via Resend...");
+    console.log("📧 USING GMAIL SMTP");
+    console.log("📨 RECIPIENT:", to);
+    console.log("📨 SUBJECT:", subject);
+    console.log("📨 NAME:", name);
 
-  const otp = text.match(/\d{6}/)?.[0] || "000000";
+    const otp = text.match(/\d{6}/)?.[0] || "000000";
 
-  console.log("📨 RECIPIENT:", to);
-  console.log("📨 SUBJECT:", subject);
-  console.log("📨 NAME:", name);
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  const data = await resend.emails.send({
-  from: "CollegeDocs <onboarding@resend.dev>",
-  to,
-  subject,
-  html: `
+    await transporter.verify();
+    console.log("✅ SMTP VERIFIED");
+
+    const info = await transporter.sendMail({
+      from: `"CollegeDocs" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
-  
+
   <div style="background:#2563eb;color:white;padding:15px;border-radius:8px 8px 0 0;">
     <h2 style="margin:0;">CollegeDocs Verification</h2>
   </div>
 
   <div style="border:1px solid #e5e7eb;padding:30px;border-radius:0 0 8px 8px;">
-    
+
     <h3>Hello, ${name || "User"} 👋</h3>
 
     <p>Your One-Time Password (OTP) for CollegeDocs login is:</p>
@@ -61,17 +68,12 @@ export const sendEmail = async (
   </div>
 </div>
 `,
-});
+    });
 
-   if ((data as any)?.error) {
-  console.error("❌ RESEND ERROR:", (data as any).error);
-  throw new Error(JSON.stringify((data as any).error));
-}
-
-console.log("✅ Email sent:", JSON.stringify(data, null, 2));
-return data;
+    console.log("✅ EMAIL SENT:", info.messageId);
+    return info;
   } catch (error) {
-    console.error("❌ Email error:", error);
+    console.error("❌ EMAIL ERROR:", error);
     throw error;
   }
 };
