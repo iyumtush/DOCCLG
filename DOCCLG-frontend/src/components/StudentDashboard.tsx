@@ -539,7 +539,7 @@ export default function StudentDashboard({
 
 <div className="relative grid grid-cols-4 items-start justify-items-center">                          <div className="absolute top-[46px] left-[12.5%] right-[12.5%] h-1 bg-gray-200 rounded-full" />
                           <div
-  className={`absolute top-[46px] left-[12.5%] h-1 rounded-full transition-all duration-500 ${
+  className={`absolute top-[88px] left-[12.5%] h-1 rounded-full transition-all duration-500 ${
     request.status === "REJECTED"
       ? "bg-red-500"
       : "bg-green-500"
@@ -572,7 +572,7 @@ export default function StudentDashboard({
                                 (index === 3 && request.status === "HOD_APPROVED");
 
                               return (
-                            <div key={index} className="relative z-10 flex flex-col items-center justify-start min-h-[110px]">    
+                            <div key={index} className="relative z-10 flex flex-col items-center justify-start min-h-[140px]">    
                                  <span className="mb-3 text-xs font-medium text-gray-600"> {labels[index]}
                                  </span>
                                                           <div
