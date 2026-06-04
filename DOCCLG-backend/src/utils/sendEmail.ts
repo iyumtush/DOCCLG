@@ -33,16 +33,19 @@ export const sendEmail = async (
           htmlContent: `
 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px;">
   <div style="background:#2563eb;color:white;padding:15px;border-radius:8px 8px 0 0;">
-    <h2 style="margin:0;">CollegeDocs Verification</h2>
+    <h2 style="margin:0;">CollegeDocs Notification Center</h2>
   </div>
 
   <div style="border:1px solid #e5e7eb;padding:30px;border-radius:0 0 8px 8px;">
-    <h3>Hello, ${name || "User"} 👋</h3>
+    <h3 style="margin-top:0;">Hello, ${name || "User"} 👋</h3>
+    <p style="color:#6b7280;margin-bottom:20px;">
+      This is an automated notification from CollegeDocs.
+    </p>
 
     ${
       otp
         ? `
-      <p>Your One-Time Password (OTP) is:</p>
+      <p><strong>Your One-Time Password (OTP) is:</strong></p>
 
       <div style="
         font-size:42px;
@@ -59,7 +62,19 @@ export const sendEmail = async (
 
       <p>This OTP will expire in <b>5 minutes</b>.</p>
       `
-        : `<p>${text}</p>`
+        : `
+      <div style="
+        background:#f8fafc;
+        border-left:4px solid #2563eb;
+        padding:16px;
+        border-radius:8px;
+        margin:20px 0;
+        line-height:1.7;
+        white-space:pre-line;
+      ">
+        ${text}
+      </div>
+      `
     }
 
     <hr style="margin:20px 0;" />
