@@ -547,9 +547,9 @@ export default function StudentDashboard({
   style={{
     width:
       request.status === "PENDING"
-        ? "0%"
+        ? "25%"
         : request.status === "CLASS_INCHARGE_APPROVED"
-        ? "33.33%"
+        ? "50%"
         : request.status === "HOD_APPROVED"
         ? "75%"
         : request.status === "COMPLETED"
