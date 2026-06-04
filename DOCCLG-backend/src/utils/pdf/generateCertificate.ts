@@ -136,10 +136,9 @@ export const generateCertificate = async ({
   }
 
   const uploadResult = await cloudinary.uploader.upload(filePath, {
-    resource_type: "auto",
+    resource_type: "raw",
     folder: "certificates",
     public_id: certificateId,
-    format: "pdf",
     overwrite: true,
   });
 
