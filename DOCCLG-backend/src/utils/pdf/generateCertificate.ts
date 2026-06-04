@@ -98,39 +98,58 @@ export const generateCertificate = async ({
   const qrBase64 = qrImage.replace(/^data:image\/png;base64,/, "");
   const qrBuffer = Buffer.from(qrBase64, "base64");
 
-  doc.image(qrBuffer, 220, 420, {
+  // Small QR in bottom-left corner
+  doc.image(qrBuffer, 60, 610, {
+    width: 70,
+  });
+
+  doc.fontSize(9);
+  doc.text("Verification ID:", 60, 690, {
     width: 120,
+    align: "left",
   });
 
-  doc.moveDown(2);
-  doc.fontSize(10).text(`Verification ID: ${certificateId}`, {
+  doc.text(certificateId, 60, 705, {
+    width: 140,
+    align: "left",
+  });
+
+  // Digital approval section
+  doc.fontSize(12);
+  doc.text("────────────────────", 180, 540, {
     align: "center",
   });
 
-  doc.moveDown(8);
-
-  doc.text("Verified & Approved Digitally", {
+  doc.text("Verified & Approved Digitally", 0, 560, {
     align: "center",
   });
 
-  doc.moveDown(4);
-
-  doc.text("________________________", {
-    align: "right",
+  doc.text("────────────────────", 180, 580, {
+    align: "center",
   });
 
-  doc.text("Principal", {
-    align: "right",
+  // Principal signature block centered
+  doc.fontSize(12);
+  doc.text("_________________________", 0, 665, {
+    align: "center",
   });
 
-  doc.text("CollegeDocs Authority", {
-    align: "right",
+  doc.font('Helvetica-Bold');
+  doc.text("Principal", 0, 690, {
+    align: "center",
+  });
+
+  doc.font('Helvetica');
+  doc.text("CollegeDocs Authority", 0, 710, {
+    align: "center",
   });
 
   doc.moveDown(2);
 
   doc.fontSize(10).text(
     "This is a computer generated certificate. QR code can be used for verification.",
+    0,
+    755,
     {
       align: "center",
     }
