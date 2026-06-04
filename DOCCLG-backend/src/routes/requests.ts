@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { STATUS, ROLE } from "../lib/constants";
 import { sendEmail } from "../utils/sendEmail";
+import { generateCertificate } from "../utils/pdf/generateCertificate";
 
 const router = Router();
 const prisma = new PrismaClient();
@@ -325,6 +326,31 @@ CollegeDocs Team`,
     }
 
     if (newStatus === "HOD_APPROVED") {
+      const certificateId = `DOC-${new Date().getFullYear()}-${Date.now()}`;
+
+      let certificateUrl: string | null = null;
+
+      try {
+        if (student) {
+          certificateUrl = await generateCertificate({
+            studentName: student.name,
+            documentType: request.type,
+            certificateId,
+            requestId: request.id,
+          });
+
+          await prisma.request.update({
+            where: { id: request.id },
+            data: {
+              certificateId,
+              certificateUrl,
+            },
+          });
+        }
+      } catch (pdfError) {
+        console.error("PDF GENERATION ERROR:", pdfError);
+      }
+
       // notify student
       if (student) {
         await sendEmail(
@@ -340,7 +366,7 @@ Request Details:
 
 • Document Type: ${request.type} Certificate
 • Current Status: Approved
-${request.certificateId ? `• Certificate ID: ${request.certificateId}\n` : ""}${request.certificateUrl ? `• Certificate Link: ${request.certificateUrl}\n` : ""}
+${certificateId ? `• Certificate ID: ${certificateId}\n` : ""}${certificateUrl ? `• Certificate Link: ${certificateUrl}\n` : ""}
 Please log in to the CollegeDocs portal for further actions and status tracking.
 
 Regards,
