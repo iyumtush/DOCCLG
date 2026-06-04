@@ -551,7 +551,7 @@ export default function StudentDashboard({
         : request.status === "CLASS_INCHARGE_APPROVED"
         ? "33.33%"
         : request.status === "HOD_APPROVED"
-        ? "66.66%"
+        ? "75%"
         : request.status === "COMPLETED"
         ? "100%"
         : request.status === "REJECTED"
