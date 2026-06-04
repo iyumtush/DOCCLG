@@ -170,7 +170,8 @@ Request Details:
 Kindly log in to the CollegeDocs portal to review and take the necessary action.
 
 Regards,
-CollegeDocs Team`
+CollegeDocs Team`,
+      ci.name || "Faculty"
     )
   )
 );
@@ -194,7 +195,8 @@ Request Details:
 Your request is currently under review by the Class Incharge.
 
 Regards,
-CollegeDocs Team`
+CollegeDocs Team`,
+      user.name || "Student"
     );
 
     res.status(201).json({ request });
@@ -291,7 +293,8 @@ Request Details:
 Please log in to the CollegeDocs portal to review and proceed with the approval process.
 
 Regards,
-CollegeDocs Team`
+CollegeDocs Team`,
+      hod.name || "HOD"
     )
   )
 );
@@ -315,7 +318,8 @@ Request Details:
 You will receive another notification once the HOD completes the final approval process.
 
 Regards,
-CollegeDocs Team`
+CollegeDocs Team`,
+          student.name || "Student"
         );
       }
     }
@@ -340,7 +344,8 @@ ${request.certificateId ? `• Certificate ID: ${request.certificateId}\n` : ""}
 Please log in to the CollegeDocs portal for further actions and status tracking.
 
 Regards,
-CollegeDocs Team`
+CollegeDocs Team`,
+          student.name || "Student"
         );
       }
     }
@@ -364,7 +369,8 @@ Request Details:
 Please log in to the CollegeDocs portal for further details regarding your request.
 
 Regards,
-CollegeDocs Team`
+CollegeDocs Team`,
+          student.name || "Student"
         );
       }
     }
