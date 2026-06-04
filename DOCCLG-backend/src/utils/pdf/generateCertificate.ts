@@ -2,6 +2,7 @@ import PDFDocument from "pdfkit";
 import fs from "fs";
 import path from "path";
 import cloudinary from "../../config/cloudinary";
+import QRCode from "qrcode";
 
 interface GenerateCertificateParams {
   studentName: string;
@@ -69,7 +70,7 @@ export const generateCertificate = async ({
   doc.moveDown();
 
   doc.fontSize(14).text(
-    `This is to certify that ${studentName} has successfully completed all required approval stages for the issuance of a ${documentType}. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.` ,
+    `This is to certify that ${studentName} has successfully completed all required approval stages for the issuance of a ${documentType} Certificate. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.` ,
     {
       align: "justify",
     }
@@ -86,21 +87,37 @@ export const generateCertificate = async ({
 
   doc.moveDown(3);
 
-  doc.moveDown(2);
-  doc.fontSize(12).text(
-    `QR Verification Reference: ${certificateId}`,
-    {
-      align: "center",
-    }
-  );
+  const qrData = JSON.stringify({
+    certificateId,
+    requestId,
+    studentName,
+    documentType,
+  });
 
-  doc.moveDown(10);
+  const qrImage = await QRCode.toDataURL(qrData);
+  const qrBase64 = qrImage.replace(/^data:image\/png;base64,/, "");
+  const qrBuffer = Buffer.from(qrBase64, "base64");
+
+  doc.image(qrBuffer, 220, 420, {
+    width: 120,
+  });
+
+  doc.moveDown(2);
+  doc.fontSize(10).text(`Verification ID: ${certificateId}`, {
+    align: "center",
+  });
+
+  doc.moveDown(8);
 
   doc.text("Verified & Approved Digitally", {
     align: "center",
   });
 
-  doc.moveDown(2);
+  doc.moveDown(4);
+
+  doc.text("________________________", {
+    align: "right",
+  });
 
   doc.text("Principal", {
     align: "right",
