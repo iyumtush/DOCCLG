@@ -328,7 +328,7 @@ CollegeDocs Team`,
     if (newStatus === "HOD_APPROVED") {
       const certificateId = `DOC-${new Date().getFullYear()}-${Date.now()}`;
 
-      let certificateUrl: string | null = null;
+      let certificateUrl: string | undefined;
 
       try {
         if (student) {
@@ -343,7 +343,7 @@ CollegeDocs Team`,
             where: { id: request.id },
             data: {
               certificateId,
-              certificateUrl,
+              ...(certificateUrl ? { certificateUrl } : {}),
             },
           });
         }
