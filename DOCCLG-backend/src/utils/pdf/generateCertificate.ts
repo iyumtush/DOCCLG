@@ -36,7 +36,13 @@ export const generateCertificate = async ({
   const stream = fs.createWriteStream(filePath);
   doc.pipe(stream);
 
-  doc.fontSize(22).text("COLLEGEDOCS", {
+  doc.rect(30, 30, 535, 750).stroke();
+
+  doc.fontSize(24).text("COLLEGEDOCS", {
+    align: "center",
+  });
+
+  doc.fontSize(12).text("College Document Management System", {
     align: "center",
   });
 
@@ -51,11 +57,29 @@ export const generateCertificate = async ({
   doc.fontSize(12).text(`Certificate ID: ${certificateId}`);
   doc.text(`Request ID: ${requestId}`);
   doc.text(`Issue Date: ${new Date().toLocaleDateString()}`);
+  doc.text(`Student Name: ${studentName}`);
+  doc.text(`Document Type: ${documentType}`);
 
   doc.moveDown(2);
 
+  doc.fontSize(16).text("TO WHOMSOEVER IT MAY CONCERN", {
+    align: "center",
+    underline: true,
+  });
+
+  doc.moveDown();
+
   doc.fontSize(14).text(
-    `This is to certify that ${studentName} has successfully completed the approval process for ${documentType}.`,
+    `This is to certify that ${studentName} has successfully completed all required approval stages for the issuance of a ${documentType}. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.` ,
+    {
+      align: "justify",
+    }
+  );
+
+  doc.moveDown();
+
+  doc.text(
+    `Certificate Reference Number: ${certificateId}. This document may be verified using the QR code provided below.` ,
     {
       align: "justify",
     }
@@ -77,11 +101,30 @@ export const generateCertificate = async ({
     width: 120,
   });
 
-  doc.moveDown(8);
+  doc.moveDown(10);
 
-  doc.text("Authorized Signature", {
+  doc.text("Verified & Approved Digitally", {
+    align: "center",
+  });
+
+  doc.moveDown(2);
+
+  doc.text("Principal", {
     align: "right",
   });
+
+  doc.text("CollegeDocs Authority", {
+    align: "right",
+  });
+
+  doc.moveDown(2);
+
+  doc.fontSize(10).text(
+    "This is a computer generated certificate. QR code can be used for verification.",
+    {
+      align: "center",
+    }
+  );
 
   doc.end();
 
