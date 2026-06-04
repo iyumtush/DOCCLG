@@ -4,6 +4,8 @@ import jwt from "jsonwebtoken";
 import { STATUS, ROLE } from "../lib/constants";
 import { sendEmail } from "../utils/sendEmail";
 
+const router = Router();
+const prisma = new PrismaClient();
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
@@ -174,7 +176,7 @@ CollegeDocs Team`
 );
 
     // 🔔 Notify Student (confirmation)
-    sendEmail(
+    await sendEmail(
       user.email,
       "Request Submitted Successfully",
       `Request Submission Confirmation
@@ -296,7 +298,7 @@ CollegeDocs Team`
 
       // 🔔 Notify Student (CI approved)
       if (newStatus === "CLASS_INCHARGE_APPROVED" && student) {
-        sendEmail(
+        await sendEmail(
           student.email,
           "Request Approved by Class Incharge",
           `Request Approved by Class Incharge
@@ -321,7 +323,7 @@ CollegeDocs Team`
     if (newStatus === "HOD_APPROVED") {
       // notify student
       if (student) {
-        sendEmail(
+        await sendEmail(
           student.email,
           "Request Approved",
           `Request Approved
@@ -345,7 +347,7 @@ CollegeDocs Team`
 
     if (newStatus === "REJECTED") {
       if (student) {
-        sendEmail(
+        await sendEmail(
           student.email,
           "Request Rejected",
           `Request Rejected
