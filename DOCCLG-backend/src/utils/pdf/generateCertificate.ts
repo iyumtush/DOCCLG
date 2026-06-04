@@ -136,17 +136,24 @@ export const generateCertificate = async ({
   }
 
   const uploadResult = await cloudinary.uploader.upload(filePath, {
-    resource_type: "raw",
+    resource_type: "auto",
     folder: "certificates",
     public_id: certificateId,
+    format: "pdf",
     overwrite: true,
   });
 
+  const pdfUrl = cloudinary.url(`certificates/${certificateId}.pdf`, {
+    resource_type: "image",
+    secure: true,
+  });
+
   console.log("PDF UPLOADED:", uploadResult.secure_url);
+  console.log("PDF URL:", pdfUrl);
 
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
   }
 
-  return uploadResult.secure_url;
+  return pdfUrl;
 };
