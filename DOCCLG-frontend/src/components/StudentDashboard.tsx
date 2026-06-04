@@ -535,37 +535,32 @@ export default function StudentDashboard({
                       <CardContent>
                         {/* Premium Timeline */}
                         <div className="mb-6">
-                          <div className="flex items-center justify-between text-xs mb-4 px-2">
-                            <span>Submitted</span>
-                            <span>CI</span>
-                            <span>HOD</span>
-                            <span>Done</span>
-                          </div>
+                          
 
-                          <div className="relative flex items-center justify-between">
-                            {/* Line */}
-                            <div className="absolute top-4 left-0 right-0 h-1 bg-gray-200 rounded-full" />
-
-                            <div
-                              className={`absolute top-4 left-0 h-1 rounded-full transition-all duration-500 ${
-                                request.status === "REJECTED" ? "bg-red-500" : "bg-green-500"
-                              }`}
-                              style={{
-                                width:
-                                  request.status === "PENDING"
-                                    ? "25%"
-                                    : request.status === "CLASS_INCHARGE_APPROVED"
-                                    ? "50%"
-                                    : request.status === "HOD_APPROVED"
-                                    ? "100%"
-                                    : request.status === "REJECTED"
-                                    ? "100%"
-                                    : "0%",
-                              }}
-                            />
+<div className="relative grid grid-cols-4 items-start justify-items-center">                          <div className="absolute top-4 left-[12.5%] right-[12.5%] h-1 bg-gray-200 rounded-full" />
+                          <div
+  className={`absolute top-4 left-[12.5%] h-1 rounded-full transition-all duration-500 ${
+    request.status === "REJECTED"
+      ? "bg-red-500"
+      : "bg-green-500"
+  }`}
+  style={{
+    width:
+      request.status === "PENDING"
+        ? "25%"
+        : request.status === "CLASS_INCHARGE_APPROVED"
+        ? "50%"
+        : request.status === "HOD_APPROVED"
+        ? "100%"
+        : request.status === "REJECTED"
+        ? "100%"
+        : "0%",
+  }}
+/>
 
                             {/* Steps */}
                             {["PENDING", "CLASS_INCHARGE_APPROVED", "HOD_APPROVED", "DONE"].map((step, index) => {
+                              const labels = ["Submitted", "CI", "HOD", "Done"];
                               const isCompleted =
                                 index === 0 ||
                                 (index === 1 &&
@@ -575,9 +570,11 @@ export default function StudentDashboard({
                                 (index === 3 && request.status === "HOD_APPROVED");
 
                               return (
-                                <div key={index} className="relative z-10 flex flex-col items-center">
-                                  <div
-                                    className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-all ${
+                            <div key={index} className="relative z-10 flex flex-col items-center justify-start">    
+                                 <span className="mb-3 text-xs font-medium text-gray-600"> {labels[index]}
+                                 </span>
+                                                          <div
+                                             className={`w-8 h-8 flex items-center justify-center rounded-full border-2 transition-all ${
                                       request.status === "REJECTED" && index === 3
                                         ? "bg-red-500 border-red-500 text-white"
                                         : isCompleted
