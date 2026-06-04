@@ -1,5 +1,3 @@
-
-
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
 import fs from "fs";
@@ -27,6 +25,8 @@ export const generateCertificate = async ({
 
   const fileName = `${certificateId}.pdf`;
   const filePath = path.join(uploadsDir, fileName);
+
+  console.log("GENERATING PDF:", filePath);
 
   const doc = new PDFDocument({
     size: "A4",
@@ -90,11 +90,21 @@ export const generateCertificate = async ({
     stream.on("error", reject);
   });
 
+  const stats = fs.statSync(filePath);
+  console.log("PDF SIZE:", stats.size, "bytes");
+
+  if (stats.size === 0) {
+    throw new Error("Generated PDF is empty");
+  }
+
   const uploadResult = await cloudinary.uploader.upload(filePath, {
-    resource_type: "raw",
+    resource_type: "auto",
     folder: "certificates",
     public_id: certificateId,
+    format: "pdf",
   });
+
+  console.log("PDF UPLOADED:", uploadResult.secure_url);
 
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
