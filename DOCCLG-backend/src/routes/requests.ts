@@ -333,7 +333,7 @@ CollegeDocs Team`,
       try {
         if (student) {
           certificateUrl = await generateCertificate({
-            studentName: student.name,
+            studentName: student.name || "Student",
             documentType: request.type,
             certificateId,
             requestId: request.id,
