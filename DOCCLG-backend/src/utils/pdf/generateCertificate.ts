@@ -1,5 +1,4 @@
 import PDFDocument from "pdfkit";
-import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
 import cloudinary from "../../config/cloudinary";
@@ -87,19 +86,13 @@ export const generateCertificate = async ({
 
   doc.moveDown(3);
 
-  const qrData = JSON.stringify({
-    certificateId,
-    requestId,
-    studentName,
-  });
-
-  const qrImage = await QRCode.toDataURL(qrData);
-  const qrBase64 = qrImage.replace(/^data:image\/png;base64,/, "");
-  const qrBuffer = Buffer.from(qrBase64, "base64");
-
-  doc.image(qrBuffer, 220, 450, {
-    width: 120,
-  });
+  doc.moveDown(2);
+  doc.fontSize(12).text(
+    `QR Verification Reference: ${certificateId}`,
+    {
+      align: "center",
+    }
+  );
 
   doc.moveDown(10);
 
