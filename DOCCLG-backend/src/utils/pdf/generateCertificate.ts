@@ -2,6 +2,7 @@ import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
 import fs from "fs";
 import path from "path";
+import cloudinary from "../../config/cloudinary";
 
 interface GenerateCertificateParams {
   studentName: string;
@@ -141,7 +142,18 @@ export const generateCertificate = async ({
     throw new Error("Generated PDF is empty");
   }
 
-  console.log("PDF SAVED LOCALLY:", filePath);
+  const uploadResult = await cloudinary.uploader.upload(filePath, {
+    resource_type: "raw",
+    folder: "certificates",
+    public_id: certificateId,
+    overwrite: true,
+  });
 
-  return `/certificates/${fileName}`;
+  console.log("PDF UPLOADED:", uploadResult.secure_url);
+
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+
+  return uploadResult.secure_url;
 };
