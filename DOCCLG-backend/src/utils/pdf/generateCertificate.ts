@@ -149,11 +149,16 @@ export const generateCertificate = async ({
     overwrite: true,
   });
 
-  console.log("PDF UPLOADED:", uploadResult.secure_url);
+  const downloadUrl = uploadResult.secure_url.replace(
+    "/upload/",
+    "/upload/fl_attachment/"
+  );
+
+  console.log("PDF UPLOADED:", downloadUrl);
 
   if (fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
   }
 
-  return uploadResult.secure_url;
+  return downloadUrl;
 };
