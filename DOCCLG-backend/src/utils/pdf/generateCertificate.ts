@@ -121,13 +121,6 @@ export const generateCertificate = async ({
 
   console.log("WRITING PDF CONTENT...");
 
-  for (let i = 0; i < 50; i++) {
-    doc.moveDown();
-    doc.fontSize(12).text(
-      `Certificate Verification Line ${i + 1} - ${certificateId}`
-    );
-  }
-
   doc.end();
 
   await new Promise<void>((resolve, reject) => {
@@ -137,9 +130,6 @@ export const generateCertificate = async ({
 
   const stats = fs.statSync(filePath);
   console.log("PDF SIZE:", stats.size, "bytes");
-  const pdfHeader = fs.readFileSync(filePath).subarray(0, 20).toString();
-  console.log("PDF HEADER:", pdfHeader);
-  console.log("PDF PATH:", filePath);
 
   if (stats.size === 0) {
     throw new Error("Generated PDF is empty");
@@ -154,7 +144,9 @@ export const generateCertificate = async ({
 
   console.log("PDF UPLOADED:", uploadResult.secure_url);
 
-  console.log("LOCAL PDF KEPT FOR TESTING:", filePath);
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
 
   return uploadResult.secure_url;
 };
