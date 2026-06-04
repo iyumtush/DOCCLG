@@ -126,6 +126,8 @@ export const generateCertificate = async ({
     }
   );
 
+  console.log("WRITING PDF CONTENT...");
+
   doc.end();
 
   await new Promise<void>((resolve, reject) => {
@@ -135,16 +137,17 @@ export const generateCertificate = async ({
 
   const stats = fs.statSync(filePath);
   console.log("PDF SIZE:", stats.size, "bytes");
+  console.log("PDF PATH:", filePath);
 
   if (stats.size === 0) {
     throw new Error("Generated PDF is empty");
   }
 
   const uploadResult = await cloudinary.uploader.upload(filePath, {
-    resource_type: "auto",
+    resource_type: "raw",
     folder: "certificates",
     public_id: certificateId,
-    format: "pdf",
+    overwrite: true,
   });
 
   console.log("PDF UPLOADED:", uploadResult.secure_url);
