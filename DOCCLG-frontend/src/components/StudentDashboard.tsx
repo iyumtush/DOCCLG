@@ -539,7 +539,7 @@ export default function StudentDashboard({
 
 <div className="relative grid grid-cols-4 items-start justify-items-center">                          <div className="absolute top-[46px] left-[12.5%] right-[12.5%] h-1 bg-gray-200 rounded-full" />
                           <div
-  className={`absolute top-[45px] left-[12.5%] h-1 rounded-full transition-all duration-500 ${
+  className={`absolute top-[44px] left-[12.5%] h-1 rounded-full transition-all duration-500 ${
     request.status === "REJECTED"
       ? "bg-red-500"
       : "bg-green-500"
