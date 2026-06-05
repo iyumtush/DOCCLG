@@ -9,6 +9,10 @@ interface GenerateCertificateParams {
   documentType: string;
   certificateId: string;
   requestId: string;
+  course?: string;
+  yearOfStudy?: string;
+  academicSession?: string;
+  semester?: string;
 }
 
 export const generateCertificate = async ({
@@ -16,6 +20,10 @@ export const generateCertificate = async ({
   documentType,
   certificateId,
   requestId,
+  course,
+  yearOfStudy,
+  academicSession,
+  semester,
 }: GenerateCertificateParams): Promise<string> => {
   const uploadsDir = path.join(process.cwd(), "uploads", "certificates");
 
@@ -72,6 +80,10 @@ export const generateCertificate = async ({
   doc.text(`Issue Date: ${new Date().toLocaleDateString()}`);
   doc.text(`Student Name: ${studentName}`);
   doc.text(`Document Type: ${formattedDocumentType}`);
+  if (course) doc.text(`Course: ${course}`);
+  if (yearOfStudy) doc.text(`Current Year: ${yearOfStudy}`);
+  if (semester) doc.text(`Current Semester: ${semester}`);
+  if (academicSession) doc.text(`Academic Session: ${academicSession}`);
 
   doc.moveDown(2);
 
@@ -83,7 +95,7 @@ export const generateCertificate = async ({
   doc.moveDown();
 
   doc.fontSize(14).text(
-    `This is to certify that ${studentName} has successfully completed all required approval stages for the issuance of a ${formattedDocumentType} Certificate. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.` ,
+    `This is to certify that ${studentName} is a bona fide student of ${course || 'the institution'}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.`,
     {
       align: "justify",
     }

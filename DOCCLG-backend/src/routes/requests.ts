@@ -370,7 +370,6 @@ CollegeDocs Team`,
       try {
         if (student) {
           certificateUrl = await generateCertificate({
-          certificateUrl = await generateCertificate({
   studentName: student.name || "Student",
   documentType: request.type,
   certificateId,
@@ -408,6 +407,10 @@ We are pleased to inform you that your request has been approved successfully.
 Request Details:
 
 • Document Type: ${request.type} Certificate
+• Course: ${request.course || 'N/A'}
+• Current Year: ${request.yearOfStudy || 'N/A'}
+• Current Semester: ${request.semester || 'N/A'}
+• Academic Session: ${request.academicSession || 'N/A'}
 • Current Status: Approved
 ${certificateId ? `• Certificate ID: ${certificateId}\n` : ""}${certificateUrl ? `• Certificate Link: ${certificateUrl}\n` : ""}
 Please log in to the CollegeDocs portal for further actions and status tracking.
