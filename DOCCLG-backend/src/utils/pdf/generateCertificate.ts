@@ -100,12 +100,9 @@ export const generateCertificate = async ({
 
   doc.moveDown(3);
 
-  const qrData = JSON.stringify({
-    certificateId,
-    requestId,
-    studentName,
-    documentType,
-  });
+  const certificateUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/certificates/${certificateId}.pdf`;
+
+  const qrData = certificateUrl;
 
   const qrImage = await QRCode.toDataURL(qrData);
   const qrBase64 = qrImage.replace(/^data:image\/png;base64,/, "");
@@ -127,19 +124,19 @@ export const generateCertificate = async ({
     align: 'left',
   });
 
-  // Green approval tick
+  // Keep approval mark below authority text with proper spacing
   doc.fillColor('green');
   doc.font('Helvetica-Bold');
-  doc.fontSize(28);
-  doc.text('✓', 430, 705, {
+  doc.fontSize(18);
+  doc.text('✓', 430, 742, {
     width: 50,
     align: 'center',
   });
 
   doc.fontSize(8);
   doc.fillColor('gray');
-  doc.text('Verified & Approved Digitally', 360, 735, {
-    width: 180,
+  doc.text('Verified & Approved Digitally', 340, 760, {
+    width: 220,
     align: 'center',
   });
 
@@ -164,14 +161,14 @@ export const generateCertificate = async ({
     align: 'center',
   });
 
-  doc.moveDown(2);
+  // Do not move down here; it can force the footer onto a second page.
 
   doc.fontSize(8);
   doc.fillColor('gray');
   doc.text(
     'This is a computer generated certificate. QR code can be used for verification.',
     80,
-    785,
+    770,
     {
       width: 420,
       align: 'center',
@@ -201,6 +198,9 @@ export const generateCertificate = async ({
     public_id: certificateId,
     overwrite: true,
   });
+
+  console.log('QR URL:', certificateUrl);
+  console.log('FINAL PDF URL:', uploadResult.secure_url);
 
   console.log("PDF UPLOADED:", uploadResult.secure_url);
 
