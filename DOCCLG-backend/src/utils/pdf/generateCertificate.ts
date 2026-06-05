@@ -49,10 +49,9 @@ export const generateCertificate = async ({
     align: 'center',
   });
 
-  doc.moveDown(0.5);
-  doc.text('────────────────────────────', {
-    align: 'center',
-  });
+  doc.moveTo(180, 125)
+     .lineTo(415, 125)
+     .stroke('#1f2f6b');
 
   doc.moveDown(0.5);
 
@@ -61,9 +60,9 @@ export const generateCertificate = async ({
   });
 
   doc.moveDown(0.3);
-  doc.text('────────────────────────────', {
-    align: 'center',
-  });
+  doc.moveTo(160, 190)
+     .lineTo(435, 190)
+     .stroke('#1f2f6b');
   doc.fillColor('black');
 
   doc.moveDown(2);
@@ -113,49 +112,46 @@ export const generateCertificate = async ({
   const qrBuffer = Buffer.from(qrBase64, "base64");
 
   // QR bottom-left like reference design
-  doc.image(qrBuffer, 40, 655, {
-    width: 50,
+  doc.image(qrBuffer, 50, 700, {
+    width: 45,
   });
 
   doc.fontSize(8);
-  doc.text('Verification ID:', 40, 712, {
+  doc.text('Verification ID:', 50, 750, {
     width: 110,
     align: 'left',
   });
 
-  doc.text(certificateId, 40, 724, {
+  doc.text(certificateId, 50, 762, {
     width: 120,
     align: 'left',
   });
 
   // Digital approval section
-  doc.fontSize(12);
-  doc.text("────────────────────", 180, 540, {
-    align: "center",
+  doc.fontSize(9);
+  doc.fillColor('gray');
+  doc.text('Verified & Approved Digitally', 380, 760, {
+    width: 150,
+    align: 'right',
   });
-
-  doc.text("Verified & Approved Digitally", 0, 560, {
-    align: "center",
-  });
-
-  doc.text("────────────────────", 180, 580, {
-    align: "center",
-  });
+  doc.fillColor('black');
 
   // Principal signature centered below line
-  doc.moveTo(210, 690)
-     .lineTo(390, 690)
+  doc.moveTo(360, 690)
+     .lineTo(520, 690)
      .stroke();
 
   doc.font('Helvetica-Bold');
-  doc.fontSize(16);
-  doc.text('Principal', 0, 700, {
+  doc.fontSize(14);
+  doc.text('Principal', 360, 698, {
+    width: 160,
     align: 'center',
   });
 
   doc.font('Helvetica');
-  doc.fontSize(12);
-  doc.text('CollegeDocs Authority', 0, 725, {
+  doc.fontSize(11);
+  doc.text('CollegeDocs Authority', 360, 718, {
+    width: 160,
     align: 'center',
   });
 
