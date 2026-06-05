@@ -26,6 +26,10 @@ export const generateCertificate = async ({
   const fileName = `${certificateId}.pdf`;
   const filePath = path.join(uploadsDir, fileName);
 
+  const formattedDocumentType =
+    documentType.charAt(0).toUpperCase() +
+    documentType.slice(1).toLowerCase();
+
   console.log("GENERATING PDF:", filePath);
 
   const doc = new PDFDocument({
@@ -37,9 +41,9 @@ export const generateCertificate = async ({
   doc.pipe(stream);
 
   doc.lineWidth(2);
-  doc.rect(20, 20, 555, 800).stroke('#1f2f6b');
+  doc.rect(20, 20, 555, 800).stroke('black');
   doc.lineWidth(1);
-  doc.rect(28, 28, 539, 784).stroke('#1f2f6b');
+  doc.rect(28, 28, 539, 784).stroke('black');
 
   doc.fontSize(34).fillColor('#1f2f6b').text('COLLEGEDOCS', {
     align: 'center',
@@ -49,20 +53,16 @@ export const generateCertificate = async ({
     align: 'center',
   });
 
-  doc.moveTo(180, 125)
-     .lineTo(415, 125)
-     .stroke('#1f2f6b');
+  // Removed colored horizontal line at y=125
 
   doc.moveDown(0.5);
 
-  doc.fontSize(28).fillColor('#1f2f6b').text(`${documentType.toUpperCase()} CERTIFICATE`, {
+  doc.fontSize(28).fillColor('#1f2f6b').text(`${formattedDocumentType} Certificate`, {
     align: 'center',
   });
 
   doc.moveDown(0.3);
-  doc.moveTo(160, 190)
-     .lineTo(435, 190)
-     .stroke('#1f2f6b');
+  // Removed colored horizontal line at y=190
   doc.fillColor('black');
 
   doc.moveDown(2);
@@ -71,7 +71,7 @@ export const generateCertificate = async ({
   doc.text(`Request ID: ${requestId}`);
   doc.text(`Issue Date: ${new Date().toLocaleDateString()}`);
   doc.text(`Student Name: ${studentName}`);
-  doc.text(`Document Type: ${documentType}`);
+  doc.text(`Document Type: ${formattedDocumentType}`);
 
   doc.moveDown(2);
 
@@ -83,7 +83,7 @@ export const generateCertificate = async ({
   doc.moveDown();
 
   doc.fontSize(14).text(
-    `This is to certify that ${studentName} has successfully completed all required approval stages for the issuance of a ${documentType} Certificate. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.` ,
+    `This is to certify that ${studentName} has successfully completed all required approval stages for the issuance of a ${formattedDocumentType} Certificate. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.` ,
     {
       align: "justify",
     }
