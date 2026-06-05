@@ -78,7 +78,17 @@ const emptyFormData = {
   customDocumentName: "",
   purpose: "",
   additionalDetails: "",
+  course: "",
+  yearOfStudy: "",
+  academicSession: "",
+  semester: "",
 };
+
+const academicSessions = Array.from({ length: 5 }, (_, index) => {
+  const startYear = new Date().getFullYear() + index;
+  return `${startYear}-${startYear + 1}`;
+});
+
 
 export default function StudentDashboard({
   user,
@@ -217,6 +227,17 @@ export default function StudentDashboard({
   const handleCreateRequest = async () => {
     try {
       setCreating(true);
+      // Refactored validation: always require course, yearOfStudy, academicSession, semester
+      if (
+        !formData.course ||
+        !formData.yearOfStudy ||
+        !formData.academicSession ||
+        !formData.semester
+      ) {
+        toast.error("Please fill in Course, Year of Study, Academic Session, and Semester.");
+        setCreating(false);
+        return;
+      }
       const res = await fetch("https://docclg-backend.onrender.com/api/requests", {
         method: "POST",
         headers: {
@@ -926,6 +947,119 @@ export default function StudentDashboard({
                   />
                 </div>
               ) : null}
+
+              {/* Move Course/Year/Session block here */}
+              {formData.documentType && (
+                <div>
+                  <div className="space-y-2">
+                    <Label>Course</Label>
+                    <Select
+                      value={formData.course || ""}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          course: value,
+                          semester: "",
+                        }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Course" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="B.Tech">B.Tech</SelectItem>
+                        <SelectItem value="B.E">B.E</SelectItem>
+                        <SelectItem value="BCA">BCA</SelectItem>
+                        <SelectItem value="BBA">BBA</SelectItem>
+                        <SelectItem value="B.Com">B.Com</SelectItem>
+                        <SelectItem value="M.Tech">M.Tech</SelectItem>
+                        <SelectItem value="MBA">MBA</SelectItem>
+                        <SelectItem value="MCA">MCA</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Current Year</Label>
+                    <Select
+                      value={formData.yearOfStudy || ""}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          yearOfStudy: value,
+                        }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Current Year" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="First Year">First Year</SelectItem>
+                        <SelectItem value="Second Year">Second Year</SelectItem>
+                        <SelectItem value="Third Year">Third Year</SelectItem>
+                        <SelectItem value="Final Year">Final Year</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+  <Label>Academic Session</Label>
+  <Select
+    value={formData.academicSession || ""}
+    onValueChange={(value) =>
+      setFormData((prev) => ({
+        ...prev,
+        academicSession: value,
+      }))
+    }
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Select Academic Session" />
+    </SelectTrigger>
+
+    <SelectContent>
+      {academicSessions.map((session) => (
+        <SelectItem key={session} value={session}>
+          {session}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+</div>
+                  {/* Semester Selector */}
+                  <div className="space-y-2">
+                    <Label>Current Semester</Label>
+                    <Select
+                      value={formData.semester || ""}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          semester: value,
+                        }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Current Semester" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {[
+                          "B.Tech",
+                          "B.E",
+                          "M.Tech",
+                        ].includes(formData.course)
+                          ? Array.from({ length: 8 }, (_, i) => i + 1).map((sem) => (
+                              <SelectItem key={sem} value={`Semester ${sem}`}>
+                                Semester {sem}
+                              </SelectItem>
+                            ))
+                          : Array.from({ length: 6 }, (_, i) => i + 1).map((sem) => (
+                              <SelectItem key={sem} value={`Semester ${sem}`}>
+                                Semester {sem}
+                              </SelectItem>
+                            ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="purpose">Purpose</Label>
