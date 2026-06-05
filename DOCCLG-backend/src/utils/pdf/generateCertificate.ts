@@ -129,16 +129,17 @@ export const generateCertificate = async ({
 
   // Green approval tick
   doc.fillColor('green');
-  doc.fontSize(18);
-  doc.text('✓', 435, 735, {
-    width: 40,
+  doc.font('Helvetica-Bold');
+  doc.fontSize(28);
+  doc.text('✓', 430, 705, {
+    width: 50,
     align: 'center',
   });
 
-  doc.fontSize(9);
+  doc.fontSize(8);
   doc.fillColor('gray');
-  doc.text('Verified & Approved Digitally', 380, 755, {
-    width: 150,
+  doc.text('Verified & Approved Digitally', 360, 735, {
+    width: 180,
     align: 'center',
   });
 
@@ -158,22 +159,25 @@ export const generateCertificate = async ({
 
   doc.font('Helvetica');
   doc.fontSize(11);
-  doc.text('CollegeDocs Authority', 360, 718, {
+  doc.text('CollegeDocs Authority', 360, 722, {
     width: 160,
     align: 'center',
   });
 
   doc.moveDown(2);
 
-  doc.fontSize(10).text(
+  doc.fontSize(8);
+  doc.fillColor('gray');
+  doc.text(
     'This is a computer generated certificate. QR code can be used for verification.',
-    60,
-    740,
+    80,
+    785,
     {
-      width: 470,
+      width: 420,
       align: 'center',
     }
   );
+  doc.fillColor('black');
 
   console.log("WRITING PDF CONTENT...");
 
