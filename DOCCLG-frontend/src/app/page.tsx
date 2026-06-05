@@ -77,6 +77,11 @@ const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
+  const [stats, setStats] = useState({
+    students: 0,
+    faculty: 0,
+    documents: 0,
+  });
  
 
 useEffect(() => {
@@ -105,6 +110,30 @@ useEffect(() => {
     window.removeEventListener("online", updateStatus);
     window.removeEventListener("offline", updateStatus);
   };
+}, []);
+
+useEffect(() => {
+  const loadStats = async () => {
+    try {
+      const res = await fetch(
+        'https://docclg-backend.onrender.com/api/stats'
+      );
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+
+      setStats({
+        students: data.students || 0,
+        faculty: data.faculty || 0,
+        documents: data.documents || 0,
+      });
+    } catch (error) {
+      console.error('Failed to load stats', error);
+    }
+  };
+
+  loadStats();
 }, []);
 
 useEffect(() => {
@@ -1173,15 +1202,21 @@ onChange={(e) => {
             {/* Quick Stats */}
             <div className="mt-6 grid grid-cols-3 gap-4">
               <Card className="text-center p-4">
-                <div className="text-2xl font-bold text-blue-600">1,247</div>
+                <div className="text-2xl font-bold text-blue-600">
+                  {stats.students.toLocaleString()}
+                </div>
                 <div className="text-xs text-gray-600">Active Students</div>
               </Card>
               <Card className="text-center p-4">
-                <div className="text-2xl font-bold text-green-600">89</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {stats.faculty.toLocaleString()}
+                </div>
                 <div className="text-xs text-gray-600">Faculty Members</div>
               </Card>
               <Card className="text-center p-4">
-                <div className="text-2xl font-bold text-purple-600">3,456</div>
+                <div className="text-2xl font-bold text-purple-600">
+                  {stats.documents.toLocaleString()}
+                </div>
                 <div className="text-xs text-gray-600">Documents Issued</div>
               </Card>
             </div>
