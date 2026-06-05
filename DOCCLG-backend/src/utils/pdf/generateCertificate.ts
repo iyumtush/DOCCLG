@@ -36,21 +36,35 @@ export const generateCertificate = async ({
   const stream = fs.createWriteStream(filePath);
   doc.pipe(stream);
 
-  doc.rect(30, 30, 535, 750).stroke();
+  doc.lineWidth(2);
+  doc.rect(20, 20, 555, 800).stroke('#1f2f6b');
+  doc.lineWidth(1);
+  doc.rect(28, 28, 539, 784).stroke('#1f2f6b');
 
-  doc.fontSize(24).text("COLLEGEDOCS", {
-    align: "center",
+  doc.fontSize(34).fillColor('#1f2f6b').text('COLLEGEDOCS', {
+    align: 'center',
   });
 
-  doc.fontSize(12).text("College Document Management System", {
-    align: "center",
+  doc.fontSize(16).fillColor('black').text('College Document Management System', {
+    align: 'center',
   });
 
-  doc.moveDown();
-
-  doc.fontSize(18).text(`${documentType.toUpperCase()} CERTIFICATE`, {
-    align: "center",
+  doc.moveDown(0.5);
+  doc.text('────────────────────────────', {
+    align: 'center',
   });
+
+  doc.moveDown(0.5);
+
+  doc.fontSize(28).fillColor('#1f2f6b').text(`${documentType.toUpperCase()} CERTIFICATE`, {
+    align: 'center',
+  });
+
+  doc.moveDown(0.3);
+  doc.text('────────────────────────────', {
+    align: 'center',
+  });
+  doc.fillColor('black');
 
   doc.moveDown(2);
 
@@ -98,20 +112,20 @@ export const generateCertificate = async ({
   const qrBase64 = qrImage.replace(/^data:image\/png;base64,/, "");
   const qrBuffer = Buffer.from(qrBase64, "base64");
 
-  // Small QR in bottom-left corner
-  doc.image(qrBuffer, 60, 610, {
-    width: 70,
+  // QR bottom-left like reference design
+  doc.image(qrBuffer, 40, 655, {
+    width: 50,
   });
 
-  doc.fontSize(9);
-  doc.text("Verification ID:", 60, 690, {
+  doc.fontSize(8);
+  doc.text('Verification ID:', 40, 712, {
+    width: 110,
+    align: 'left',
+  });
+
+  doc.text(certificateId, 40, 724, {
     width: 120,
-    align: "left",
-  });
-
-  doc.text(certificateId, 60, 705, {
-    width: 140,
-    align: "left",
+    align: 'left',
   });
 
   // Digital approval section
@@ -128,30 +142,31 @@ export const generateCertificate = async ({
     align: "center",
   });
 
-  // Principal signature block centered
-  doc.fontSize(12);
-  doc.text("_________________________", 0, 665, {
-    align: "center",
-  });
+  // Principal signature centered below line
+  doc.moveTo(210, 690)
+     .lineTo(390, 690)
+     .stroke();
 
   doc.font('Helvetica-Bold');
-  doc.text("Principal", 0, 690, {
-    align: "center",
+  doc.fontSize(16);
+  doc.text('Principal', 0, 700, {
+    align: 'center',
   });
 
   doc.font('Helvetica');
-  doc.text("CollegeDocs Authority", 0, 710, {
-    align: "center",
+  doc.fontSize(12);
+  doc.text('CollegeDocs Authority', 0, 725, {
+    align: 'center',
   });
 
   doc.moveDown(2);
 
-  doc.fontSize(10).text(
-    "This is a computer generated certificate. QR code can be used for verification.",
+  doc.fontSize(11).text(
+    'This is a computer generated certificate. QR code can be used for verification.',
     0,
-    755,
+    780,
     {
-      align: "center",
+      align: 'center',
     }
   );
 
