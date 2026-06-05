@@ -129,11 +129,18 @@ export const generateCertificate = async ({
 
  doc.fontSize(8);
 
+// Keep both words together and centered
+const verifyY = 755;
+
 doc.fillColor('green');
-doc.text('Verified', 385, 775);
+doc.text('Verified', 390, verifyY, {
+  continued: true,
+});
 
 doc.fillColor('#1f2f6b');
-doc.text('& Approved Digitally', 430, 775);
+doc.text(' & Approved Digitally', {
+  continued: false,
+});
 
 doc.fillColor('black');
 
@@ -158,15 +165,17 @@ doc.fillColor('black');
 
   // Do not move down here; it can force the footer onto a second page.
 
-  doc.fontSize(8);
+  // Fixed footer inside page border
+  doc.fontSize(7);
   doc.fillColor('gray');
   doc.text(
     'This is a computer generated certificate. QR code can be used for verification.',
-    80,
-    800,
+    60,
+    770,
     {
-      width: 420,
+      width: 480,
       align: 'center',
+      lineBreak: false,
     }
   );
   doc.fillColor('black');
