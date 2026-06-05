@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import requestsRoutes from "./routes/requests";
 
+import prisma from "./config/prisma";
+
 dotenv.config();
 
 const app = express(); 
@@ -24,6 +26,43 @@ app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("DOCCLG Backend Running ✅");
+});
+
+app.get("/api/stats", async (req, res) => {
+  try {
+    const students = await prisma.user.count({
+      where: {
+        role: "STUDENT",
+      },
+    });
+
+    const faculty = await prisma.user.count({
+      where: {
+        role: {
+          in: ["FACULTY", "CLASS_INCHARGE", "HOD"],
+        },
+      },
+    });
+
+    const documents = await prisma.request.count({
+      where: {
+        status: "HOD_APPROVED",
+      },
+    });
+
+    res.json({
+      students,
+      faculty,
+      documents,
+    });
+  } catch (error) {
+    console.error("STATS ERROR:", error);
+    res.status(500).json({
+      students: 0,
+      faculty: 0,
+      documents: 0,
+    });
+  }
 });
 
 app.use("/api/auth", authRoutes);
