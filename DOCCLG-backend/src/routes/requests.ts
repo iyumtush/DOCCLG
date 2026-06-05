@@ -118,10 +118,30 @@ router.get("/", authenticate, async (req: any, res) => {
  */
 router.post("/", authenticate, async (req: any, res) => {
   try {
-    const { documentType, purpose } = req.body;
+    const {
+      documentType,
+      purpose,
+      course,
+      yearOfStudy,
+      academicSession,
+      semester,
+    } = req.body;
+    const formattedDocumentType = documentType
+      .toLowerCase()
+      .replace(/\b\w/g, (c: string) => c.toUpperCase());
 
-    if (!documentType || !purpose) {
-      return res.status(400).json({ message: "Missing fields" });
+    if (
+      !documentType ||
+      !purpose ||
+      !course ||
+      !yearOfStudy ||
+      !academicSession ||
+      !semester
+    ) {
+      return res.status(400).json({
+        message:
+          "Document type, purpose, course, year of study, academic session and semester are required",
+      });
     }
 
     const user = await prisma.user.findUnique({
@@ -134,13 +154,17 @@ router.post("/", authenticate, async (req: any, res) => {
 
     const request = await prisma.request.create({
       data: {
-        type: documentType,
+        type: formattedDocumentType,
         reason: purpose,
         branch: user.branch,
         student: {
           connect: { id: user.id },
         },
         status: STATUS.PENDING,
+        course,
+        yearOfStudy,
+        academicSession,
+        semester,
       },
     });
 
@@ -167,6 +191,10 @@ Request Details:
 
 • Document Type: ${documentType} Certificate
 • Purpose: ${purpose}
+• Course: ${course}
+• Current Year: ${yearOfStudy}
+• Academic Session: ${academicSession}
+• Current Semester: ${semester}
 
 Kindly log in to the CollegeDocs portal to review and take the necessary action.
 
@@ -191,6 +219,10 @@ Request Details:
 
 • Document Type: ${documentType} Certificate
 • Purpose: ${purpose}
+• Course: ${course}
+• Current Year: ${yearOfStudy}
+• Academic Session: ${academicSession}
+• Current Semester: ${semester}
 • Current Status: Pending
 
 Your request is currently under review by the Class Incharge.
@@ -289,6 +321,11 @@ A request has been reviewed and approved by the Class Incharge and is now pendin
 Request Details:
 
 • Document Type: ${request.type} Certificate
+• Purpose: ${request.reason}
+• Course: ${request.course}
+• Current Year: ${request.yearOfStudy}
+• Academic Session: ${request.academicSession}
+• Current Semester: ${request.semester}
 • Current Status: Waiting for HOD Approval
 
 Please log in to the CollegeDocs portal to review and proceed with the approval process.
@@ -333,11 +370,17 @@ CollegeDocs Team`,
       try {
         if (student) {
           certificateUrl = await generateCertificate({
-            studentName: student.name || "Student",
-            documentType: request.type,
-            certificateId,
-            requestId: request.id,
-          });
+          certificateUrl = await generateCertificate({
+  studentName: student.name || "Student",
+  documentType: request.type,
+  certificateId,
+  requestId: request.id,
+
+  course: request.course || "",
+  yearOfStudy: request.yearOfStudy || "",
+  academicSession: request.academicSession || "",
+  semester: request.semester || "",
+});
 
           await prisma.request.update({
             where: { id: request.id },
