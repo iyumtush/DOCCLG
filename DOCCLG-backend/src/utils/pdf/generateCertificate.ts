@@ -125,22 +125,17 @@ export const generateCertificate = async ({
   });
 
   // Keep approval mark below authority text with proper spacing
-  doc.fillColor('green');
-  doc.font('Helvetica-Bold');
-  doc.fontSize(18);
-  doc.text('✓', 430, 742, {
-    width: 50,
-    align: 'center',
-  });
 
-  doc.fontSize(8);
-  doc.fillColor('gray');
-  doc.text('Verified & Approved Digitally', 340, 760, {
-    width: 220,
-    align: 'center',
-  });
 
-  doc.fillColor('black');
+ doc.fontSize(8);
+
+doc.fillColor('green');
+doc.text('Verified', 385, 775);
+
+doc.fillColor('#1f2f6b');
+doc.text('& Approved Digitally', 430, 775);
+
+doc.fillColor('black');
 
   // Principal signature centered below line
   doc.moveTo(360, 690)
@@ -168,7 +163,7 @@ export const generateCertificate = async ({
   doc.text(
     'This is a computer generated certificate. QR code can be used for verification.',
     80,
-    770,
+    800,
     {
       width: 420,
       align: 'center',
