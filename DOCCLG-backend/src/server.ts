@@ -6,9 +6,12 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import requestsRoutes from "./routes/requests";
 
-import prisma from "./config/prisma";
 
+
+import { PrismaClient } from "@prisma/client";
 dotenv.config();
+
+const prisma = new PrismaClient();
 
 const app = express(); 
 app.post("/test-otp", (req, res) => {
