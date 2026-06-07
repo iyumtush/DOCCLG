@@ -15,6 +15,8 @@ const isOtpEmail =
 const otp = isOtpEmail
   ? text.match(/\d{6}/)?.[0] || ""
   : "";
+const certificateUrlMatch = text.match(/https?:\/\/[^\s]+/);
+const certificateUrl = certificateUrlMatch?.[0] || "";
     const response = await fetch(
       "https://api.brevo.com/v3/smtp/email",
       {
@@ -79,6 +81,26 @@ const otp = isOtpEmail
       ">
         ${text}
       </div>
+
+      ${certificateUrl ? `
+      <div style="text-align:center;margin-top:20px;">
+        <a
+          href="${certificateUrl}"
+          target="_blank"
+          style="
+            display:inline-block;
+            background:#2563eb;
+            color:#ffffff;
+            text-decoration:none;
+            padding:12px 24px;
+            border-radius:8px;
+            font-weight:bold;
+          "
+        >
+          📥 Download Certificate
+        </a>
+      </div>
+      ` : ""}
       `
     }
 
