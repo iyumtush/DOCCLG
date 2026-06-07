@@ -448,7 +448,12 @@ Request Details:
 • Current Semester: ${request.semester || 'N/A'}
 • Academic Session: ${request.academicSession || 'N/A'}
 • Current Status: Approved
-${certificateId ? `• Certificate ID: ${certificateId}\n` : ""}${certificateUrl ? `• Certificate Link: ${certificateUrl}\n` : ""}
+${certificateId ? `• Certificate ID: ${certificateId}\n` : ""}
+
+${certificateUrl
+  ? `DOWNLOAD YOUR CERTIFICATE\n${certificateUrl}\n\nYou can open the above link directly to download your approved certificate.\n`
+  : ""}
+
 Please log in to the CollegeDocs portal for further actions and status tracking.
 
 Regards,
