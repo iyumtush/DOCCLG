@@ -95,7 +95,7 @@ export const generateCertificate = async ({
   doc.moveDown();
 
   doc.fontSize(14).text(
-    `This is to certify that ${studentName} is a bona fide student of ${course || 'the institution'}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Certificate Management System after verification and approval by the concerned authorities.`,
+    `This is to certify that ${studentName} is a bonafide student of ${course || 'the institution'}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Documents Management System after verification and approval by the concerned authorities.`,
     {
       align: "justify",
     }
