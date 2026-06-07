@@ -22,6 +22,14 @@ model User {
   // STUDENT | CLASS_INCHARGE | HOD
 
   branch       String?
+  section      String?
+
+  // Student Details
+  collegeId    String?
+  rollNumber   String?
+
+  // Faculty Details
+  employeeId   String?
 
   createdAt    DateTime @default(now())
 
@@ -56,6 +64,7 @@ model Request {
   // PENDING | CLASS_INCHARGE_APPROVED | HOD_APPROVED | REJECTED
 
   branch    String?
+  section   String?
 
   // Approval Comments
   classInchargeComment String?

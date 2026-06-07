@@ -19,7 +19,17 @@ router.post("/register", async (req, res) => {
    
    console.log("REGISTER BODY:", req.body);
    
-   const { name, email, password, role, branch } = req.body;
+   const {
+  name,
+  email,
+  password,
+  role,
+  branch,
+  section,
+  collegeId,
+  rollNumber,
+  employeeId,
+} = req.body;
    const cleanEmail = email?.trim();
 
     if (!email || !password) {
@@ -43,6 +53,10 @@ router.post("/register", async (req, res) => {
     passwordHash: hashedPassword,
     role: role || "STUDENT",
     branch,
+    section,
+    collegeId,
+    rollNumber,
+    employeeId,
   },
 });
 
@@ -62,6 +76,11 @@ try {
         name: user.name,
         email: user.email,
         role: user.role,
+        branch: user.branch,
+        section: user.section,
+        collegeId: user.collegeId,
+        rollNumber: user.rollNumber,
+        employeeId: user.employeeId,
       },
     });
   } catch (error) {
@@ -100,10 +119,15 @@ router.post("/login", async (req, res) => {
     return res.status(401).json({ message: "Invalid role selected" });
 }
     const token = jwt.sign(
-      { userId: user.id, role: user.role, branch: user.branch },
-      JWT_SECRET,
-      { expiresIn: "8h" }
-    );
+  {
+    userId: user.id,
+    role: user.role,
+    branch: user.branch,
+    section: user.section,
+  },
+  JWT_SECRET,
+  { expiresIn: "8h" }
+);
 
     return res.json({
       message: "Login successful",
@@ -114,6 +138,10 @@ router.post("/login", async (req, res) => {
         email: user.email,
         role: user.role,
         branch: user.branch,
+        section: user.section,
+        collegeId: user.collegeId,
+        rollNumber: user.rollNumber,
+        employeeId: user.employeeId,
       },
     });
 
@@ -220,10 +248,15 @@ const user = await prisma.user.findUnique({
     });
 
     const token = jwt.sign(
-      { userId: user.id, role: user.role, branch: user.branch },
-      JWT_SECRET,
-      { expiresIn: "8h" }
-    );
+  {
+    userId: user.id,
+    role: user.role,
+    branch: user.branch,
+    section: user.section,
+  },
+  JWT_SECRET,
+  { expiresIn: "8h" }
+);
 
     return res.json({
       message: "Login successful",
@@ -234,6 +267,10 @@ const user = await prisma.user.findUnique({
         email: user.email,
         role: user.role,
         branch: user.branch,
+        section: user.section,
+        collegeId: user.collegeId,
+        rollNumber: user.rollNumber,
+        employeeId: user.employeeId,
       },
     });
 
@@ -341,6 +378,10 @@ router.get("/me", async (req: any, res) => {
         email: user.email,
         role: user.role,
         branch: user.branch,
+        section: user.section,
+        collegeId: user.collegeId,
+        rollNumber: user.rollNumber,
+        employeeId: user.employeeId,
       },
     });
 

@@ -64,7 +64,8 @@ router.get("/", authenticate, async (req: any, res) => {
     else if (user.role === ROLE.CLASS_INCHARGE) {
       requests = await prisma.request.findMany({
         where: {
-          branch: user.branch, // return all for correct counts
+          branch: user.branch,
+          section: user.section,
         },
         include: { student: true },
         orderBy: { createdAt: "desc" },
@@ -89,6 +90,7 @@ router.get("/", authenticate, async (req: any, res) => {
         academicSession: r.academicSession || null,
         semester: r.semester || null,
         attendancePercentage: r.attendancePercentage || null,
+        section: r.section || null,
       id: r.id,
       documentType: r.type,
       customDocumentName: null,
@@ -153,8 +155,10 @@ router.post("/", authenticate, async (req: any, res) => {
       where: { id: req.user.userId },
     });
 
-    if (!user || !user.branch) {
-      return res.status(400).json({ message: "User branch not set" });
+    if (!user || !user.branch || !user.section) {
+      return res.status(400).json({
+        message: "User branch or section not set",
+      });
     }
 
     const request = await prisma.request.create({
@@ -162,6 +166,7 @@ router.post("/", authenticate, async (req: any, res) => {
         type: formattedDocumentType,
         reason: purpose,
         branch: user.branch,
+        section: user.section,
         student: {
           connect: { id: user.id },
         },
@@ -178,6 +183,7 @@ router.post("/", authenticate, async (req: any, res) => {
       where: {
         role: ROLE.CLASS_INCHARGE,
         branch: user.branch,
+        section: user.section,
       },
     });
 
