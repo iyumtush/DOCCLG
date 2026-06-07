@@ -8,8 +8,13 @@ export const sendEmail = async (
     console.log("📧 USING BREVO API");
     console.log("📨 RECIPIENT:", to);
 
-    const otp = text.match(/\d{6}/)?.[0] || "";
+const isOtpEmail =
+  subject.toLowerCase().includes("otp") ||
+  subject.toLowerCase().includes("verification");
 
+const otp = isOtpEmail
+  ? text.match(/\d{6}/)?.[0] || ""
+  : "";
     const response = await fetch(
       "https://api.brevo.com/v3/smtp/email",
       {
