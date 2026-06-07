@@ -60,6 +60,7 @@ const [registerRole, setRegisterRole] = useState("STUDENT");
 const [showLoginPassword, setShowLoginPassword] = useState(false);
 const [showFacultyPassword, setShowFacultyPassword] = useState(false);
 const [branch, setBranch] = useState("");
+const [section, setSection] = useState("");
 const [roleError, setRoleError] = useState("");
 const [passwordShake, setPasswordShake] = useState(false);
 const [roleShake, setRoleShake] = useState(false);
@@ -430,7 +431,10 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
   const email = formData.get("email");
   const password = formData.get("password");
   const branch = formData.get("branch"); // ✅ ADDED
-
+  const section = formData.get("section");
+   const collegeId = formData.get("collegeId");
+   const rollNumber = formData.get("rollNumber");
+   const employeeId = formData.get("employeeId");
   if (!branch) {
     alert("Please select branch");
     setLoading(false);
@@ -446,12 +450,16 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
-          email,
-          password,
-          role: registerRole,
-          branch, // ✅ ADDED
-        }),
+  name,
+  email,
+  password,
+  role: registerRole,
+  branch,
+  section,
+  collegeId,
+  rollNumber,
+  employeeId,
+}),
       }
     );
 
@@ -1141,11 +1149,15 @@ onChange={(e) => {
     <select
       className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
       value={registerRole}
-      onChange={(e) => setRegisterRole(e.target.value)}
+      onChange={(e) => {
+  setRegisterRole(e.target.value);
+  setSection("");
+}}
     >
       <option value="">Select role</option>
       <option value="STUDENT">Student</option>
-      <option value="CLASS_INCHARGE">Faculty</option>
+      <option value="CLASS_INCHARGE">Class Incharge</option>
+
       <option value="HOD">HOD</option>
     </select>
   </div>
@@ -1154,11 +1166,12 @@ onChange={(e) => {
   <div className="flex-1">
     <Label className="font-normal text-sm">Branch</Label>
     <select
-      name="branch"
-      className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-      value={branch}
-      onChange={(e) => setBranch(e.target.value)}
-    >
+  name="branch"
+  required
+  className="..."
+  value={branch}
+  onChange={(e) => setBranch(e.target.value)}
+>
       <option value="">Select Branch</option>
       <option value="CSE">CSE</option>
       <option value="AIDS">AIDS</option>
@@ -1172,6 +1185,85 @@ onChange={(e) => {
 </div>
 
     {/* BUTTON */}
+    {registerRole === "STUDENT" && (
+  <>
+    <div>
+      <Label>College ID</Label>
+      <Input
+        name="collegeId"
+        placeholder="Enter College ID"
+        required
+      />
+    </div>
+
+    <div>
+      <Label>Roll Number</Label>
+      <Input
+        name="rollNumber"
+        placeholder="Enter Roll Number"
+        required
+      />
+    </div>
+
+    <div>
+      <Label>Section</Label>
+      <select
+        name="section"
+        className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+        value={section}
+        onChange={(e) => setSection(e.target.value)}
+        required
+      >
+        <option value="">Select Section</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+      </select>
+    </div>
+  </>
+)}
+
+{registerRole === "CLASS_INCHARGE" && (
+  <>
+    <div>
+      <Label>Employee ID</Label>
+      <Input
+        name="employeeId"
+        placeholder="Enter Employee ID"
+        required
+      />
+    </div>
+
+    <div>
+      <Label>Section</Label>
+      <select
+        name="section"
+        className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+        value={section}
+        onChange={(e) => setSection(e.target.value)}
+        required
+      >
+        <option value="">Select Section</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+      </select>
+    </div>
+  </>
+)}
+
+{registerRole === "HOD" && (
+  <div>
+    <Label>Employee ID</Label>
+    <Input
+      name="employeeId"
+      placeholder="Enter Employee ID"
+      required
+    />
+  </div>
+)}
     <Button type="submit" className="w-full" disabled={loading}>
   {loading ? "Registering..." : "Register"}
 </Button>

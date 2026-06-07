@@ -65,6 +65,12 @@ interface StudentUser {
   email: string;
   role: string;
   registrationNumber?: string;
+
+  branch?: string;
+  section?: string;
+
+  collegeId?: string;
+  rollNumber?: string;
 }
 
 interface StudentDashboardProps {
@@ -110,7 +116,9 @@ export default function StudentDashboard({
   const [loading, setLoading] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
   const [requests, setRequests] = useState<DocumentRequest[]>([]);
-  const [currentUser, setCurrentUser] = useState<StudentUser>(user);
+  const [currentUser, setCurrentUser] = useState<StudentUser>(
+  finalUser || user
+);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editData, setEditData] = useState({
     name: user.name,
@@ -124,12 +132,15 @@ export default function StudentDashboard({
   const [previousStatuses, setPreviousStatuses] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    setCurrentUser(user);
-    setEditData({
-      name: user.name,
-      email: user.email,
-    });
-  }, [user]);
+  const activeUser = finalUser || user;
+
+  setCurrentUser(activeUser);
+
+  setEditData({
+    name: activeUser.name,
+    email: activeUser.email,
+  });
+}, [user]);
 
   const fetchRequests = async () => {
     if (!finalToken) return;
@@ -437,9 +448,21 @@ export default function StudentDashboard({
                   <h2 className="text-2xl font-semibold">{currentUser.name}</h2>
                   <p className="text-sm uppercase text-gray-500">{currentUser.role}</p>
                   <p className="text-sm text-gray-700">{currentUser.email}</p>
-                  <p className="text-sm text-gray-600">
-                    Reg No: {currentUser.registrationNumber || "-"}
-                  </p>
+                 <p className="text-sm text-gray-600">
+  College ID: {currentUser.collegeId || "-"}
+</p>
+
+<p className="text-sm text-gray-600">
+  Roll Number: {currentUser.rollNumber || "-"}
+</p>
+
+<p className="text-sm text-gray-600">
+  Branch: {currentUser.branch || "-"}
+</p>
+
+<p className="text-sm text-gray-600">
+  Section: {currentUser.section || "-"}
+</p>
 
                   <div className="my-4 border-t" />
 

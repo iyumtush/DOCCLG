@@ -34,12 +34,15 @@ type Request = {
   yearOfStudy?: string;
   academicSession?: string;
   semester?: string;
-  attendancePercentage?: number;
-  student: {
-    name: string;
-    email: string;
-    branch: string;
+  section?: string;
   
+attendancePercentage?: number | undefined;
+  student: {
+  name: string;
+  email: string;
+  branch: string;
+  section?: string;
+
     
   };
 };
@@ -289,6 +292,10 @@ body: JSON.stringify({
         </span>
 
         <p className="text-sm text-gray-500 mt-2">{user?.email}</p>
+        <p className="text-sm text-gray-500">
+  {user?.branch}
+  {user?.section ? ` • Section ${user.section}` : ""}
+</p>
       </div>
 
       {/* STATS */}
@@ -361,6 +368,7 @@ body: JSON.stringify({
 
                 <p className="text-sm text-gray-500">
                   👤 {req.student?.name} • {req.student?.branch}
+                  {req.section ? ` • Section ${req.section}` : ""}
                 </p>
 
                 <p className="text-xs text-gray-400">
@@ -423,8 +431,8 @@ body: JSON.stringify({
             [req.id]: e.target.value,
           }))
         }
-        placeholder="Enter attendance percentage"
-        className="w-full border rounded-lg px-3 py-2"
+        placeholder="e.g. 85"
+        className="w-32 border rounded-lg px-3 py-2"
       />
     </div>
 )}
