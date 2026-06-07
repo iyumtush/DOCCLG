@@ -30,10 +30,17 @@ type Request = {
   rejectionReason?: string;
   certificateId?: string;
   certificateUrl?: string;
+  course?: string;
+  yearOfStudy?: string;
+  academicSession?: string;
+  semester?: string;
+  attendancePercentage?: number;
   student: {
     name: string;
     email: string;
     branch: string;
+  
+    
   };
 };
 
@@ -43,11 +50,11 @@ export default function FacultyDashboard() {
   const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
   const [requests, setRequests] = useState<Request[]>([]);
+  const [attendanceInputs, setAttendanceInputs] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   const [activeTab, setActiveTab] = useState<"requests" | "history">("requests");
   const [historyTab, setHistoryTab] = useState<"approved" | "rejected">("approved");
-
   // ================= AUTH =================
 
 
@@ -188,8 +195,13 @@ useEffect(() => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ status: mappedStatus }),
-      });
+body: JSON.stringify({
+  status: mappedStatus,
+  attendancePercentage:
+    attendanceInputs[id] && attendanceInputs[id] !== ""
+      ? Number(attendanceInputs[id])
+      : undefined,
+}),      });
 
       if (res.ok) {
         if (status === "APPROVED") {
@@ -375,19 +387,64 @@ useEffect(() => {
             <p className="mt-3 text-sm">
               <span className="font-medium">Purpose:</span> {req.purpose}
             </p>
+            <div className="mt-3 text-sm space-y-1">
+  <p><span className="font-medium">Course:</span> {req.course || "-"}</p>
+  <p><span className="font-medium">Current Year:</span> {req.yearOfStudy || "-"}</p>
+  <p><span className="font-medium">Current Semester:</span> {req.semester || "-"}</p>
+  <p><span className="font-medium">Academic Session:</span> {req.academicSession || "-"}</p>
+</div>
 
             {/* ✅ MULTI-LEVEL APPROVAL FIX */}
             {(
-              (user.role === "CLASS_INCHARGE" && req.status === "PENDING") ||
-              (user.role === "HOD" && req.status === "CLASS_INCHARGE_APPROVED")
-            ) && (
+  (user.role === "CLASS_INCHARGE" && req.status === "PENDING") ||
+  (user.role === "HOD" && req.status === "CLASS_INCHARGE_APPROVED")
+    ) && (
+      
+      <>
+              
+              {user.role === "CLASS_INCHARGE" &&
+  (req.documentType || "").toUpperCase().includes("ATTENDANCE") &&
+  req.status === "PENDING" && (
+    
+    <div className="mt-4">
+      <label className="block text-sm font-medium mb-2">
+        Attendance Percentage (%)
+      </label>
+
+      <input
+        type="number"
+        min="0"
+        max="100"
+        step="0.01"
+        value={attendanceInputs[req.id] || ""}
+        onChange={(e) =>
+          setAttendanceInputs((prev) => ({
+            ...prev,
+            [req.id]: e.target.value,
+          }))
+        }
+        placeholder="Enter attendance percentage"
+        className="w-full border rounded-lg px-3 py-2"
+      />
+    </div>
+)}
               <div className="flex gap-2 mt-4">
 
                 <Button
                   size="sm"
                   className="bg-green-600 hover:bg-green-700"
-                  onClick={() => updateStatus(req.id, "APPROVED")}
-                >
+onClick={() => {
+  if (
+    user.role === "CLASS_INCHARGE" &&
+    (req.documentType || "").toUpperCase().includes("ATTENDANCE") &&
+    !attendanceInputs[req.id]
+  ) {
+    toast.error("Please enter attendance percentage");
+    return;
+  }
+
+  updateStatus(req.id, "APPROVED");
+}}                >
                   Approve
                 </Button>
 
@@ -399,13 +456,16 @@ useEffect(() => {
                   Reject
                 </Button>
 
-              </div>
+                            </div>
+
+              </>
             )}
 
           </div>
         ))}
-    </div>
-  )}
+
+          </div>
+        )}
 
   {/* HISTORY SECTION */}
   {activeTab === "history" && (
