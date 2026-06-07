@@ -18,6 +18,7 @@ router.post("/", authMiddleware, async (req: any, res) => {
 });
 router.post("/:id/incharge-approve", authMiddleware, async (req: any, res) => {
   const { id } = req.params;
+const { attendancePercentage } = req.body;
   const user = req.user;
   const r = await prisma.request.update({
     where: { id },
@@ -27,6 +28,7 @@ router.post("/:id/incharge-approve", authMiddleware, async (req: any, res) => {
 });
 router.post("/:id/hod-approve", authMiddleware, async (req: any, res) => {
   const { id } = req.params;
+const { attendancePercentage } = req.body;
   const user = req.user;
   const certId = uuidv4();
   const r = await prisma.request.update({
@@ -39,6 +41,7 @@ router.post("/:id/hod-approve", authMiddleware, async (req: any, res) => {
 });
 router.post("/:id/reject", authMiddleware, async (req: any, res) => {
   const { id } = req.params;
+const { attendancePercentage } = req.body;
   const { reason } = req.body;
   const r = await prisma.request.update({
     where: { id },

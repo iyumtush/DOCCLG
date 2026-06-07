@@ -13,6 +13,7 @@ interface GenerateCertificateParams {
   yearOfStudy?: string;
   academicSession?: string;
   semester?: string;
+  attendancePercentage?: number;
 }
 
 export const generateCertificate = async ({
@@ -24,6 +25,7 @@ export const generateCertificate = async ({
   yearOfStudy,
   academicSession,
   semester,
+  attendancePercentage,
 }: GenerateCertificateParams): Promise<string> => {
   const uploadsDir = path.join(process.cwd(), "uploads", "certificates");
 
@@ -84,6 +86,8 @@ export const generateCertificate = async ({
   if (yearOfStudy) doc.text(`Current Year: ${yearOfStudy}`);
   if (semester) doc.text(`Current Semester: ${semester}`);
   if (academicSession) doc.text(`Academic Session: ${academicSession}`);
+  if (attendancePercentage !== undefined)
+    doc.text(`Attendance Percentage: ${attendancePercentage}%`);
 
   doc.moveDown(2);
 
@@ -94,12 +98,16 @@ export const generateCertificate = async ({
 
   doc.moveDown();
 
-  doc.fontSize(14).text(
-    `This is to certify that ${studentName} is a bonafide student of ${course || 'the institution'}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Documents Management System after verification and approval by the concerned authorities.`,
-    {
-      align: "justify",
-    }
-  );
+  const isAttendanceCertificate =
+    documentType.toUpperCase().includes("ATTENDANCE");
+
+  const certificateContent = isAttendanceCertificate
+    ? `This is to certify that ${studentName} is a bonafide student of ${course || 'the institution'} and is currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. The student's attendance for the said academic session is ${attendancePercentage ?? 'N/A'}%. This certificate is issued on the student's request for official purposes.`
+    : `This is to certify that ${studentName} is a bonafide student of ${course || 'the institution'}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Documents Management System after verification and approval by the concerned authorities.`;
+
+  doc.fontSize(14).text(certificateContent, {
+    align: "justify",
+  });
 
   doc.moveDown();
 

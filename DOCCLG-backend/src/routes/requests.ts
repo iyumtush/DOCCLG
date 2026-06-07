@@ -84,6 +84,11 @@ router.get("/", authenticate, async (req: any, res) => {
 
     // ✅ FORMAT RESPONSE (UNCHANGED)
     const formatted = (requests || []).map((r: any) => ({
+      course: r.course || null,
+        yearOfStudy: r.yearOfStudy || null,
+        academicSession: r.academicSession || null,
+        semester: r.semester || null,
+        attendancePercentage: r.attendancePercentage || null,
       id: r.id,
       documentType: r.type,
       customDocumentName: null,
@@ -246,6 +251,7 @@ CollegeDocs Team`,
 router.patch("/:id", authenticate, async (req: any, res) => {
   try {
     const { id } = req.params;
+const { attendancePercentage } = req.body;
 
     const user = await prisma.user.findUnique({
       where: { id: req.user.userId },
@@ -288,10 +294,30 @@ router.patch("/:id", authenticate, async (req: any, res) => {
       newStatus = "REJECTED";
     }
 
-    const updated = await prisma.request.update({
-      where: { id },
-      data: { status: newStatus },
+    const updateData: any = {
+  status: newStatus,
+};
+
+if (
+  user.role === ROLE.CLASS_INCHARGE &&
+  request.type.toUpperCase().includes("ATTENDANCE")
+) {
+  if (
+    attendancePercentage === undefined ||
+    attendancePercentage === ""
+  ) {
+    return res.status(400).json({
+      message: "Attendance percentage is required",
     });
+  }
+
+  updateData.attendancePercentage = Number(attendancePercentage);
+}
+
+const updated = await prisma.request.update({
+  where: { id },
+  data: updateData,
+});
 
     // 🔔 Fetch student
     const student = await prisma.user.findUnique({
@@ -326,6 +352,9 @@ Request Details:
 • Current Year: ${request.yearOfStudy}
 • Academic Session: ${request.academicSession}
 • Current Semester: ${request.semester}
+${updated.attendancePercentage
+  ? `• Attendance Percentage: ${updated.attendancePercentage}%`
+  : ""}
 • Current Status: Waiting for HOD Approval
 
 Please log in to the CollegeDocs portal to review and proceed with the approval process.
@@ -379,6 +408,7 @@ CollegeDocs Team`,
   yearOfStudy: request.yearOfStudy || "",
   academicSession: request.academicSession || "",
   semester: request.semester || "",
+  attendancePercentage: updated.attendancePercentage || undefined,
 });
 
           await prisma.request.update({

@@ -45,10 +45,11 @@ model Request {
   reason    String?
 
   // Academic Details
-  course           String?
-  yearOfStudy      String?
-  academicSession  String?
-  semester         String?
+  course               String?
+  yearOfStudy          String?
+  academicSession      String?
+  semester             String?
+  attendancePercentage Float?
 
   // ✅ CONTROLLED STRING (instead of enum)
   status    String   @default("PENDING")

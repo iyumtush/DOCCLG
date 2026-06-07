@@ -1,6 +1,9 @@
 import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
 import authRoutes from "./routes/auth";
 import requestsRoutes from "./routes/requests";
+import { sendEmail } from "./utils/sendEmail";
 
 dotenv.config();
 
@@ -14,8 +17,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/requests", requestsRoutes);
 
 const PORT = process.env.PORT || 4000;
- 
-import { sendEmail } from "./utils/sendEmail";
 
 sendEmail(
   "yourgmail@gmail.com",
