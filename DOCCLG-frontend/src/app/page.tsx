@@ -1118,60 +1118,62 @@ onChange={(e) => {
 </div>
 
     {/* PASSWORD WITH 🚪 */}
-    <div className="relative">
-<Label>Password</Label>
-  <Input
-    name="password"
-    type={showRegisterPassword ? "text" : "password"}
-    placeholder="Enter Password"
-    required
-    className="pr-10"
-  />
+    <div>
+  <Label>Password</Label>
 
+  <div className="relative mt-1">
+    <Input
+      name="password"
+      type={showRegisterPassword ? "text" : "password"}
+      placeholder="Enter Password"
+      required
+      className="pr-10"
+    />
 
-  <button
-    type="button"
-    onClick={() => setShowRegisterPassword((prev) => !prev)}  // ✅ FIXED
-    className="absolute right-3 top-1/2 -translate-y-1/2"
-  >
-    {showRegisterPassword ? (
-      <DoorOpen className="text-green-500 rotate-12" size={20} />
-    ) : (
-      <DoorClosed className="text-gray-500" size={20} />
-    )}
-  </button>
+    <button
+  type="button"
+  onClick={() => setShowRegisterPassword((prev) => !prev)}
+  className="absolute right-3 top-1/2 -translate-y-1/2"
+>
+  {showRegisterPassword ? (
+    <DoorOpen className="text-green-500 rotate-12" size={20} />
+  ) : (
+    <DoorClosed className="text-gray-500" size={20} />
+  )}
+</button>
+  </div>
 </div>
-   <div className="flex gap-4 max-w-md">
   
+  <div className="grid grid-cols-2 gap-4">
+
   {/* ROLE */}
-  <div className="flex-1">
+  <div>
     <Label className="font-normal text-sm">Role</Label>
     <select
       className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
       value={registerRole}
       onChange={(e) => {
-  setRegisterRole(e.target.value);
-  setSection("");
-}}
+        setRegisterRole(e.target.value);
+        setSection("");
+      }}
     >
       <option value="">Select role</option>
       <option value="STUDENT">Student</option>
       <option value="CLASS_INCHARGE">Class Incharge</option>
-
       <option value="HOD">HOD</option>
     </select>
   </div>
 
   {/* BRANCH */}
-  <div className="flex-1">
+  <div>
     <Label className="font-normal text-sm">Branch</Label>
     <select
-  name="branch"
-  required
-  className="..."
-  value={branch}
-  onChange={(e) => setBranch(e.target.value)}
->
+      name="branch"
+      required
+      className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+      value={branch}
+      onChange={(e) => setBranch(e.target.value)}
+    >
       <option value="">Select Branch</option>
       <option value="CSE">CSE</option>
       <option value="AIDS">AIDS</option>
@@ -1184,43 +1186,47 @@ onChange={(e) => {
 
 </div>
 
+
     {/* BUTTON */}
     {registerRole === "STUDENT" && (
   <>
-    <div>
-      <Label>College ID</Label>
-      <Input
-        name="collegeId"
-        placeholder="Enter College ID"
-        required
-      />
-    </div>
+   <div className="grid grid-cols-2 gap-4">
+  <div>
+    <Label>College ID</Label>
+    <Input
+      name="collegeId"
+      placeholder="e.g. CSE2025001"
+      maxLength={20}
+      required
+    />
+  </div>
 
-    <div>
-      <Label>Roll Number</Label>
-      <Input
-        name="rollNumber"
-        placeholder="Enter Roll Number"
-        required
-      />
-    </div>
-
-    <div>
-      <Label>Section</Label>
-      <select
-        name="section"
-        className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-        value={section}
-        onChange={(e) => setSection(e.target.value)}
-        required
-      >
-        <option value="">Select Section</option>
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-      </select>
-    </div>
+  <div>
+    <Label>Roll Number</Label>
+    <Input
+      name="rollNumber"
+      placeholder="e.g. 23CSE001"
+      maxLength={20}
+      required
+    />
+  </div>
+</div>
+      <div>
+  <Label>Section</Label>
+  <select
+    name="section"
+    className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+    value={section}
+    onChange={(e) => setSection(e.target.value)}
+    required
+  >
+    <option value="">Select Section</option>
+    <option value="A">A</option>
+    <option value="B">B</option>
+    <option value="C">C</option>
+    <option value="D">D</option>
+  </select>
+</div>
   </>
 )}
 
