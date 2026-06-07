@@ -13,7 +13,8 @@ interface GenerateCertificateParams {
   yearOfStudy?: string;
   academicSession?: string;
   semester?: string;
-  attendancePercentage?: number;
+  
+attendancePercentage?: number | undefined;
 }
 
 export const generateCertificate = async ({
