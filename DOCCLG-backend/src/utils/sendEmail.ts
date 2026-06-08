@@ -17,6 +17,9 @@ const otp = isOtpEmail
   : "";
 const certificateUrlMatch = text.match(/https?:\/\/[^\s]+/);
 const certificateUrl = certificateUrlMatch?.[0] || "";
+const displayText = certificateUrl
+  ? text.replace(certificateUrl, "")
+  : text;
     const response = await fetch(
       "https://api.brevo.com/v3/smtp/email",
       {
@@ -79,7 +82,7 @@ const certificateUrl = certificateUrlMatch?.[0] || "";
         line-height:1.7;
         white-space:pre-line;
       ">
-        ${text}
+        ${displayText}
       </div>
 
       ${certificateUrl ? `
