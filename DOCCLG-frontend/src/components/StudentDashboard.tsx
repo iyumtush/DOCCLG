@@ -599,7 +599,7 @@ export default function StudentDashboard({
         : request.status === "COMPLETED"
         ? "100%"
         : request.status === "REJECTED"
-        ? "100%"
+        ? "75%"
         : "0%",
   }}
 />
