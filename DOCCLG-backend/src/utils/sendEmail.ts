@@ -31,7 +31,7 @@ const displayText = certificateUrl
         body: JSON.stringify({
           sender: {
             name: "CollegeDocs",
-            email: "noreply@collegedocs.qzz.io",
+            email: "noreply.collegedocs@gmail.com",
           },
           to: [
             {
