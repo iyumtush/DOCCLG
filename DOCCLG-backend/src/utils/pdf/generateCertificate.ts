@@ -104,9 +104,18 @@ export const generateCertificate = async ({
   const isAttendanceCertificate =
     documentType.toUpperCase().includes("ATTENDANCE");
 
+  const branchBasedCourses = ["B.TECH", "BE", "B.E.", "M.TECH"];
+
+  const courseText =
+    course &&
+    branch &&
+    branchBasedCourses.includes(course.toUpperCase())
+      ? `${course} in ${branch}`
+      : course || "the programme";
+
   const certificateContent = isAttendanceCertificate
-    ? `This is to certify that ${studentName} is a bonafide student pursuing ${course || 'the programme'}${branch ? ` in ${branch}` : ''} and is currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. The student's attendance for the said academic session is ${attendancePercentage ?? 'N/A'}%. This certificate is issued on the student's request for official purposes.`
-    : `This is to certify that ${studentName} is a bonafide student pursuing ${course || 'the programme'}${branch ? ` in ${branch}` : ''}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Documents Management System after verification and approval by the concerned authorities.`;
+    ? `This is to certify that ${studentName} is a bonafide student pursuing ${courseText} and is currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. The student's attendance for the said academic session is ${attendancePercentage ?? 'N/A'}%. This certificate is issued on the student's request for official purposes.`
+    : `This is to certify that ${studentName} is a bonafide student pursuing ${courseText}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Documents Management System after verification and approval by the concerned authorities.`;
 
   doc.fontSize(14).text(certificateContent, {
     align: "justify",
