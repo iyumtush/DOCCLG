@@ -411,6 +411,7 @@ CollegeDocs Team`,
   requestId: request.id,
 
   course: request.course || "",
+  branch: student.branch || "",
   yearOfStudy: request.yearOfStudy || "",
   academicSession: request.academicSession || "",
   semester: request.semester || "",

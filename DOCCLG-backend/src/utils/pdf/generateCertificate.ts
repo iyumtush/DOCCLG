@@ -10,6 +10,7 @@ interface GenerateCertificateParams {
   certificateId: string;
   requestId: string;
   course?: string;
+  branch?: string;
   yearOfStudy?: string;
   academicSession?: string;
   semester?: string;
@@ -23,6 +24,7 @@ export const generateCertificate = async ({
   certificateId,
   requestId,
   course,
+  branch,
   yearOfStudy,
   academicSession,
   semester,
@@ -103,8 +105,8 @@ export const generateCertificate = async ({
     documentType.toUpperCase().includes("ATTENDANCE");
 
   const certificateContent = isAttendanceCertificate
-    ? `This is to certify that ${studentName} is a bonafide student of ${course || 'the institution'} and is currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. The student's attendance for the said academic session is ${attendancePercentage ?? 'N/A'}%. This certificate is issued on the student's request for official purposes.`
-    : `This is to certify that ${studentName} is a bonafide student of ${course || 'the institution'}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Documents Management System after verification and approval by the concerned authorities.`;
+    ? `This is to certify that ${studentName} is a bonafide student pursuing ${course || 'the programme'}${branch ? ` in ${branch}` : ''} and is currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. The student's attendance for the said academic session is ${attendancePercentage ?? 'N/A'}%. This certificate is issued on the student's request for official purposes.`
+    : `This is to certify that ${studentName} is a bonafide student pursuing ${course || 'the programme'}${branch ? ` in ${branch}` : ''}, currently studying in ${yearOfStudy || 'the current year'} ${semester ? `(${semester})` : ''} during the academic session ${academicSession || ''}. This certificate has been generated through the CollegeDocs Digital Documents Management System after verification and approval by the concerned authorities.`;
 
   doc.fontSize(14).text(certificateContent, {
     align: "justify",
