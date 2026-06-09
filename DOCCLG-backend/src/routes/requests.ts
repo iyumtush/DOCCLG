@@ -9,19 +9,7 @@ const router = Router();
 const prisma = new PrismaClient();
 
 
-const normalizeBranch = (branch?: string | null) => {
-  const map: Record<string, string> = {
-    "CSE": "Computer Science and Engineering",
-    "AIDS": "Artificial Intelligence and Data Science",
-    "IT": "Information Technology",
-    "EE": "Electrical Engineering",
-    "ME": "Mechanical Engineering",
-    "CE": "Civil Engineering",
-  };
 
-  if (!branch) return branch;
-  return map[branch] || branch;
-};
 
 const JWT_SECRET = process.env.JWT_SECRET || "supersecret";
 
@@ -79,7 +67,7 @@ router.get("/", authenticate, async (req: any, res) => {
     else if (user.role === ROLE.CLASS_INCHARGE) {
       requests = await prisma.request.findMany({
         where: {
-          branch: normalizeBranch(user.branch),
+          branch: user.branch,
           section: user.section,
         },
         include: { student: true },
@@ -91,7 +79,7 @@ router.get("/", authenticate, async (req: any, res) => {
     else if (user.role === ROLE.HOD) {
       requests = await prisma.request.findMany({
         where: {
-          branch: normalizeBranch(user.branch), // return all for counts + history
+          branch: user.branch, // return all for counts + history
         },
         include: { student: true },
         orderBy: { createdAt: "desc" },
@@ -351,7 +339,7 @@ const updated = await prisma.request.update({
       const hods = await prisma.user.findMany({
         where: {
           role: ROLE.HOD,
-          branch: normalizeBranch(request.branch),
+          branch: request.branch,
         },
       });
 await Promise.all(
