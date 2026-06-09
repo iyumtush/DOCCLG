@@ -60,6 +60,7 @@ const [registerRole, setRegisterRole] = useState("STUDENT");
 const [showLoginPassword, setShowLoginPassword] = useState(false);
 const [showFacultyPassword, setShowFacultyPassword] = useState(false);
 const [branch, setBranch] = useState("");
+const [course, setCourse] = useState("");
 const [section, setSection] = useState("");
 const [roleError, setRoleError] = useState("");
 const [passwordShake, setPasswordShake] = useState(false);
@@ -432,34 +433,38 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
   const password = formData.get("password");
   const branch = formData.get("branch"); // ✅ ADDED
   const section = formData.get("section");
-   const collegeId = formData.get("collegeId");
-   const rollNumber = formData.get("rollNumber");
-   const employeeId = formData.get("employeeId");
-  if (!branch) {
-    alert("Please select branch");
-    setLoading(false);
-    return;
-  }
+  const collegeId = formData.get("collegeId");
+  const rollNumber = formData.get("rollNumber");
+  const employeeId = formData.get("employeeId");
+  const course = formData.get("course");
+  const yearOfStudy = formData.get("yearOfStudy");
+  if ((course === "B.Tech" || course === "M.Tech") && !branch) {
+  alert("Please select branch");
+  setLoading(false);
+  return;
+}
 
   try {
     const res = await fetch(
-  "https://docclg-backend.onrender.com/api/auth/register",
+      "https://docclg-backend.onrender.com/api/auth/register",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-  name,
-  email,
-  password,
-  role: registerRole,
-  branch,
-  section,
-  collegeId,
-  rollNumber,
-  employeeId,
-}),
+          name,
+          email,
+          password,
+          role: registerRole,
+          branch,
+          section,
+          collegeId,
+          rollNumber,
+          employeeId,
+          course,
+          yearOfStudy,
+        }),
       }
     );
 
@@ -1163,70 +1168,134 @@ onChange={(e) => {
       <option value="HOD">HOD</option>
     </select>
   </div>
-
+</div>
   {/* BRANCH */}
+  {(course === "B.Tech" || course === "M.Tech") && (
   <div>
     <Label className="font-normal text-sm">Branch</Label>
+
     <select
       name="branch"
-      required
+      required={course === "B.Tech" || course === "M.Tech"}
       className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
       value={branch}
       onChange={(e) => setBranch(e.target.value)}
     >
       <option value="">Select Branch</option>
-      <option value="CSE">CSE</option>
-      <option value="AIDS">AIDS</option>
-      <option value="IT">IT</option>
-      <option value="EE">EE</option>
-      <option value="ME">ME</option>
-      <option value="CE">CE</option>
+
+      <option value="Computer Science and Engineering">
+        Computer Science and Engineering (CSE)
+      </option>
+
+      <option value="Artificial Intelligence and Data Science">
+        Artificial Intelligence and Data Science (AIDS)
+      </option>
+
+      <option value="Information Technology">
+        Information Technology (IT)
+      </option>
+
+      <option value="Electrical Engineering">
+        Electrical Engineering (EE)
+      </option>
+
+      <option value="Mechanical Engineering">
+        Mechanical Engineering (ME)
+      </option>
+
+      <option value="Civil Engineering">
+        Civil Engineering (CE)
+      </option>
     </select>
   </div>
-
-</div>
+)}
 
 
     {/* BUTTON */}
     {registerRole === "STUDENT" && (
   <>
-   <div className="grid grid-cols-2 gap-4">
-  <div>
-    <Label>College ID</Label>
-    <Input
-      name="collegeId"
-      placeholder="e.g. CSE2025001"
-      maxLength={20}
-      required
-    />
-  </div>
-
-  <div>
-    <Label>Roll Number</Label>
-    <Input
-      name="rollNumber"
-      placeholder="e.g. 23CSE001"
-      maxLength={20}
-      required
-    />
-  </div>
-</div>
+    <div className="grid grid-cols-2 gap-4">
       <div>
-  <Label>Section</Label>
-  <select
-    name="section"
-    className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-    value={section}
-    onChange={(e) => setSection(e.target.value)}
-    required
-  >
-    <option value="">Select Section</option>
-    <option value="A">A</option>
-    <option value="B">B</option>
-    <option value="C">C</option>
-    <option value="D">D</option>
-  </select>
-</div>
+        <Label>Course</Label>
+        <select
+  name="course"
+  value={course}
+  onChange={(e) => {
+  setCourse(e.target.value);
+
+  if (
+    e.target.value !== "B.Tech" &&
+    e.target.value !== "M.Tech"
+  ) {
+    setBranch("");
+  }
+}}
+  className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+  required
+>
+          <option value="">Select Course</option>
+          <option value="B.Tech">B.Tech</option>
+          <option value="BCA">BCA</option>
+          <option value="BCOM">BCOM</option>
+          <option value="BBA">BBA</option>
+          <option value="MCA">MCA</option>
+          <option value="MBA">MBA</option>
+          <option value="M.Tech">M.Tech</option>
+        </select>
+      </div>
+
+      <div>
+        <Label>Year of Study</Label>
+        <select
+          name="yearOfStudy"
+          className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+          required
+        >
+          <option value="">Select Year</option>
+          <option value="1st Year">1st Year</option>
+          <option value="2nd Year">2nd Year</option>
+          <option value="3rd Year">3rd Year</option>
+          <option value="4th Year">4th Year</option>
+        </select>
+      </div>
+    </div>
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <Label>College ID</Label>
+        <Input
+          name="collegeId"
+          placeholder="e.g. CSE2025001"
+          maxLength={20}
+          required
+        />
+      </div>
+
+      <div>
+        <Label>Roll Number</Label>
+        <Input
+          name="rollNumber"
+          placeholder="e.g. 23CSE001"
+          maxLength={20}
+          required
+        />
+      </div>
+    </div>
+    <div>
+      <Label>Section</Label>
+      <select
+        name="section"
+        className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+        value={section}
+        onChange={(e) => setSection(e.target.value)}
+        required
+      >
+        <option value="">Select Section</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+      </select>
+    </div>
   </>
 )}
 

@@ -71,6 +71,8 @@ interface StudentUser {
 
   collegeId?: string;
   rollNumber?: string;
+  course?: string;
+  yearOfStudy?: string;
 }
 
 interface StudentDashboardProps {
@@ -84,8 +86,6 @@ const emptyFormData = {
   customDocumentName: "",
   purpose: "",
   additionalDetails: "",
-  course: "",
-  yearOfStudy: "",
   academicSession: "",
   semester: "",
 };
@@ -130,6 +130,8 @@ export default function StudentDashboard({
 
   // Track previous request statuses for notifications
   const [previousStatuses, setPreviousStatuses] = useState<Record<string, string>>({});
+
+  const engineeringCourses = ["B.Tech", "B.E", "M.Tech"];
 
   useEffect(() => {
   const activeUser = finalUser || user;
@@ -240,12 +242,10 @@ export default function StudentDashboard({
       setCreating(true);
       // Refactored validation: always require course, yearOfStudy, academicSession, semester
       if (
-        !formData.course ||
-        !formData.yearOfStudy ||
-        !formData.academicSession ||
-        !formData.semester
-      ) {
-        toast.error("Please fill in Course, Year of Study, Academic Session, and Semester.");
+  !formData.academicSession ||
+  !formData.semester
+) {
+        toast.error("Please fill in Academic Session and Semester.");
         setCreating(false);
         return;
       }
@@ -255,7 +255,11 @@ export default function StudentDashboard({
           "Content-Type": "application/json",
           Authorization: `Bearer ${finalToken}`,
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+  ...formData,
+  course: currentUser.course,
+  yearOfStudy: currentUser.yearOfStudy,
+}),
       });
 
       if (!res.ok) {
@@ -455,10 +459,18 @@ export default function StudentDashboard({
 <p className="text-sm text-gray-600">
   Roll Number: {currentUser.rollNumber || "-"}
 </p>
+<p className="text-sm text-gray-600">
+  Course: {currentUser.course || "-"}
+</p>
 
 <p className="text-sm text-gray-600">
-  Branch: {currentUser.branch || "-"}
+  Year: {currentUser.yearOfStudy || "-"}
 </p>
+{currentUser.branch && (
+  <p className="text-sm text-gray-600">
+    Branch: {currentUser.branch}
+  </p>
+)}
 
 <p className="text-sm text-gray-600">
   Section: {currentUser.section || "-"}
@@ -974,55 +986,8 @@ export default function StudentDashboard({
               {/* Move Course/Year/Session block here */}
               {formData.documentType && (
                 <div>
-                  <div className="space-y-2">
-                    <Label>Course</Label>
-                    <Select
-                      value={formData.course || ""}
-                      onValueChange={(value) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          course: value,
-                          semester: "",
-                        }))
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Course" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="B.Tech">B.Tech</SelectItem>
-                        <SelectItem value="B.E">B.E</SelectItem>
-                        <SelectItem value="BCA">BCA</SelectItem>
-                        <SelectItem value="BBA">BBA</SelectItem>
-                        <SelectItem value="B.Com">B.Com</SelectItem>
-                        <SelectItem value="M.Tech">M.Tech</SelectItem>
-                        <SelectItem value="MBA">MBA</SelectItem>
-                        <SelectItem value="MCA">MCA</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Current Year</Label>
-                    <Select
-                      value={formData.yearOfStudy || ""}
-                      onValueChange={(value) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          yearOfStudy: value,
-                        }))
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select Current Year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="First Year">First Year</SelectItem>
-                        <SelectItem value="Second Year">Second Year</SelectItem>
-                        <SelectItem value="Third Year">Third Year</SelectItem>
-                        <SelectItem value="Final Year">Final Year</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  
+              
                   <div className="space-y-2">
   <Label>Academic Session</Label>
   <Select
@@ -1063,11 +1028,7 @@ export default function StudentDashboard({
                         <SelectValue placeholder="Select Current Semester" />
                       </SelectTrigger>
                       <SelectContent>
-                        {[
-                          "B.Tech",
-                          "B.E",
-                          "M.Tech",
-                        ].includes(formData.course)
+                        {engineeringCourses.includes(currentUser.course || "")
                           ? Array.from({ length: 8 }, (_, i) => i + 1).map((sem) => (
                               <SelectItem key={sem} value={`Semester ${sem}`}>
                                 Semester {sem}
