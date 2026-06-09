@@ -28,6 +28,10 @@ model User {
   collegeId    String?
   rollNumber   String?
 
+  // Academic Profile
+  course       String?
+  yearOfStudy  String?
+
   // Faculty Details
   employeeId   String?
 

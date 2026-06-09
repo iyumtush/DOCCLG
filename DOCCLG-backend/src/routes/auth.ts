@@ -29,6 +29,8 @@ router.post("/register", async (req, res) => {
   collegeId,
   rollNumber,
   employeeId,
+  course,
+  yearOfStudy,
 } = req.body;
    const cleanEmail = email?.trim();
 
@@ -57,6 +59,8 @@ router.post("/register", async (req, res) => {
     collegeId,
     rollNumber,
     employeeId,
+    course,
+    yearOfStudy,
   },
 });
 
@@ -81,6 +85,8 @@ try {
         collegeId: user.collegeId,
         rollNumber: user.rollNumber,
         employeeId: user.employeeId,
+        course: user.course,
+        yearOfStudy: user.yearOfStudy,
       },
     });
   } catch (error) {
@@ -142,6 +148,8 @@ router.post("/login", async (req, res) => {
         collegeId: user.collegeId,
         rollNumber: user.rollNumber,
         employeeId: user.employeeId,
+        course: user.course,
+        yearOfStudy: user.yearOfStudy,
       },
     });
 
@@ -271,6 +279,8 @@ const user = await prisma.user.findUnique({
         collegeId: user.collegeId,
         rollNumber: user.rollNumber,
         employeeId: user.employeeId,
+        course: user.course,
+        yearOfStudy: user.yearOfStudy,
       },
     });
 
@@ -382,6 +392,8 @@ router.get("/me", async (req: any, res) => {
         collegeId: user.collegeId,
         rollNumber: user.rollNumber,
         employeeId: user.employeeId,
+        course: user.course,
+        yearOfStudy: user.yearOfStudy,
       },
     });
 
