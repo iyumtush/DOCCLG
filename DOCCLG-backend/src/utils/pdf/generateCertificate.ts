@@ -176,6 +176,15 @@ doc.text(' & Approved Digitally', {
 
 doc.fillColor('black');
 
+  // Principal signature image
+  const principalSignaturePath = path.join(process.cwd(), "uploads", "IMG_9145.jpeg");
+
+  if (fs.existsSync(principalSignaturePath)) {
+    doc.image(principalSignaturePath, 380, 630, {
+      width: 120,
+    });
+  }
+
   // Principal signature centered below line
   doc.moveTo(360, 690)
      .lineTo(520, 690)
