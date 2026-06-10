@@ -453,7 +453,11 @@ Request Details:
 • Academic Session: ${request.academicSession || 'N/A'}
 • Current Status: Approved
 ${certificateId ? `• Certificate ID: ${certificateId}\n` : ""}
+${certificateUrl ? `• Download Certificate: ${certificateUrl}\n` : ""}
 
+Your certificate is now ready for download.
+
+${certificateUrl ? `Download Here: ${certificateUrl}\n` : ""}
 
 Please log in to the CollegeDocs portal for further actions and status tracking.
 
