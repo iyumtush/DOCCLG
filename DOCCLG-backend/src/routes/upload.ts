@@ -1,5 +1,3 @@
-
-
 import { Router } from "express";
 import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
@@ -16,6 +14,8 @@ router.post("/", upload.single("file"), async (req, res) => {
       });
     }
 
+    const fileBuffer = req.file.buffer;
+
     const result = await new Promise<any>((resolve, reject) => {
       cloudinary.uploader
         .upload_stream(
@@ -28,7 +28,7 @@ router.post("/", upload.single("file"), async (req, res) => {
             resolve(result);
           }
         )
-        .end(req.file!.buffer);
+        .end(fileBuffer);
     });
 
     return res.json({
