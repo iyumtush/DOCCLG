@@ -1,5 +1,3 @@
-
-
 import { Router } from "express";
 import { sendEmail } from "../utils/sendEmail";
 
@@ -22,7 +20,7 @@ router.post("/", async (req, res) => {
     }
 
     await sendEmail(
-      supportEmail,
+      supportEmail!,
       `Support Request: ${title}`,
       `New Support Request Received
 
