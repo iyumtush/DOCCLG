@@ -42,6 +42,8 @@ import {
   MapPin,
   Phone,
   Mail,
+  Linkedin,
+  Github,
 } from "lucide-react";
 
 
@@ -1401,6 +1403,32 @@ onChange={(e) => {
             <p className="text-sm text-gray-500 mt-2">
               Document Management System v1.0 | Secure • Efficient • Digital
             </p>
+            {/* Developer Credit */}
+            <div className="mt-8 flex flex-col items-center gap-2">
+              <span className="text-xs text-gray-400">
+                Developed by Tushar Ingale
+              </span>
+              <div className="flex items-center gap-4">
+                <a
+                  href="https://www.linkedin.com/in/tushar-ingale/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Tushar Ingale LinkedIn"
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://github.com/iyumtush"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Tushar Ingale GitHub"
+                  className="hover:text-gray-300 transition-colors"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </footer>
