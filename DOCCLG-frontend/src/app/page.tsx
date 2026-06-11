@@ -503,8 +503,8 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
       {/* LEFT: Logo + Title */}
       <div className="flex items-center space-x-4">
         <img
-          src="/death-note.png"
-          alt="Death Note Logo"
+          src="/collegedocs-logo.png"
+          alt="CollegeDocs Logo"
           className="w-14 h-14 object-contain"
         />
 
