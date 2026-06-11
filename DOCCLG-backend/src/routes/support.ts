@@ -16,7 +16,10 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const supportEmail = process.env.SUPPORT_EMAIL || process.env.BREVO_SENDER_EMAIL;
+    const supportEmail = process.env.SUPPORT_EMAIL;
+    if (!supportEmail) {
+      throw new Error("SUPPORT_EMAIL environment variable is not configured");
+    }
 
     await sendEmail(
       supportEmail,
