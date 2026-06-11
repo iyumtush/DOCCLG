@@ -15,7 +15,6 @@ if (!file) {
     message: "No file uploaded",
   });
 }
-
 const fileBuffer = file.buffer;
 
     const result = await new Promise<any>((resolve, reject) => {
