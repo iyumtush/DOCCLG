@@ -1352,7 +1352,7 @@ onChange={(e) => {
                 {/* Additional Links */}
                 <div className="text-center space-y-2 pt-4 border-t">
                   <p className="text-sm text-gray-600">
-                    Need help? Contact IT Support
+                    Need help? Contact Support
                   </p>
                   <div className="flex justify-center space-x-4 text-xs">
                     <button
@@ -1362,7 +1362,13 @@ onChange={(e) => {
   Forgot Password?
 </button>
                     <span className="text-gray-300">|</span>
-                    <button className="text-blue-600 hover:underline">System Guide</button>
+                    <button
+                      type="button"
+                      className="text-blue-600 hover:underline"
+                      onClick={() => router.push('/support')}
+                    >
+                      Contact Support
+                    </button>
                   </div>
                 </div>
               </CardContent>
