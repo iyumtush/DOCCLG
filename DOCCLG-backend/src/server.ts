@@ -3,8 +3,12 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
+
+
 import authRoutes from "./routes/auth";
 import requestsRoutes from "./routes/requests";
+import supportRoutes from "./routes/support";
+import uploadRoutes from "./routes/upload";
 
 
 
@@ -70,6 +74,8 @@ app.get("/api/stats", async (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/requests", requestsRoutes);
+app.use("/api/support", supportRoutes);
+app.use("/api/upload", uploadRoutes);
 
 const PORT = process.env.PORT || 4000;
  
