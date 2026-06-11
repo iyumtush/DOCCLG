@@ -7,14 +7,16 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/", upload.single("file"), async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: "No file uploaded",
-      });
-    }
+    const file = req.file;
 
-    const fileBuffer = req.file.buffer;
+if (!file) {
+  return res.status(400).json({
+    success: false,
+    message: "No file uploaded",
+  });
+}
+
+const fileBuffer = file.buffer;
 
     const result = await new Promise<any>((resolve, reject) => {
       cloudinary.uploader
