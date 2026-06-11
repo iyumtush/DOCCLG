@@ -177,11 +177,11 @@ doc.text(' & Approved Digitally', {
 doc.fillColor('black');
 
   // Principal signature image
-  const principalSignaturePath = path.join(process.cwd(), "uploads", "IMG_9145.jpeg");
+  const principalSignaturePath = path.join(process.cwd(), "uploads", "msdsign.png");
 
   if (fs.existsSync(principalSignaturePath)) {
-    doc.image(principalSignaturePath, 380, 630, {
-      width: 120,
+    doc.image(principalSignaturePath, 370, 610, {
+      width: 140,
     });
   }
 
