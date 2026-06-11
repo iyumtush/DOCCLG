@@ -49,7 +49,7 @@ export default function RootLayout({
           expand
           visibleToasts={4}
           toastOptions={{
-            duration: 3000,
+            duration: 2000,
             classNames: {
               toast:
                 "rounded-2xl border border-gray-200 shadow-xl backdrop-blur-md",
