@@ -74,6 +74,7 @@ const [forgotStep, setForgotStep] = useState(false);
 const [resetStep, setResetStep] = useState(false);
 const [resetEmail, setResetEmail] = useState("");
 const [newPassword, setNewPassword] = useState("");
+const [forgotLoading, setForgotLoading] = useState(false);
   const [facultyRole, setFacultyRole] = useState<"class-incharge" | "hod">("class-incharge");
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -218,23 +219,29 @@ const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 const handleForgotPassword = async (email: string) => {
-  const res = await fetch("https://docclg-backend.onrender.com/api/auth/forgot-password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email }),
-  });
+  try {
+    setForgotLoading(true);
 
-  const data = await res.json();
+    const res = await fetch("https://docclg-backend.onrender.com/api/auth/forgot-password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+    });
 
-  if (!res.ok) {
-    alert(data.message);
-    return;
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message);
+      return;
+    }
+
+    alert("OTP sent");
+    setResetStep(true);
+  } finally {
+    setForgotLoading(false);
   }
-
-  alert("OTP sent");
-  setResetStep(true);
 };
 
 
@@ -802,9 +809,11 @@ onChange={(e) => {
 
     <Button
       type="button"
+      disabled={forgotLoading}
+      className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
       onClick={() => handleForgotPassword(resetEmail)}
     >
-      Send Reset OTP
+      {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
     </Button>
   </div>
 )}
@@ -1016,9 +1025,11 @@ onChange={(e) => {
 
     <Button
       type="button"
+      disabled={forgotLoading}
+      className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
       onClick={() => handleForgotPassword(resetEmail)}
     >
-      Send Reset OTP
+      {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
     </Button>
   </div>
 )}
