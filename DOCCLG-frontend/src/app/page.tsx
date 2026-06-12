@@ -233,11 +233,11 @@ const handleForgotPassword = async (email: string) => {
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.message);
+      toast.error(data.message);
       return;
     }
 
-    alert("OTP sent");
+    toast.success("Reset OTP sent to your email 📧");
     setResetStep(true);
   } finally {
     setForgotLoading(false);
@@ -322,7 +322,7 @@ console.log("OTP API RESPONSE:", data);
 
   else {
   console.log("Other error:", data.message);
-  alert(data.message);
+  toast.success("Reset OTP sent to your email 📧");
 }
 
 setOtpLoading(false);
@@ -339,11 +339,12 @@ setOtpStep(true);
 setCanResend(false);
 setResendTimer(30);
 
+toast.error(data.message);
 toast.success("OTP sent! Check your email 📧");
 
   } catch (err) {
     console.error("OTP ERROR:", err);
-alert("Failed to send OTP. Check backend/server logs.");
+toast.error("Failed to send OTP. Check backend/server logs.");
   } finally {
     setOtpLoading(false);
   }
@@ -365,11 +366,11 @@ const handleResetPassword = async () => {
   const data = await res.json();
 
   if (!res.ok) {
-    alert(data.message);
+    toast.success("Reset OTP sent to your email 📧");
     return;
   }
 
-  alert("Password updated");
+  toast.success("Password updated successfully 🎉");
   setForgotStep(false);
   setResetStep(false);
 };
@@ -395,7 +396,7 @@ try {
     const data = await res.json();
 
     if (!res.ok) {
-  alert(data.message);
+  toast.success("Reset OTP sent to your email 📧");
   setOtpLoading(false);
   return;
 }
@@ -404,7 +405,7 @@ try {
     sessionStorage.setItem("token", data.token);
     sessionStorage.setItem("user", JSON.stringify(data.user));
 
-    alert("Login successful!");
+    toast.success(`Welcome back, ${data.user.name} 👋`);
 
     // ✅ ADD THIS (REDIRECT LOGIC)
     if (data.user.role === "STUDENT") {
@@ -420,7 +421,7 @@ try {
 
   } catch (err) {
     console.error(err);
-    alert("OTP verification failed");
+    toast.error("OTP verification failed");
   }
 };
 
@@ -448,7 +449,7 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
   const course = formData.get("course");
   const yearOfStudy = formData.get("yearOfStudy");
   if ((course === "B.Tech" || course === "M.Tech") && !branch) {
-  alert("Please select branch");
+  toast.warning("Please select a branch");
   setLoading(false);
   return;
 }
@@ -480,17 +481,17 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     const data = await res.json();
 
     if (!res.ok) {
-      alert(data.message || "Registration failed");
+      toast.error(data.message || "Registration failed");
       return;
     }
 
-    alert(data.message || "Registration successful");
+    toast.success(data.message || "Registration successful 🎉");
 
     form.reset();
 
   } catch (err) {
     console.error(err);
-    alert("Network error");
+    toast.error("Network error");
   } finally {
     setLoading(false);
   }
@@ -736,7 +737,17 @@ onChange={(e) => {
     handleSendOtp(emailInput.value);
   }}
 >
+  <>
+  {otpLoading && (
+    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+  )}
+  <>
+  {otpLoading && (
+    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+  )}
   {otpLoading ? "Sending OTP..." : "Send OTP"}
+</>
+</>
 
 </Button>
 
@@ -813,7 +824,12 @@ onChange={(e) => {
       className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
       onClick={() => handleForgotPassword(resetEmail)}
     >
-      {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
+      <>
+  {forgotLoading && (
+    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+  )}
+  {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
+</>
     </Button>
   </div>
 )}
@@ -953,7 +969,17 @@ onChange={(e) => {
     handleSendOtp(emailInput.value);
   }}
 >
+  <>
+  {otpLoading && (
+    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+  )}
+  <>
+  {otpLoading && (
+    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+  )}
   {otpLoading ? "Sending OTP..." : "Send OTP"}
+</>
+</>
 </Button>
 
 
@@ -1029,7 +1055,12 @@ onChange={(e) => {
       className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
       onClick={() => handleForgotPassword(resetEmail)}
     >
-      {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
+      <>
+  {forgotLoading && (
+    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+  )}
+  {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
+</>
     </Button>
   </div>
 )}
