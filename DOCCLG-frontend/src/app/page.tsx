@@ -1000,7 +1000,8 @@ onChange={(e) => {
           newOtp[i] = val;
           setOtp(newOtp.join(""));
 
-          
+    
+
           // 👉 MOVE TO NEXT BOX
           if (val && e.target.nextSibling) {
             (e.target.nextSibling as HTMLInputElement).focus();
