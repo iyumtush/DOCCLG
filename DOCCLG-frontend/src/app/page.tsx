@@ -339,7 +339,6 @@ setOtpStep(true);
 setCanResend(false);
 setResendTimer(30);
 
-toast.error(data.message);
 toast.success("OTP sent! Check your email 📧");
 
   } catch (err) {
@@ -737,16 +736,11 @@ onChange={(e) => {
     handleSendOtp(emailInput.value);
   }}
 >
-  <>
-  {otpLoading && (
-    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-  )}
-  <>
+ <>
   {otpLoading && (
     <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
   )}
   {otpLoading ? "Sending OTP..." : "Send OTP"}
-</>
 </>
 
 </Button>
