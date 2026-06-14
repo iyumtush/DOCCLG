@@ -116,12 +116,12 @@ export default function SupportPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Email</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="email"
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full border rounded-lg pl-10 pr-4 py-3"
+                  className="w-full border rounded-lg pl-12 pr-4 py-3"
                   placeholder="Enter your email"
                 />
               </div>
@@ -141,12 +141,12 @@ export default function SupportPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Issue Description</label>
               <div className="relative">
-                <MessageSquare className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
+                <MessageSquare className="absolute left-3 top-4 w-5 h-5 text-gray-400" />
                 <textarea
                   rows={5}
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full border rounded-lg pl-10 pr-4 py-3"
+                  className="w-full border rounded-lg pl-12 pr-4 py-3"
                   placeholder="Explain the issue in detail"
                 />
               </div>
