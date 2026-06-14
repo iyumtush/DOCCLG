@@ -82,11 +82,12 @@ const [forgotLoading, setForgotLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-  const [stats, setStats] = useState({
-    students: 0,
-    faculty: 0,
-    documents: 0,
-  });
+const [stats, setStats] = useState({
+  students: 0,
+  faculty: 0,
+  documents: 0,
+});
+const [statsLoading, setStatsLoading] = useState(true);
  
 
 useEffect(() => {
@@ -119,6 +120,7 @@ useEffect(() => {
 
 useEffect(() => {
   const loadStats = async () => {
+    setStatsLoading(true);
     try {
       const res = await fetch(
         'https://docclg-backend.onrender.com/api/stats'
@@ -135,6 +137,8 @@ useEffect(() => {
       });
     } catch (error) {
       console.error('Failed to load stats', error);
+    } finally {
+      setStatsLoading(false);
     }
   };
 
@@ -322,7 +326,7 @@ console.log("OTP API RESPONSE:", data);
 
   else {
   console.log("Other error:", data.message);
-  toast.success("Reset OTP sent to your email 📧");
+  toast.error(data.message || "Failed to send OTP");
 }
 
 setOtpLoading(false);
@@ -365,7 +369,7 @@ const handleResetPassword = async () => {
   const data = await res.json();
 
   if (!res.ok) {
-    toast.success("Reset OTP sent to your email 📧");
+    toast.error(data.message || "Failed to reset password");
     return;
   }
 
@@ -395,7 +399,7 @@ try {
     const data = await res.json();
 
     if (!res.ok) {
-  toast.success("Reset OTP sent to your email 📧");
+  toast.error(data.message || "Invalid OTP");
   setOtpLoading(false);
   return;
 }
@@ -1414,19 +1418,19 @@ onChange={(e) => {
             <div className="mt-6 grid grid-cols-3 gap-4">
               <Card className="text-center p-4">
                 <div className="text-2xl font-bold text-blue-600">
-                  {stats.students.toLocaleString()}
+                  {statsLoading ? "..." : stats.students.toLocaleString()}
                 </div>
                 <div className="text-xs text-gray-600">Active Students</div>
               </Card>
               <Card className="text-center p-4">
                 <div className="text-2xl font-bold text-green-600">
-                  {stats.faculty.toLocaleString()}
+                  {statsLoading ? "..." : stats.faculty.toLocaleString()}
                 </div>
                 <div className="text-xs text-gray-600">Faculty Members</div>
               </Card>
               <Card className="text-center p-4">
                 <div className="text-2xl font-bold text-purple-600">
-                  {stats.documents.toLocaleString()}
+                  {statsLoading ? "..." : stats.documents.toLocaleString()}
                 </div>
                 <div className="text-xs text-gray-600">Documents Issued</div>
               </Card>
