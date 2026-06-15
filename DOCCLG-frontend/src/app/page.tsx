@@ -1212,7 +1212,12 @@ onChange={(e) => {
   </div>
 </div>
   {/* BRANCH */}
-  {(course === "B.Tech" || course === "M.Tech") && (
+  {(
+    registerRole === "CLASS_INCHARGE" ||
+    registerRole === "HOD" ||
+    course === "B.Tech" ||
+    course === "M.Tech"
+  ) && (
   <div>
     <Label className="font-normal text-sm">Branch</Label>
 
