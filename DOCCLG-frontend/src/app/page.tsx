@@ -523,7 +523,8 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
           <h1 className="text-2xl font-bold text-gray-900">
 CollegeDocs          </h1>
           <p className="text-sm text-gray-600">
-           Digital Documents Management System 
+           Smart Academic
+Document Management System 
           </p>
         </div>
       </div>
@@ -556,8 +557,9 @@ CollegeDocs          </h1>
                 <span className="text-blue-600 block">Management System</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8">
-                Streamlined document request and approval process for students and faculty. 
-                Request official certificates, track approval status, and receive documents digitally.
+                A secure digital platform for students and faculty to request,
+approve, track, and receive academic documents online through a
+multi-level approval workflow.
               </p>
             </div>
 
