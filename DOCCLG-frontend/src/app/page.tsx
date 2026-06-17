@@ -522,6 +522,9 @@ const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">
 CollegeDocs          </h1>
+<p className="text-xs text-blue-600 font-medium">
+  KDKCE Nagpur
+</p>
           <p className="text-sm text-gray-600">
            Smart Academic
 Document Management System 
@@ -1480,7 +1483,7 @@ onChange={(e) => {
               © {new Date().getFullYear()} KDK College of Engineering, Nagpur. All rights reserved.
             </p>
             <p className="text-sm text-gray-500 mt-2">
-              Document Management System v1.0 | Secure • Efficient • Digital
+            CollegeDocs | Secure • Efficient • Paperless  
             </p>
             {/* Developer Credit */}
             <div className="mt-8 flex flex-col items-center gap-2">
