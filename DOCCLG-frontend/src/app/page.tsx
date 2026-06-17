@@ -1475,7 +1475,7 @@ onChange={(e) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <p className="text-gray-400">
-              © 2024 ABC College of Engineering. All rights reserved.
+              © {new Date().getFullYear()} KDK College of Engineering, Nagpur. All rights reserved.
             </p>
             <p className="text-sm text-gray-500 mt-2">
               Document Management System v1.0 | Secure • Efficient • Digital
