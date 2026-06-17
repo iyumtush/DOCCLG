@@ -625,21 +625,47 @@ CollegeDocs          </h1>
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <Building2 className="w-6 h-6" />
-                  <h3 className="text-lg font-semibold">College Information</h3>
-                </div>
+<h3 className="text-lg font-semibold">
+  KDK College of Engineering, Nagpur
+</h3>                </div>
                 <div className="space-y-2 text-blue-100">
                   <div className="flex items-center space-x-2">
                     <MapPin className="w-4 h-4" />
-                    <span className="text-sm">123 College Street, City, State - 123456</span>
+                    <span className="text-sm">
+
+  Great Nag Road, Nandanvan, Nagpur – 440024 (M.S.)
+
+</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Phone className="w-4 h-4" />
-                    <span className="text-sm">+91-1234567890</span>
+                    <span className="text-sm">
+
+  0712-2711400
+
+</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Mail className="w-4 h-4" />
-                    <span className="text-sm">info@abccollege.edu</span>
+                    <span className="text-sm">
+
+  www.kdkce.edu.in
+
+</span>
                   </div>
+                  <div className="pt-3 border-t border-blue-400 mt-3">
+  <p className="text-sm">
+    Established: 1984
+  </p>
+
+  <p className="text-sm">
+    Affiliated to R.T.M. Nagpur University
+  </p>
+
+  <p className="text-sm">
+    NAAC Grade A | NBA Accredited
+  </p>
+</div>
                 </div>
               </CardContent>
             </Card>
