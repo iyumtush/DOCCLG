@@ -596,10 +596,10 @@ export default function StudentDashboard({
           <div className="lg:col-span-2">
             <Tabs defaultValue="requests" className="w-full">
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <TabsList className="grid grid-cols-3 w-full sm:w-auto rounded-xl bg-gray-100 p-1">
-                  <TabsTrigger className="rounded-lg py-2" value="requests">My Requests</TabsTrigger>
-                  <TabsTrigger className="rounded-lg py-2" value="history">History</TabsTrigger>
-                  <TabsTrigger className="rounded-lg py-2" value="certificates">Certificates</TabsTrigger>
+                <TabsList className="grid grid-cols-3 w-full sm:w-auto rounded-xl bg-gray-100 p-1 h-11">
+                  <TabsTrigger className="rounded-lg text-sm font-semibold" value="requests">My Requests</TabsTrigger>
+                  <TabsTrigger className="rounded-lg text-sm font-semibold" value="history">History</TabsTrigger>
+                  <TabsTrigger className="rounded-lg text-sm font-semibold" value="certificates">Certificates</TabsTrigger>
                 </TabsList>
 
                 <Button 
@@ -645,9 +645,9 @@ export default function StudentDashboard({
                     }
                     
                     const getLineWidth = () => {
-                      if (currentStage === 1) return "33%";
-                      if (currentStage === 2) return "66%";
-                      if (currentStage === 3) return "100%";
+                      if (currentStage === 1) return "25%";
+                      if (currentStage === 2) return "50%";
+                      if (currentStage === 3) return "75%";
                       return "0%";
                     };
                     
@@ -682,11 +682,11 @@ export default function StudentDashboard({
                             <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
                               
                               {/* Horizontal connector line for large screens */}
-                              <div className="absolute top-[20px] left-[12%] right-[12%] h-0.5 bg-gray-200 md:block hidden rounded-full" />
+                              <div className="absolute top-[20px] left-[12.5%] right-[12.5%] h-0.5 bg-gray-200 md:block hidden rounded-full" />
                               
                               {/* Active connector fill line */}
                               <div 
-                                className={`absolute top-[20px] left-[12%] h-0.5 md:block hidden rounded-full transition-all duration-500 ${
+                                className={`absolute top-[20px] left-[12.5%] h-0.5 md:block hidden rounded-full transition-all duration-300 ${
                                   isRejected ? "bg-red-500" : "bg-green-500"
                                 }`}
                                 style={{
