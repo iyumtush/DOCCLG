@@ -127,8 +127,8 @@ export default function StudentDashboard({
   const [initialLoad, setInitialLoad] = useState(true);
   const [requests, setRequests] = useState<DocumentRequest[]>([]);
   const [currentUser, setCurrentUser] = useState<StudentUser>(
-  finalUser || user
-);
+    finalUser || user
+  );
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editData, setEditData] = useState({
     name: user.name,
@@ -144,15 +144,15 @@ export default function StudentDashboard({
   const engineeringCourses = ["B.Tech", "B.E", "M.Tech"];
 
   useEffect(() => {
-  const activeUser = finalUser || user;
+    const activeUser = finalUser || user;
 
-  setCurrentUser(activeUser);
+    setCurrentUser(activeUser);
 
-  setEditData({
-    name: activeUser.name,
-    email: activeUser.email,
-  });
-}, [user]);
+    setEditData({
+      name: activeUser.name,
+      email: activeUser.email,
+    });
+  }, [user]);
 
   const fetchRequests = async () => {
     if (!finalToken) return;
@@ -252,9 +252,9 @@ export default function StudentDashboard({
       setCreating(true);
       // Refactored validation: always require course, yearOfStudy, academicSession, semester
       if (
-  !formData.academicSession ||
-  !formData.semester
-) {
+        !formData.academicSession ||
+        !formData.semester
+      ) {
         toast.error("Please fill in Academic Session and Semester.");
         setCreating(false);
         return;
@@ -266,10 +266,10 @@ export default function StudentDashboard({
           Authorization: `Bearer ${finalToken}`,
         },
         body: JSON.stringify({
-  ...formData,
-  course: currentUser.course,
-  yearOfStudy: currentUser.yearOfStudy,
-}),
+          ...formData,
+          course: currentUser.course,
+          yearOfStudy: currentUser.yearOfStudy,
+        }),
       });
 
       if (!res.ok) {
@@ -450,10 +450,10 @@ export default function StudentDashboard({
                 <span className="text-sm font-semibold text-gray-900">{currentUser.name}</span>
                 <span className="text-xs text-gray-500 uppercase">{currentUser.role}</span>
               </div>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
-                className="rounded-xl border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors" 
+                className="rounded-xl border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
                 onClick={onLogout}
               >
                 Logout
@@ -602,7 +602,7 @@ export default function StudentDashboard({
                   <TabsTrigger className="rounded-lg text-sm font-semibold" value="certificates">Certificates</TabsTrigger>
                 </TabsList>
 
-                <Button 
+                <Button
                   onClick={() => setIsCreateDialogOpen(true)}
                   className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm h-10 px-4 shrink-0"
                 >
@@ -631,7 +631,7 @@ export default function StudentDashboard({
                 ) : (
                   requests.map((request) => {
                     const isRejected = request.status === "REJECTED";
-                    
+
                     // Determine current workflow stage (0 = Submitted, 1 = Class Incharge, 2 = HOD, 3 = Completed)
                     let currentStage = 0;
                     if (request.status === "PENDING") {
@@ -643,14 +643,14 @@ export default function StudentDashboard({
                     } else if (isRejected) {
                       currentStage = request.hodComments ? 2 : 1;
                     }
-                    
+
                     const getLineWidth = () => {
                       if (currentStage === 1) return "33.33%";
                       if (currentStage === 2) return "66.66%";
-                      if (currentStage === 3) return "100%";
+                      if (currentStage === 3) return "99%";
                       return "0%";
                     };
-                    
+
                     return (
                       <Card key={request.id} className="overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300 bg-white rounded-2xl">
                         <CardHeader className="pb-4">
@@ -675,21 +675,20 @@ export default function StudentDashboard({
                             </div>
                           </div>
                         </CardHeader>
-                        
+
                         <CardContent className="space-y-6">
                           {/* Visual Stepper Workflow */}
                           <div className="bg-gray-50/50 rounded-xl p-4 sm:p-6 border border-gray-100 relative">
                             <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
-                              
+
                               {/* Horizontal connector line wrapper (spans exact center-to-center distance) */}
                               <div className="absolute top-[20px] left-5 right-5 h-0.5 md:block hidden">
                                 {/* Gray background line */}
                                 <div className="w-full h-full bg-gray-200 rounded-full" />
                                 {/* Active progress fill line */}
-                                <div 
-                                  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${
-                                    isRejected ? "bg-red-500" : "bg-green-500"
-                                  }`}
+                                <div
+                                  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isRejected ? "bg-red-500" : "bg-green-500"
+                                    }`}
                                   style={{
                                     width: getLineWidth()
                                   }}
@@ -704,10 +703,10 @@ export default function StudentDashboard({
                                 { label: "Completed", sub: "Ready for Download", icon: Check }
                               ].map((step, idx) => {
                                 const StepIcon = step.icon;
-                                
+
                                 // Determine step state: completed, active, pending, or rejected
                                 let stepState: "completed" | "active" | "pending" | "rejected" = "pending";
-                                
+
                                 if (isRejected) {
                                   if (currentStage === idx) {
                                     stepState = "rejected";
@@ -731,16 +730,15 @@ export default function StudentDashboard({
                                 return (
                                   <div key={idx} className="relative z-10 flex flex-row md:flex-col items-center gap-3 md:gap-2 w-full md:w-auto md:text-center">
                                     {/* Icon container */}
-                                    <div 
-                                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300 ${
-                                        stepState === "completed"
+                                    <div
+                                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300 ${stepState === "completed"
                                           ? "bg-green-600 border-green-600 text-white shadow-sm"
                                           : stepState === "active"
-                                          ? "bg-white border-green-500 text-green-600 animate-stepper-pulse"
-                                          : stepState === "rejected"
-                                          ? "bg-red-500 border-red-500 text-white animate-stepper-pulse-rejected"
-                                          : "bg-white border-gray-200 text-gray-400"
-                                      }`}
+                                            ? "bg-white border-green-500 text-green-600 animate-stepper-pulse"
+                                            : stepState === "rejected"
+                                              ? "bg-red-500 border-red-500 text-white animate-stepper-pulse-rejected"
+                                              : "bg-white border-gray-200 text-gray-400"
+                                        }`}
                                     >
                                       {stepState === "rejected" ? (
                                         <XCircle className="h-5 w-5" />
@@ -750,17 +748,16 @@ export default function StudentDashboard({
                                         <StepIcon className="h-5 w-5" />
                                       )}
                                     </div>
-                                    
+
                                     <div className="flex flex-col md:items-center">
-                                      <span className={`text-xs font-bold ${
-                                        stepState === "rejected"
+                                      <span className={`text-xs font-bold ${stepState === "rejected"
                                           ? "text-red-600"
                                           : stepState === "completed"
-                                          ? "text-green-700"
-                                          : stepState === "active"
-                                          ? "text-green-600"
-                                          : "text-gray-500"
-                                      }`}>
+                                            ? "text-green-700"
+                                            : stepState === "active"
+                                              ? "text-green-600"
+                                              : "text-gray-500"
+                                        }`}>
                                         {step.label}
                                       </span>
                                       <span className="text-[10px] text-gray-400 hidden sm:inline md:block mt-0.5">{step.sub}</span>
@@ -778,10 +775,10 @@ export default function StudentDashboard({
                                   {isRejected
                                     ? "Rejected"
                                     : request.status === "PENDING"
-                                    ? "Verification by Class Incharge"
-                                    : request.status === "CLASS_INCHARGE_APPROVED"
-                                    ? "Final Signature by HOD"
-                                    : "Approved & Issued"}
+                                      ? "Verification by Class Incharge"
+                                      : request.status === "CLASS_INCHARGE_APPROVED"
+                                        ? "Final Signature by HOD"
+                                        : "Approved & Issued"}
                                 </strong>
                               </span>
                               <span>
@@ -967,7 +964,7 @@ export default function StudentDashboard({
                       Download your approved and issued certificates
                     </CardDescription>
                   </CardHeader>
-                  
+
                   <CardContent className="pt-6">
                     {issuedCertificates.length === 0 ? (
                       <div className="py-12 text-center">
@@ -1097,32 +1094,32 @@ export default function StudentDashboard({
               {/* Move Course/Year/Session block here */}
               {formData.documentType && (
                 <div>
-                  
-              
-                  <div className="space-y-2">
-  <Label>Academic Session</Label>
-  <Select
-    value={formData.academicSession || ""}
-    onValueChange={(value) =>
-      setFormData((prev) => ({
-        ...prev,
-        academicSession: value,
-      }))
-    }
-  >
-    <SelectTrigger>
-      <SelectValue placeholder="Select Academic Session" />
-    </SelectTrigger>
 
-    <SelectContent>
-      {academicSessions.map((session) => (
-        <SelectItem key={session} value={session}>
-          {session}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-</div>
+
+                  <div className="space-y-2">
+                    <Label>Academic Session</Label>
+                    <Select
+                      value={formData.academicSession || ""}
+                      onValueChange={(value) =>
+                        setFormData((prev) => ({
+                          ...prev,
+                          academicSession: value,
+                        }))
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Academic Session" />
+                      </SelectTrigger>
+
+                      <SelectContent>
+                        {academicSessions.map((session) => (
+                          <SelectItem key={session} value={session}>
+                            {session}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
                   {/* Semester Selector */}
                   <div className="space-y-2">
                     <Label>Current Semester</Label>
@@ -1141,15 +1138,15 @@ export default function StudentDashboard({
                       <SelectContent>
                         {engineeringCourses.includes(currentUser.course || "")
                           ? Array.from({ length: 8 }, (_, i) => i + 1).map((sem) => (
-                              <SelectItem key={sem} value={`Semester ${sem}`}>
-                                Semester {sem}
-                              </SelectItem>
-                            ))
+                            <SelectItem key={sem} value={`Semester ${sem}`}>
+                              Semester {sem}
+                            </SelectItem>
+                          ))
                           : Array.from({ length: 6 }, (_, i) => i + 1).map((sem) => (
-                              <SelectItem key={sem} value={`Semester ${sem}`}>
-                                Semester {sem}
-                              </SelectItem>
-                            ))}
+                            <SelectItem key={sem} value={`Semester ${sem}`}>
+                              Semester {sem}
+                            </SelectItem>
+                          ))}
                       </SelectContent>
                     </Select>
                   </div>
