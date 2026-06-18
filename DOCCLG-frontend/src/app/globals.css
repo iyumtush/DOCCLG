@@ -111,21 +111,305 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  75% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .animate-shake {
   animation: shake 0.4s ease;
 }
+
+/* Custom Benefit Logo Animations */
+
+/* 1. Document Requests */
+.doc-request-icon .doc-page {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+.doc-request-icon .doc-fold {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: 14px 8px;
+}
+
+.doc-request-icon .doc-line {
+  stroke-dasharray: 12;
+  stroke-dashoffset: 12;
+  animation: draw-line 2.5s infinite ease-in-out;
+}
+
+.doc-request-icon .doc-line-1 {
+  animation-delay: 0.3s;
+}
+
+.doc-request-icon .doc-line-2 {
+  animation-delay: 0.6s;
+}
+
+.doc-request-icon .doc-line-3 {
+  stroke-dasharray: 8;
+  stroke-dashoffset: 8;
+  animation: draw-line-short 2.5s infinite ease-in-out;
+  animation-delay: 0s;
+}
+
+@keyframes draw-line {
+  0% {
+    stroke-dashoffset: 12;
+    opacity: 0;
+  }
+
+  25% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  75% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -12;
+    opacity: 0;
+  }
+}
+
+@keyframes draw-line-short {
+  0% {
+    stroke-dashoffset: 8;
+    opacity: 0;
+  }
+
+  25% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  75% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -8;
+    opacity: 0;
+  }
+}
+
+.group:hover .doc-request-icon .doc-page {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.group:hover .doc-request-icon .doc-fold {
+  transform: translate(-0.5px, 0.5px);
+}
+
+/* 2. Multi-Level Approval */
+.approval-icon .node-1,
+.approval-icon .head-1 {
+  animation: pulse-node-1 2.5s infinite ease-in-out;
+}
+
+.approval-icon .node-2,
+.approval-icon .head-2 {
+  animation: pulse-node-2 2.5s infinite ease-in-out;
+}
+
+.approval-icon .check-mark {
+  stroke-dasharray: 10;
+  stroke-dashoffset: 10;
+  animation: draw-check 2.5s infinite ease-in-out;
+}
+
+.approval-icon .conn-line {
+  stroke-dasharray: 6;
+  stroke-dashoffset: 6;
+  animation: draw-conn 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse-node-1 {
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(0.95);
+    transform-origin: 9.5px 7px;
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1.05);
+    transform-origin: 9.5px 7px;
+  }
+}
+
+@keyframes pulse-node-2 {
+
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(0.93);
+    transform-origin: 18px 9px;
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+    transform-origin: 18px 9px;
+  }
+}
+
+@keyframes draw-check {
+
+  0%,
+  45% {
+    stroke-dashoffset: 10;
+    opacity: 0;
+  }
+
+  70%,
+  90% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -10;
+    opacity: 0;
+  }
+}
+
+@keyframes draw-conn {
+
+  0%,
+  30% {
+    stroke-dashoffset: 6;
+    opacity: 0;
+  }
+
+  55%,
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -6;
+    opacity: 0;
+  }
+}
+
+/* 3. Digital Signatures */
+.signature-icon .shield-base {
+  animation: pulse-shield 3s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.signature-icon .sig-draw {
+  stroke-dasharray: 22;
+  stroke-dashoffset: 22;
+  animation: draw-signature 3s infinite ease-in-out;
+}
+
+@keyframes pulse-shield {
+
+  0%,
+  100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 0px rgba(147, 51, 234, 0));
+  }
+
+  50% {
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 3px rgba(147, 51, 234, 0.35));
+  }
+}
+
+@keyframes draw-signature {
+
+  0%,
+  15% {
+    stroke-dashoffset: 22;
+    opacity: 0;
+  }
+
+  50%,
+  80% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+
+  100% {
+    stroke-dashoffset: -22;
+    opacity: 0;
+  }
+}
+
+/* 4. Real-time Tracking */
+.tracking-icon .cap-float {
+  animation: float-cap 3s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.tracking-icon .tracking-ping {
+  transform-origin: 12px 18px;
+  animation: ping-wave 2s infinite cubic-bezier(0, 0, 0.2, 1);
+  opacity: 0;
+}
+
+.tracking-icon .tracking-ping.delay-1 {
+  animation-delay: 1s;
+}
+
+@keyframes float-cap {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-3px) rotate(1deg);
+  }
+}
+
+@keyframes ping-wave {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

@@ -568,11 +568,17 @@ multi-level approval workflow.
 
             {/* Features Grid */}
             <div className="grid sm:grid-cols-2 gap-4">
-              <Card className="border-blue-100 bg-blue-50/50">
+              <Card className="group border-blue-100 hover:border-blue-300 bg-blue-50/50 hover:bg-blue-50/80 hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-default">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <FileText className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-blue-100 group-hover:bg-blue-200 rounded-lg flex items-center justify-center transition-colors duration-300">
+                      <svg className="w-5 h-5 text-blue-600 doc-request-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path className="doc-page" d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                        <polyline className="doc-fold" points="14 2 14 8 20 8" />
+                        <line className="doc-line doc-line-1" x1="8" y1="13" x2="16" y2="13" />
+                        <line className="doc-line doc-line-2" x1="8" y1="17" x2="14" y2="17" />
+                        <line className="doc-line doc-line-3" x1="8" y1="9" x2="12" y2="9" />
+                      </svg>
                     </div>
                     <h3 className="font-semibold text-gray-900">Document Requests</h3>
                   </div>
@@ -582,11 +588,18 @@ multi-level approval workflow.
                 </CardContent>
               </Card>
 
-              <Card className="border-green-100 bg-green-50/50">
+              <Card className="group border-green-100 hover:border-green-300 bg-green-50/50 hover:bg-green-50/80 hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-default">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <Users className="w-5 h-5 text-green-600" />
+                    <div className="w-10 h-10 bg-green-100 group-hover:bg-green-200 rounded-lg flex items-center justify-center transition-colors duration-300">
+                      <svg className="w-5 h-5 text-green-600 approval-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path className="node node-1" d="M17 21v-2a3 3 0 0 0-3-3H5a3 3 0 0 0-3 3v2" />
+                        <circle className="node-head head-1" cx="9.5" cy="7" r="4" />
+                        <path className="node node-2" d="M22 19v-1a3 3 0 0 0-3-3h-4" />
+                        <circle className="node-head head-2" cx="18" cy="9" r="3" />
+                        <path className="conn-line" d="M14 12h1" />
+                        <path className="check-mark" d="M16 14l2 2 4-4" />
+                      </svg>
                     </div>
                     <h3 className="font-semibold text-gray-900">Multi-Level Approval</h3>
                   </div>
@@ -596,11 +609,14 @@ multi-level approval workflow.
                 </CardContent>
               </Card>
 
-              <Card className="border-purple-100 bg-purple-50/50">
+              <Card className="group border-purple-100 hover:border-purple-300 bg-purple-50/50 hover:bg-purple-50/80 hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-default">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                      <Shield className="w-5 h-5 text-purple-600" />
+                    <div className="w-10 h-10 bg-purple-100 group-hover:bg-purple-200 rounded-lg flex items-center justify-center transition-colors duration-300">
+                      <svg className="w-5 h-5 text-purple-600 signature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path className="shield-base" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        <path className="sig-draw" d="M9.5 14.5c1-1 2-2.5 1-3.5s-2 .5 0 2 3-1.5 4-3" />
+                      </svg>
                     </div>
                     <h3 className="font-semibold text-gray-900">Digital Signatures</h3>
                   </div>
@@ -610,11 +626,19 @@ multi-level approval workflow.
                 </CardContent>
               </Card>
 
-              <Card className="border-orange-100 bg-orange-50/50">
+              <Card className="group border-orange-100 hover:border-orange-300 bg-orange-50/50 hover:bg-orange-50/80 hover:-translate-y-1 hover:shadow-md transition-all duration-300 cursor-default">
                 <CardContent className="p-6">
                   <div className="flex items-center space-x-3 mb-3">
-                    <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                      <GraduationCap className="w-5 h-5 text-orange-600" />
+                    <div className="w-10 h-10 bg-orange-100 group-hover:bg-orange-200 rounded-lg flex items-center justify-center transition-colors duration-300">
+                      <svg className="w-5 h-5 text-orange-600 tracking-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <g className="cap-float">
+                          <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.91a2 2 0 0 0 1.66 0z" />
+                          <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+                          <path d="M21.5 12v6" />
+                        </g>
+                        <circle className="tracking-ping" cx="12" cy="18" r="4" stroke="currentColor" strokeWidth="1" />
+                        <circle className="tracking-ping delay-1" cx="12" cy="18" r="4" stroke="currentColor" strokeWidth="1" />
+                      </svg>
                     </div>
                     <h3 className="font-semibold text-gray-900">Real-time Tracking</h3>
                   </div>
