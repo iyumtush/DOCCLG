@@ -645,9 +645,9 @@ export default function StudentDashboard({
                     }
                     
                     const getLineWidth = () => {
-                      if (currentStage === 1) return "25%";
-                      if (currentStage === 2) return "50%";
-                      if (currentStage === 3) return "75%";
+                      if (currentStage === 1) return "33.33%";
+                      if (currentStage === 2) return "66.66%";
+                      if (currentStage === 3) return "100%";
                       return "0%";
                     };
                     
@@ -681,18 +681,20 @@ export default function StudentDashboard({
                           <div className="bg-gray-50/50 rounded-xl p-4 sm:p-6 border border-gray-100 relative">
                             <div className="relative flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4">
                               
-                              {/* Horizontal connector line for large screens */}
-                              <div className="absolute top-[20px] left-[12.5%] right-[12.5%] h-0.5 bg-gray-200 md:block hidden rounded-full" />
-                              
-                              {/* Active connector fill line */}
-                              <div 
-                                className={`absolute top-[20px] left-[12.5%] h-0.5 md:block hidden rounded-full transition-all duration-300 ${
-                                  isRejected ? "bg-red-500" : "bg-green-500"
-                                }`}
-                                style={{
-                                  width: getLineWidth()
-                                }}
-                              />
+                              {/* Horizontal connector line wrapper (spans exact center-to-center distance) */}
+                              <div className="absolute top-[20px] left-5 right-5 h-0.5 md:block hidden">
+                                {/* Gray background line */}
+                                <div className="w-full h-full bg-gray-200 rounded-full" />
+                                {/* Active progress fill line */}
+                                <div 
+                                  className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${
+                                    isRejected ? "bg-red-500" : "bg-green-500"
+                                  }`}
+                                  style={{
+                                    width: getLineWidth()
+                                  }}
+                                />
+                              </div>
 
                               {/* Stepper Steps */}
                               {[
