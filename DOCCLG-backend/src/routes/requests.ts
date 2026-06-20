@@ -401,25 +401,25 @@ CollegeDocs Team`,
     }
 
     if (newStatus === "HOD_APPROVED") {
-      const certificateId = `DOC-${new Date().getFullYear()}-${Date.now()}`;
+      const certificateId = `KDKCE-${new Date().getFullYear()}-${Date.now()}`;
 
       let certificateUrl: string | undefined;
 
       try {
         if (student) {
           certificateUrl = await generateCertificate({
-  studentName: student.name || "Student",
-  documentType: request.type,
-  certificateId,
-  requestId: request.id,
-
-  course: request.course || "",
-  branch: student.branch || "",
-  yearOfStudy: request.yearOfStudy || "",
-  academicSession: request.academicSession || "",
-  semester: request.semester || "",
-  attendancePercentage: updated.attendancePercentage || undefined,
-});
+            studentName: student.name || "Student",
+            documentType: request.type,
+            certificateId,
+            requestId: request.id,
+            course: request.course || "",
+            branch: student.branch || "",
+            yearOfStudy: request.yearOfStudy || "",
+            academicSession: request.academicSession || "",
+            semester: request.semester || "",
+            attendancePercentage: updated.attendancePercentage || undefined,
+            purpose: request.reason || "",
+          });
 
           await prisma.request.update({
             where: { id: request.id },
