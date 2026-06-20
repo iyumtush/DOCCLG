@@ -192,8 +192,8 @@ export const generateCertificate = async ({
   const courseYearText = `${formattedCourse} ${yearOfStudy || "1st"} year (${formattedBranch})`;
 
   const p1 = isAttendanceCertificate
-    ? `This is to certify that $$${studentTitle}$$ is a bonafide student of this institution and is a student of $$${courseYearText}$$ for the session $$${fullSession}$$. The student's attendance for the semester $$${semester || "1st"}$$ is $$${attendancePercentage ?? "N/A"}%$$.`
-    : `This is to certify that $$${studentTitle}$$ is a bonafide student of this institution and is a student of $$${courseYearText}$$ for the session $$${fullSession}$$.`;
+    ? `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$. The student's attendance for the semester $$${semester || "1st"} $$is $$${attendancePercentage ?? "N/A"}%$$.`
+    : `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$.`;
 
   const p2 = `This certificate is being issued on his/her own request.`;
 
