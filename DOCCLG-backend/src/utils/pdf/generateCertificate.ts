@@ -22,12 +22,14 @@ interface GenerateCertificateParams {
 const writeFormattedText = (
   doc: any,
   text: string,
-  options: { align?: string; width?: number; lineGap?: number }
+  options: { align?: string; width?: number; lineGap?: number },
+  baseFont: string = 'Helvetica',
+  boldFont: string = 'Helvetica-Bold'
 ) => {
   const parts = text.split("$$");
   for (let i = 0; i < parts.length; i++) {
     const isBold = i % 2 !== 0;
-    doc.font(isBold ? 'Helvetica-Bold' : 'Helvetica');
+    doc.font(isBold ? boldFont : baseFont);
     doc.text(parts[i], {
       continued: i < parts.length - 1,
       ...options
@@ -71,27 +73,32 @@ export const generateCertificate = async ({
   const stream = fs.createWriteStream(filePath);
   doc.pipe(stream);
 
-  // Outer Page Borders
-  doc.lineWidth(2);
-  doc.rect(20, 20, 555, 800).stroke('black');
-  doc.lineWidth(1);
-  doc.rect(26, 26, 543, 788).stroke('black');
+  // Outer Page Borders (Double Border Maroon #800000)
+  doc.lineWidth(2.5);
+  doc.rect(20, 20, 555, 800).stroke('#800000');
+  doc.lineWidth(0.8);
+  doc.rect(24, 24, 547, 792).stroke('#800000');
 
   // Top Left Banner
   doc.font('Helvetica-Bold').fontSize(8.5).fillColor('black');
   doc.text('Grade - A', 35, 35, { width: 80, align: 'center' });
 
-  // Stylized Engineering Shield/Triangle Logo (Estd: 1984)
-  doc.lineWidth(1.5);
-  doc.strokeColor('#1f2f6b');
-  doc.moveTo(75, 47).lineTo(95, 80).lineTo(55, 80).closePath().stroke();
-  doc.moveTo(75, 47).lineTo(75, 80).stroke();
-  doc.lineWidth(1.0);
-  doc.moveTo(62, 65).lineTo(88, 65).stroke();
-  doc.strokeColor('black');
+  // Top Left Logo image (uploads/logo.png) with manual fallback
+  const logoPath = path.join(process.cwd(), "uploads", "logo.png");
+  if (fs.existsSync(logoPath)) {
+    doc.image(logoPath, 50, 48, { width: 50 });
+  } else {
+    // Stylized Engineering Shield/Triangle Logo (Estd: 1984) Fallback
+    doc.lineWidth(1.5);
+    doc.strokeColor('#1f2f6b');
+    doc.moveTo(75, 47).lineTo(95, 80).lineTo(55, 80).closePath().stroke();
+    doc.moveTo(75, 47).lineTo(75, 80).stroke();
+    doc.lineWidth(1.0);
+    doc.moveTo(62, 65).lineTo(88, 65).stroke();
+  }
 
   doc.fillColor('black');
-  doc.font('Helvetica-Bold').fontSize(8.5).text('Estd : 1984', 35, 85, { width: 80, align: 'center' });
+  doc.font('Helvetica-Bold').fontSize(8.5).text('Estd : 1984', 35, 103, { width: 80, align: 'center' });
 
   // Top Right Banner
   doc.font('Helvetica-Bold').fontSize(8.5).text('D.T.E.', 480, 35, { width: 80, align: 'center' });
@@ -105,16 +112,16 @@ export const generateCertificate = async ({
   doc.strokeColor('black');
   doc.roundedRect(120, 43, 355, 47, 4).stroke();
 
-  doc.font('Helvetica-Bold').fontSize(16).fillColor('#800000').text('K. D. K. COLLEGE OF ENGINEERING', 120, 48, { width: 355, align: 'center' });
-  doc.fontSize(8.5).fillColor('black').text('Great Nag Road, Nandanvan, Nagpur - 440009.', 120, 65, { width: 355, align: 'center' });
-  doc.fontSize(8.5).fillColor('#1f2f6b').text('(An Autonomous Institute w.e.f. 2024-25)', 120, 77, { width: 355, align: 'center' });
+  doc.font('Times-Bold').fontSize(16).fillColor('#800000').text('K. D. K. COLLEGE OF ENGINEERING', 120, 48, { width: 355, align: 'center' });
+  doc.font('Helvetica-Bold').fontSize(8.5).fillColor('black').text('Great Nag Road, Nandanvan, Nagpur – 440024.', 120, 65, { width: 355, align: 'center' });
+  doc.fontSize(8.5).fillColor('#0000ff').text('(An Autonomous Institute w.e.f. 2024-25)', 120, 77, { width: 355, align: 'center' });
 
   // Accreditation & Affiliation Row details below box
   doc.font('Helvetica-Bold').fontSize(8.5).fillColor('#800000').text('Accredited by NAAC & NBA (5 Programs)', 120, 94, { width: 355, align: 'center' });
-  doc.font('Helvetica-Bold').fontSize(7.5).fillColor('green').text('Approved by AICTE New Delhi, Directorate of Technical Education, M.S. Mumbai', 120, 105, { width: 355, align: 'center' });
+  doc.font('Helvetica-Bold').fontSize(7.5).fillColor('#006400').text('Approved by AICTE New Delhi, Directorate of Technical Education, M.S. Mumbai', 120, 105, { width: 355, align: 'center' });
   doc.text('& Affiliated to R.T.M. Nagpur University, Nagpur.', 120, 114, { width: 355, align: 'center' });
 
-  doc.font('Helvetica').fontSize(7).fillColor('black').text('Ph.No. : (0712) 2711400, 2710030, Fax : (0712) 2713658', 120, 124, { width: 355, align: 'center' });
+  doc.font('Helvetica').fontSize(7).fillColor('black').text('Ph.No. : (0712) 2711400, 2711030, Fax : (0712) 2713658', 120, 124, { width: 355, align: 'center' });
   doc.font('Helvetica').fontSize(7).text('Email : kdkce4147@gmail.com; Web Site : www.kdkce.edu.in', 120, 133, { width: 355, align: 'center' });
 
   // Officer Row (Principal & Vice Principal titles)
@@ -124,14 +131,14 @@ export const generateCertificate = async ({
   doc.font('Helvetica-Bold').fontSize(9.5).text('Dr. Avinash M. Badar', 355, 150, { width: 200, align: 'right' });
   doc.font('Helvetica').fontSize(9).text('Vice Principal', 355, 162, { width: 200, align: 'right' });
 
-  // Center Vision statement bounded by lines
-  doc.lineWidth(1);
-  doc.strokeColor('black');
-  doc.moveTo(40, 180).lineTo(555, 180).stroke();
+  // Double Divider line below officer row
+  doc.lineWidth(1.5).strokeColor('#800000').moveTo(40, 174).lineTo(555, 174).stroke();
+  doc.lineWidth(0.5).strokeColor('#800000').moveTo(40, 176).lineTo(555, 176).stroke();
 
-  doc.font('Helvetica-BoldOblique').fontSize(8.5).fillColor('#1f2f6b').text('VISION : Service to the Society Through Quality Technical Education', 40, 184, { width: 515, align: 'center' });
-
-  doc.moveTo(40, 196).lineTo(555, 196).stroke();
+  // Center Vision statement bounded by single lines
+  doc.lineWidth(0.8).strokeColor('#800000').moveTo(40, 182).lineTo(555, 182).stroke();
+  doc.font('Helvetica-BoldOblique').fontSize(8.5).fillColor('#0000ff').text('VISION : Service to the Society Through Quality Technical Education', 40, 186, { width: 515, align: 'center' });
+  doc.lineWidth(0.8).strokeColor('#800000').moveTo(40, 198).lineTo(555, 198).stroke();
 
   // Dynamic Ref No and Date Row
   const formattedDate = new Date().toLocaleDateString("en-GB", {
@@ -154,20 +161,20 @@ export const generateCertificate = async ({
   doc.font('Helvetica-Bold').fontSize(10).fillColor('black').text(refNo, 40, 206, { width: 350, align: 'left' });
   doc.text(`Date : ${formattedDate}`, 355, 206, { width: 200, align: 'right' });
 
-  doc.lineWidth(1.5).moveTo(40, 222).lineTo(555, 222).stroke();
+  doc.lineWidth(1.5).strokeColor('#800000').moveTo(40, 222).lineTo(555, 222).stroke();
 
   // Document Title & Subtitle
   let titleText = documentType.toUpperCase();
   if (!titleText.endsWith("CERTIFICATE")) {
     titleText = `${titleText} CERTIFICATE`;
   }
-  doc.font('Helvetica-Bold').fontSize(14).text(titleText, 40, 275, {
+  doc.font('Times-Bold').fontSize(18).fillColor('black').text(titleText, 40, 260, {
     width: 515,
     align: 'center',
     underline: true
   });
 
-  doc.font('Helvetica-Bold').fontSize(12).text('(TO WHOMSOEVER IT MAY CONCERN)', 40, 295, {
+  doc.font('Times-Bold').fontSize(12).text('(TO WHOMSOEVER IT MAY CONCERN)', 40, 282, {
     width: 515,
     align: 'center',
     underline: true
@@ -198,11 +205,11 @@ export const generateCertificate = async ({
   const p2 = `This certificate is being issued on his/her own request.`;
 
   doc.x = 40;
-  doc.y = 340;
-  writeFormattedText(doc, p1, { width: 515, align: 'justify', lineGap: 6 });
+  doc.y = 330;
+  writeFormattedText(doc, p1, { width: 515, align: 'justify', lineGap: 7 }, 'Times-Roman', 'Times-Bold');
 
   doc.moveDown(1.5);
-  writeFormattedText(doc, p2, { width: 515, align: 'left' });
+  writeFormattedText(doc, p2, { width: 515, align: 'left' }, 'Times-Roman', 'Times-Bold');
 
   // Verification Area (Bottom Left)
   const certificateUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/raw/upload/certificates/${certificateId}.pdf`;
@@ -224,7 +231,7 @@ export const generateCertificate = async ({
   doc.fillColor('green');
   doc.font('Helvetica-Bold').fontSize(8.5);
   doc.text('Verified', 110, 690, { continued: true });
-  doc.fillColor('#1f2f6b');
+  doc.fillColor('#0000ff');
   doc.text(' & Approved Digitally', { continued: false });
 
   doc.fillColor('gray');
@@ -232,22 +239,24 @@ export const generateCertificate = async ({
   doc.text('Signed digitally via CollegeDocs system.', 110, 703, { width: 220 });
 
   // Principal Signature Block (Bottom Right)
-  const principalSignaturePath = path.join(process.cwd(), "uploads", "msdsign.png");
+  const signaturePath = path.join(process.cwd(), "uploads", "signature_stamp.png");
+  const fallbackSignaturePath = path.join(process.cwd(), "uploads", "msdsign.png");
+  const actualSignaturePath = fs.existsSync(signaturePath) ? signaturePath : fallbackSignaturePath;
 
-  if (fs.existsSync(principalSignaturePath)) {
-    doc.image(principalSignaturePath, 390, 615, {
+  if (fs.existsSync(actualSignaturePath)) {
+    doc.image(actualSignaturePath, 380, 595, {
       width: 130,
     });
   }
 
   doc.lineWidth(1).strokeColor('black');
-  doc.moveTo(370, 695).lineTo(530, 695).stroke();
+  doc.moveTo(370, 685).lineTo(530, 685).stroke();
 
-  doc.font('Helvetica-Bold').fontSize(11).fillColor('black').text('PRINCIPAL', 370, 702, {
+  doc.font('Helvetica-Bold').fontSize(11).fillColor('black').text('PRINCIPAL', 370, 692, {
     width: 160,
     align: 'center',
   });
-  doc.text('KDKCE, NAGPUR', 370, 715, {
+  doc.text('KDKCE, NAGPUR', 370, 705, {
     width: 160,
     align: 'center',
   });
@@ -291,7 +300,7 @@ export const generateCertificate = async ({
   console.log('QR URL:', certificateUrl);
   console.log('FINAL PDF URL:', uploadResult.secure_url);
 
-  if (fs.existsSync(filePath)) {
+  if (fs.existsSync(filePath) && !certificateId.startsWith("TEST-")) {
     fs.unlinkSync(filePath);
   }
 
