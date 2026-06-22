@@ -244,8 +244,8 @@ export const generateCertificate = async ({
   const actualSignaturePath = fs.existsSync(signaturePath) ? signaturePath : fallbackSignaturePath;
 
   if (fs.existsSync(actualSignaturePath)) {
-    doc.image(actualSignaturePath, 380, 595, {
-      width: 130,
+    doc.image(actualSignaturePath, 400, 585, {
+      width: 100,
     });
   }
 
