@@ -198,9 +198,21 @@ export const generateCertificate = async ({
   const formattedCourse = course || "B.Tech.";
   const courseYearText = `${formattedCourse} ${yearOfStudy || "1st"} year (${formattedBranch})`;
 
-  const p1 = isAttendanceCertificate
-    ? `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$. The student's attendance for the semester $$${semester || "1st"} $$is $$${attendancePercentage ?? "N/A"}%$$.`
-    : `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$.`;
+  const docTypeUpper = documentType.toUpperCase();
+  const isRecommendationCertificate = docTypeUpper.includes("RECOMMENDATION");
+  const isCharacterCertificate = docTypeUpper.includes("CHARACTER");
+
+  let p1 = "";
+  if (isAttendanceCertificate) {
+    p1 = `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$. The student's attendance for the semester $$${semester || "1st"} $$is $$${attendancePercentage ?? "N/A"}%$$.`;
+  } else if (isRecommendationCertificate) {
+    p1 = `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$. During his/her tenure, he/she has demonstrated outstanding academic performance, strong diligence, and exemplary conduct. I highly recommend him/her for any future academic endeavors or professional pursuits.`;
+  } else if (isCharacterCertificate) {
+    p1 = `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$. To the best of my knowledge, he/she bears a good moral character and has shown clean conduct during his/her stay at this institution.`;
+  } else {
+    // Default to Bonafide template
+    p1 = `This is to certify that $$${studentTitle} $$is a bonafide student of this institution and is a student of $$${courseYearText} $$for the session $$${fullSession}$$.`;
+  }
 
   const p2 = `This certificate is being issued on his/her own request.`;
 
