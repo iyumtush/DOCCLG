@@ -49,32 +49,32 @@ import {
 
 
 export default function HomePage() {
- const router = useRouter();
- const [loginType, setLoginType] = useState<"student" | "faculty" | "admin" | "register">("student");
-const [otpStep, setOtpStep] = useState(false);
-const [otp, setOtp] = useState("");
-const [otpEmail, setOtpEmail] = useState("");
-const [otpLoading, setOtpLoading] = useState(false);
-const [otpMessage, setOtpMessage] = useState("");
-const [resendTimer, setResendTimer] = useState(0);
-const [canResend, setCanResend] = useState(true);
-const [registerRole, setRegisterRole] = useState("STUDENT");
-const [showLoginPassword, setShowLoginPassword] = useState(false);
-const [showFacultyPassword, setShowFacultyPassword] = useState(false);
-const [branch, setBranch] = useState("");
-const [course, setCourse] = useState("");
-const [section, setSection] = useState("");
-const [roleError, setRoleError] = useState("");
-const [passwordShake, setPasswordShake] = useState(false);
-const [roleShake, setRoleShake] = useState(false);
-const [showAdminPassword, setShowAdminPassword] = useState(false);
-const [showRegisterPassword, setShowRegisterPassword] = useState(false);
-const [passwordError, setPasswordError] = useState("");
-const [forgotStep, setForgotStep] = useState(false);
-const [resetStep, setResetStep] = useState(false);
-const [resetEmail, setResetEmail] = useState("");
-const [newPassword, setNewPassword] = useState("");
-const [forgotLoading, setForgotLoading] = useState(false);
+  const router = useRouter();
+  const [loginType, setLoginType] = useState<"student" | "faculty" | "admin" | "register">("student");
+  const [otpStep, setOtpStep] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpEmail, setOtpEmail] = useState("");
+  const [otpLoading, setOtpLoading] = useState(false);
+  const [otpMessage, setOtpMessage] = useState("");
+  const [resendTimer, setResendTimer] = useState(0);
+  const [canResend, setCanResend] = useState(true);
+  const [registerRole, setRegisterRole] = useState("STUDENT");
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showFacultyPassword, setShowFacultyPassword] = useState(false);
+  const [branch, setBranch] = useState("");
+  const [course, setCourse] = useState("");
+  const [section, setSection] = useState("");
+  const [roleError, setRoleError] = useState("");
+  const [passwordShake, setPasswordShake] = useState(false);
+  const [roleShake, setRoleShake] = useState(false);
+  const [showAdminPassword, setShowAdminPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [forgotStep, setForgotStep] = useState(false);
+  const [resetStep, setResetStep] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
   const [facultyRole, setFacultyRole] = useState<"class-incharge" | "hod">("class-incharge");
   const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -82,472 +82,472 @@ const [forgotLoading, setForgotLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
-const [stats, setStats] = useState({
-  students: 0,
-  faculty: 0,
-  documents: 0,
-});
-const [statsLoading, setStatsLoading] = useState(true);
- 
+  const [stats, setStats] = useState({
+    students: 0,
+    faculty: 0,
+    documents: 0,
+  });
+  const [statsLoading, setStatsLoading] = useState(true);
 
-useEffect(() => {
-  const savedToken = sessionStorage.getItem("token");
-  const savedUser = sessionStorage.getItem("user");
 
-  if (savedToken && savedUser) {
-    setToken(savedToken);
-    setUser(JSON.parse(savedUser));
-  }
+  useEffect(() => {
+    const savedToken = sessionStorage.getItem("token");
+    const savedUser = sessionStorage.getItem("user");
 
-  setAuthChecked(true);
-}, []); 
+    if (savedToken && savedUser) {
+      setToken(savedToken);
+      setUser(JSON.parse(savedUser));
+    }
 
-useEffect(() => {
-  const updateStatus = () => {
-    setIsOnline(navigator.onLine);
-  };
+    setAuthChecked(true);
+  }, []);
 
-  updateStatus();
+  useEffect(() => {
+    const updateStatus = () => {
+      setIsOnline(navigator.onLine);
+    };
 
-  window.addEventListener("online", updateStatus);
-  window.addEventListener("offline", updateStatus);
+    updateStatus();
 
-  return () => {
-    window.removeEventListener("online", updateStatus);
-    window.removeEventListener("offline", updateStatus);
-  };
-}, []);
+    window.addEventListener("online", updateStatus);
+    window.addEventListener("offline", updateStatus);
 
-useEffect(() => {
-  const loadStats = async () => {
-    setStatsLoading(true);
+    return () => {
+      window.removeEventListener("online", updateStatus);
+      window.removeEventListener("offline", updateStatus);
+    };
+  }, []);
+
+  useEffect(() => {
+    const loadStats = async () => {
+      setStatsLoading(true);
+      try {
+        const res = await fetch(
+          'https://docclg-backend.onrender.com/api/stats'
+        );
+
+        if (!res.ok) return;
+
+        const data = await res.json();
+
+        setStats({
+          students: data.students || 0,
+          faculty: data.faculty || 0,
+          documents: data.documents || 0,
+        });
+      } catch (error) {
+        console.error('Failed to load stats', error);
+      } finally {
+        setStatsLoading(false);
+      }
+    };
+
+    loadStats();
+  }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (resendTimer > 0) {
+      interval = setInterval(() => {
+        setResendTimer((prev) => prev - 1);
+      }, 1000);
+    } else {
+      setCanResend(true);
+    }
+
+    return () => clearInterval(interval);
+  }, [resendTimer]);
+
+
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const formData = new FormData(e.currentTarget);
+    const identifier = formData.get("identifier") as string;
+    const password = formData.get("password") as string;
+
+    let role = "STUDENT";
+    if (loginType === "faculty") {
+      role = facultyRole === "class-incharge" ? "CLASS_INCHARGE" : "HOD";
+    } else if (loginType === "admin") {
+      role = "ADMIN";
+    }
+
     try {
-      const res = await fetch(
-        'https://docclg-backend.onrender.com/api/stats'
+      const response = await fetch(
+        `https://docclg-backend.onrender.com/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: identifier,
+            password,
+            role,
+          }),
+        }
       );
 
-      if (!res.ok) return;
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Login failed");
+        return;
+      }
+
+      setUser(data.user);
+      setToken(data.token);
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("user", JSON.stringify(data.user));
+
+      if (data.user.role === "STUDENT") {
+        router.push("/student/dashboard");
+      } else if (
+        data.user.role === "CLASS_INCHARGE" ||
+        data.user.role === "HOD"
+      ) {
+        router.push("/faculty/dashboard");
+      } else if (data.user.role === "ADMIN") {
+        router.push("/admin/dashboard");
+      }
+
+    } catch (err) {
+      console.error(err);
+      setError("Network error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (email: string) => {
+    try {
+      setForgotLoading(true);
+
+      const res = await fetch("https://docclg-backend.onrender.com/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
 
       const data = await res.json();
 
-      setStats({
-        students: data.students || 0,
-        faculty: data.faculty || 0,
-        documents: data.documents || 0,
-      });
-    } catch (error) {
-      console.error('Failed to load stats', error);
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      }
+
+      toast.success("Reset OTP sent to your email 📧");
+      setResetStep(true);
     } finally {
-      setStatsLoading(false);
+      setForgotLoading(false);
     }
   };
 
-  loadStats();
-}, []);
-
-useEffect(() => {
-  let interval: NodeJS.Timeout;
-
-  if (resendTimer > 0) {
-    interval = setInterval(() => {
-      setResendTimer((prev) => prev - 1);
-    }, 1000);
-  } else {
-    setCanResend(true);
-  }
-
-  return () => clearInterval(interval);
-}, [resendTimer]);
 
 
+  // HANDLE SEND OTP (OTP FUNCTIONS)
 
-const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
 
-  const formData = new FormData(e.currentTarget);
-  const identifier = formData.get("identifier") as string;
-  const password = formData.get("password") as string;
+  const handleSendOtp = async (email: string) => {
+    try {
+      setOtpLoading(true);
 
-  let role = "STUDENT";
-  if (loginType === "faculty") {
-    role = facultyRole === "class-incharge" ? "CLASS_INCHARGE" : "HOD";
-  } else if (loginType === "admin") {
-    role = "ADMIN";
-  }
+      // 🔐 PASSWORD GET
+      let passwordValue = "";
 
-  try {
-    const response = await fetch(
-      `https://docclg-backend.onrender.com/api/auth/login`,
-      {
+      if (loginType === "student") {
+        const input = document.getElementById("student-password") as HTMLInputElement;
+        passwordValue = input?.value;
+      } else if (loginType === "faculty") {
+        const input = document.getElementById("faculty-password") as HTMLInputElement;
+        passwordValue = input?.value;
+      }
+
+      // 🎭 ROLE LOGIC
+      let role = "STUDENT";
+
+      if (loginType === "faculty") {
+        role = facultyRole === "class-incharge"
+          ? "CLASS_INCHARGE"
+          : "HOD";
+      }
+
+      // 🚀 API CALL
+      const res = await fetch("https://docclg-backend.onrender.com/api/auth/send-otp", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
-          email: identifier,
-          password,
+          email,
+          password: passwordValue,
           role,
         }),
+      });
+
+      const data = await res.json();
+
+      console.log("OTP API RESPONSE:", data);
+
+      // 🧪 DEBUG 1 → WHAT BACKEND RETURNS
+      console.log("Backend response:", data);
+
+      // ❌ ERROR HANDLING
+      if (!res.ok) {
+
+        if (loginType === "faculty" && data.message === "Invalid role selected") {
+
+          console.log("Setting role error");
+
+          setRoleError("Wrong role selected ❌");
+
+          setRoleShake(true);
+          setTimeout(() => setRoleShake(false), 500);
+
+          setTimeout(() => setRoleError(""), 2000);
+        }
+
+        else if (data.message === "Invalid password") {
+
+          console.log("Setting password error");
+
+          setPasswordError("Incorrect password ❌");
+
+          setPasswordShake(true);
+          setTimeout(() => setPasswordShake(false), 500);
+
+          setTimeout(() => setPasswordError(""), 2000);
+        }
+
+        else {
+          console.log("Other error:", data.message);
+          toast.error(data.message || "Failed to send OTP");
+        }
+
+        setOtpLoading(false);
+        return;
       }
-    );
 
-    const data = await response.json();
+      // ✅ SUCCESS
+      console.log("OTP SUCCESS FLOW RUNNING");
 
-    if (!response.ok) {
-      setError(data.message || "Login failed");
-      return;
+      setOtpEmail(email);
+      setOtp("");
+      setOtpStep(true);
+
+      setCanResend(false);
+      setResendTimer(30);
+
+      toast.success("OTP sent! Check your email 📧");
+
+    } catch (err) {
+      console.error("OTP ERROR:", err);
+      toast.error("Failed to send OTP. Check backend/server logs.");
+    } finally {
+      setOtpLoading(false);
     }
+  };
 
-    setUser(data.user);
-    setToken(data.token);
-    sessionStorage.setItem("token", data.token);
-    sessionStorage.setItem("user", JSON.stringify(data.user));
-
-    if (data.user.role === "STUDENT") {
-      router.push("/student/dashboard");
-    } else if (
-      data.user.role === "CLASS_INCHARGE" ||
-      data.user.role === "HOD"
-    ) {
-      router.push("/faculty/dashboard");
-    } else if (data.user.role === "ADMIN") {
-      router.push("/admin/dashboard");
-    }
-
-  } catch (err) {
-    console.error(err);
-    setError("Network error");
-  } finally {
-    setLoading(false);
-  }
-};
-
-const handleForgotPassword = async (email: string) => {
-  try {
-    setForgotLoading(true);
-
-    const res = await fetch("https://docclg-backend.onrender.com/api/auth/forgot-password", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email }),
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      toast.error(data.message);
-      return;
-    }
-
-    toast.success("Reset OTP sent to your email 📧");
-    setResetStep(true);
-  } finally {
-    setForgotLoading(false);
-  }
-};
-
-
-
-// HANDLE SEND OTP (OTP FUNCTIONS)
-
-
-const handleSendOtp = async (email: string) => {
-  try {
-    setOtpLoading(true);
-
-    // 🔐 PASSWORD GET
-    let passwordValue = "";
-
-    if (loginType === "student") {
-      const input = document.getElementById("student-password") as HTMLInputElement;
-      passwordValue = input?.value;
-    } else if (loginType === "faculty") {
-      const input = document.getElementById("faculty-password") as HTMLInputElement;
-      passwordValue = input?.value;
-    }
-
-    // 🎭 ROLE LOGIC
-    let role = "STUDENT";
-
-    if (loginType === "faculty") {
-      role = facultyRole === "class-incharge"
-        ? "CLASS_INCHARGE"
-        : "HOD";
-    }
-
-    // 🚀 API CALL
-    const res = await fetch("https://docclg-backend.onrender.com/api/auth/send-otp", {
+  const handleResetPassword = async () => {
+    const res = await fetch("https://docclg-backend.onrender.com/api/auth/reset-password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email,
-        password: passwordValue,
-        role,
+        email: resetEmail,
+        otp,
+        newPassword,
       }),
     });
 
     const data = await res.json();
 
-console.log("OTP API RESPONSE:", data);
-
-    // 🧪 DEBUG 1 → WHAT BACKEND RETURNS
-   console.log("Backend response:", data);
-
-    // ❌ ERROR HANDLING
     if (!res.ok) {
-
-  if (loginType === "faculty" && data.message === "Invalid role selected") {
-
-    console.log("Setting role error");
-
-    setRoleError("Wrong role selected ❌");
-
-    setRoleShake(true);
-    setTimeout(() => setRoleShake(false), 500);
-
-    setTimeout(() => setRoleError(""), 2000);
-  } 
-
-  else if (data.message === "Invalid password") {
-
-    console.log("Setting password error");
-
-    setPasswordError("Incorrect password ❌");
-
-    setPasswordShake(true);
-    setTimeout(() => setPasswordShake(false), 500);
-
-    setTimeout(() => setPasswordError(""), 2000);
-  } 
-
-  else {
-  console.log("Other error:", data.message);
-  toast.error(data.message || "Failed to send OTP");
-}
-
-setOtpLoading(false);
-return;
-}
-
-    // ✅ SUCCESS
-console.log("OTP SUCCESS FLOW RUNNING");
-
-setOtpEmail(email);
-setOtp("");
-setOtpStep(true);
-
-setCanResend(false);
-setResendTimer(30);
-
-toast.success("OTP sent! Check your email 📧");
-
-  } catch (err) {
-    console.error("OTP ERROR:", err);
-toast.error("Failed to send OTP. Check backend/server logs.");
-  } finally {
-    setOtpLoading(false);
-  }
-};
-
-const handleResetPassword = async () => {
-  const res = await fetch("https://docclg-backend.onrender.com/api/auth/reset-password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email: resetEmail,
-      otp,
-      newPassword,
-    }),
-  });
-
-  const data = await res.json();
-
-  if (!res.ok) {
-    toast.error(data.message || "Failed to reset password");
-    return;
-  }
-
-  toast.success("Password updated successfully 🎉");
-  setForgotStep(false);
-  setResetStep(false);
-};
-
-
-const handleVerifyOtp = async () => {
-  
-try {
-    const res = await fetch(
-      `https://docclg-backend.onrender.com/api/auth/verify-otp`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: otpEmail,
-          otp,
-        }),
-      }
-    );
-
-    const data = await res.json();
-
-    if (!res.ok) {
-  toast.error(data.message || "Invalid OTP");
-  setOtpLoading(false);
-  return;
-}
-
-    // ✅ Save login
-    sessionStorage.setItem("token", data.token);
-    sessionStorage.setItem("user", JSON.stringify(data.user));
-
-    toast.success(`Welcome back, ${data.user.name} 👋`);
-
-    // ✅ ADD THIS (REDIRECT LOGIC)
-    if (data.user.role === "STUDENT") {
-      router.push("/student/dashboard");
-    } else if (
-      data.user.role === "CLASS_INCHARGE" ||
-      data.user.role === "HOD"
-    ) {
-      router.push("/faculty/dashboard");
-    } else if (data.user.role === "ADMIN") {
-      router.push("/admin/dashboard");
-    }
-
-  } catch (err) {
-    console.error(err);
-    toast.error("OTP verification failed");
-  }
-};
-
-
-
-
-
-const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-
-  if (loading) return;
-  setLoading(true);
-
-  const form = e.currentTarget;
-  const formData = new FormData(form);
-
-  const name = formData.get("name");
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const branch = formData.get("branch"); // ✅ ADDED
-  const section = formData.get("section");
-  const collegeId = formData.get("collegeId");
-  const rollNumber = formData.get("rollNumber");
-  const employeeId = formData.get("employeeId");
-  const course = formData.get("course");
-  const yearOfStudy = formData.get("yearOfStudy");
-  if ((course === "B.Tech" || course === "M.Tech") && !branch) {
-  toast.warning("Please select a branch");
-  setLoading(false);
-  return;
-}
-
-  try {
-    const res = await fetch(
-      "https://docclg-backend.onrender.com/api/auth/register",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          role: registerRole,
-          branch,
-          section,
-          collegeId,
-          rollNumber,
-          employeeId,
-          course,
-          yearOfStudy,
-        }),
-      }
-    );
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      toast.error(data.message || "Registration failed");
+      toast.error(data.message || "Failed to reset password");
       return;
     }
 
-    toast.success(data.message || "Registration successful 🎉");
+    toast.success("Password updated successfully 🎉");
+    setForgotStep(false);
+    setResetStep(false);
+  };
 
-    form.reset();
 
-  } catch (err) {
-    console.error(err);
-    toast.error("Network error");
-  } finally {
-    setLoading(false);
-  }
-};
+  const handleVerifyOtp = async () => {
+
+    try {
+      const res = await fetch(
+        `https://docclg-backend.onrender.com/api/auth/verify-otp`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: otpEmail,
+            otp,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || "Invalid OTP");
+        setOtpLoading(false);
+        return;
+      }
+
+      // ✅ Save login
+      sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("user", JSON.stringify(data.user));
+
+      toast.success(`Welcome back, ${data.user.name} 👋`);
+
+      // ✅ ADD THIS (REDIRECT LOGIC)
+      if (data.user.role === "STUDENT") {
+        router.push("/student/dashboard");
+      } else if (
+        data.user.role === "CLASS_INCHARGE" ||
+        data.user.role === "HOD"
+      ) {
+        router.push("/faculty/dashboard");
+      } else if (data.user.role === "ADMIN") {
+        router.push("/admin/dashboard");
+      }
+
+    } catch (err) {
+      console.error(err);
+      toast.error("OTP verification failed");
+    }
+  };
+
+
+
+
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (loading) return;
+    setLoading(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const branch = formData.get("branch"); // ✅ ADDED
+    const section = formData.get("section");
+    const collegeId = formData.get("collegeId");
+    const rollNumber = formData.get("rollNumber");
+    const employeeId = formData.get("employeeId");
+    const course = formData.get("course");
+    const yearOfStudy = formData.get("yearOfStudy");
+    if ((course === "B.Tech" || course === "M.Tech") && !branch) {
+      toast.warning("Please select a branch");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "https://docclg-backend.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            role: registerRole,
+            branch,
+            section,
+            collegeId,
+            rollNumber,
+            employeeId,
+            course,
+            yearOfStudy,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || "Registration failed");
+        return;
+      }
+
+      toast.success(data.message || "Registration successful 🎉");
+
+      form.reset();
+
+    } catch (err) {
+      console.error(err);
+      toast.error("Network error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
- 
-  
 
 
-   <div className="min-h-screen">
+
+
+    <div className="min-h-screen">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex justify-between items-center py-6">
-      
-      {/* LEFT: Logo + Title */}
-      <div className="flex items-center space-x-4">
-        <img
-          src="/collegedocs-logo.png"
-          alt="CollegeDocs Logo"
-          className="w-14 h-14 object-contain"
-        />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-6">
 
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">
-CollegeDocs          </h1>
-<p className="text-xs text-blue-600 font-medium">
-  KDKCE Nagpur
-</p>
-          <p className="text-sm text-gray-600">
-           Smart Academic
-Document Management System 
-          </p>
+            {/* LEFT: Logo + Title */}
+            <div className="flex items-center space-x-4">
+              <img
+                src="/collegedocs-logo.png"
+                alt="CollegeDocs Logo"
+                className="w-14 h-14 object-contain"
+              />
+
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  CollegeDocs          </h1>
+                <p className="text-xs text-blue-600 font-medium">
+                  KDKCE Nagpur
+                </p>
+                <p className="text-sm text-gray-600">
+                  Smart Academic
+                  Document Management System
+                </p>
+              </div>
+            </div>
+
+            {/* RIGHT: Status */}
+            <div className="flex items-center space-x-4">
+              <Badge
+                variant="outline"
+                className={isOnline
+                  ? "text-green-700 border-green-200 bg-green-50"
+                  : "text-red-700 border-red-200 bg-red-50"
+                }
+              >
+                {isOnline ? "System Online" : "System Offline"}
+              </Badge>
+            </div>
+
+          </div>
         </div>
-      </div>
-
-      {/* RIGHT: Status */}
-      <div className="flex items-center space-x-4">
-        <Badge
-          variant="outline"
-          className={isOnline
-            ? "text-green-700 border-green-200 bg-green-50"
-            : "text-red-700 border-red-200 bg-red-50"
-          }
-        >
-          {isOnline ? "System Online" : "System Offline"}
-        </Badge>
-      </div>
-
-    </div>
-  </div>
-</header>
+      </header>
 
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -556,13 +556,13 @@ Document Management System
           <div className="space-y-8">
             <div className="text-center lg:text-left">
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                Digital Documents 
+                Digital Documents
                 <span className="text-blue-600 block">Management System</span>
               </h2>
               <p className="text-xl text-gray-600 mb-8">
                 A secure digital platform for students and faculty to request,
-approve, track, and receive academic documents online through a
-multi-level approval workflow.
+                approve, track, and receive academic documents online through a
+                multi-level approval workflow.
               </p>
             </div>
 
@@ -654,47 +654,47 @@ multi-level approval workflow.
               <CardContent className="p-6">
                 <div className="flex items-center space-x-3 mb-4">
                   <Building2 className="w-6 h-6" />
-<h3 className="text-lg font-semibold">
-  KDK College of Engineering, Nagpur
-</h3>                </div>
+                  <h3 className="text-lg font-semibold">
+                    KDK College of Engineering, Nagpur
+                  </h3>                </div>
                 <div className="space-y-2 text-blue-100">
                   <div className="flex items-center space-x-2">
                     <MapPin className="w-4 h-4" />
                     <span className="text-sm">
 
-  Great Nag Road, Nandanvan, Nagpur – 440024 (M.S.)
+                      Great Nag Road, Nandanvan, Nagpur – 440024 (M.S.)
 
-</span>
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Phone className="w-4 h-4" />
                     <span className="text-sm">
 
-  0712-2711400
+                      0712-2711400
 
-</span>
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Mail className="w-4 h-4" />
                     <span className="text-sm">
 
-  www.kdkce.edu.in
+                      www.kdkce.edu.in
 
-</span>
+                    </span>
                   </div>
                   <div className="pt-3 border-t border-blue-400 mt-3">
-  <p className="text-sm">
-    Established: 1984
-  </p>
+                    <p className="text-sm">
+                      Established: 1984
+                    </p>
 
-  <p className="text-sm">
-    Affiliated to R.T.M. Nagpur University
-  </p>
+                    <p className="text-sm">
+                      Affiliated to R.T.M. Nagpur University
+                    </p>
 
-  <p className="text-sm">
-    NAAC Grade A | NBA Accredited
-  </p>
-</div>
+                    <p className="text-sm">
+                      NAAC Grade A | NBA Accredited
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -713,740 +713,737 @@ multi-level approval workflow.
                 {/* Login Type Selector */}
                 <Tabs value={loginType} onValueChange={(value) => setLoginType(value as any)} className="w-full">
                   <TabsList className="grid w-full grid-cols-4">
-  <TabsTrigger value="student">Student</TabsTrigger>
-  <TabsTrigger value="faculty">Faculty</TabsTrigger>
-  <TabsTrigger value="admin">Admin</TabsTrigger>
-  <TabsTrigger value="register">Register</TabsTrigger>
-</TabsList>
+                    <TabsTrigger value="student">Student</TabsTrigger>
+                    <TabsTrigger value="faculty">Faculty</TabsTrigger>
+                    <TabsTrigger value="admin">Admin</TabsTrigger>
+                    <TabsTrigger value="register">Register</TabsTrigger>
+                  </TabsList>
 
                   {/* Student Login */}
                   <TabsContent value="student" className="space-y-4 mt-6">
                     <form onSubmit={handleLogin} className="space-y-4">
                       <div className="space-y-2">
                         <Label htmlFor="student-id">Registration Number / Email</Label>
-                        <Input 
-                          id="student-id" 
+                        <Input
+                          id="student-id"
                           name="identifier"
                           placeholder="Enter your registration number or email"
                           className="h-11"
                           required
                         />
                       </div>
-<div className={`space-y-2 ${passwordShake ? "animate-shake" : ""}`}>
+                      <div className={`space-y-2 ${passwordShake ? "animate-shake" : ""}`}>
 
-  <Label htmlFor="student-password">Password</Label>
+                        <Label htmlFor="student-password">Password</Label>
 
-  <div className="relative">
-    <Input 
-      id="student-password" 
-      name="password"
-      type={showLoginPassword ? "text" : "password"}
-      placeholder="Enter your password"
-className={`h-11 pr-10 ${passwordError ? "ring-2 ring-red-400" : ""}`}      
-required
+                        <div className="relative">
+                          <Input
+                            id="student-password"
+                            name="password"
+                            type={showLoginPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            className={`h-11 pr-10 ${passwordError ? "ring-2 ring-red-400" : ""}`}
+                            required
 
-onChange={(e) => {
-  setPasswordError("");
-}}
-    />
+                            onChange={(e) => {
+                              setPasswordError("");
+                            }}
+                          />
 
-    <button
-      type="button"
-      onClick={() => setShowLoginPassword((prev) => !prev)}
-      className="absolute right-3 top-1/2 -translate-y-1/2"
-    >
-      {showLoginPassword ? (
-        <DoorOpen className="text-green-500 rotate-12" size={20} />
-      ) : (
-        <DoorClosed className="text-gray-500" size={20} />
-      )}
-    </button>
-  </div>
+                          <button
+                            type="button"
+                            onClick={() => setShowLoginPassword((prev) => !prev)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2"
+                          >
+                            {showLoginPassword ? (
+                              <DoorOpen className="text-green-500 rotate-12" size={20} />
+                            ) : (
+                              <DoorClosed className="text-gray-500" size={20} />
+                            )}
+                          </button>
+                        </div>
 
-  {/* 🔴 ERROR MESSAGE */}
-  {passwordError && (
-    <p className="text-sm text-red-600">
-      {passwordError}
-    </p>
-  )}
-</div>
+                        {/* 🔴 ERROR MESSAGE */}
+                        {passwordError && (
+                          <p className="text-sm text-red-600">
+                            {passwordError}
+                          </p>
+                        )}
+                      </div>
                       {error && (
                         <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
                           {error}
                         </div>
                       )}
                       {!otpStep ? (
- // Send OTP Button  
+                        // Send OTP Button  
 
-<Button
-  type="button"
-  className={`w-full h-11 bg-blue-600 hover:bg-blue-700 ${
-    otpLoading ? "opacity-50 cursor-not-allowed" : ""
-  }`}
-  disabled={otpLoading}
-  onClick={() => {
-    const emailInput = document.getElementById("student-id") as HTMLInputElement;
+                        <Button
+                          type="button"
+                          className={`w-full h-11 bg-blue-600 hover:bg-blue-700 ${otpLoading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                          disabled={otpLoading}
+                          onClick={() => {
+                            const emailInput = document.getElementById("student-id") as HTMLInputElement;
 
-    if (!emailInput?.value) {
-      alert("Enter email first");
-      return;
-    }
+                            if (!emailInput?.value) {
+                              alert("Enter email first");
+                              return;
+                            }
 
-    handleSendOtp(emailInput.value);
-  }}
->
- <>
-  {otpLoading && (
-    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-  )}
-  {otpLoading ? "Sending OTP..." : "Send OTP"}
-</>
+                            handleSendOtp(emailInput.value);
+                          }}
+                        >
+                          <>
+                            {otpLoading && (
+                              <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            )}
+                            {otpLoading ? "Sending OTP..." : "Send OTP"}
+                          </>
 
-</Button>
-
-
-) : (
-  <>
-  <div className="flex justify-between gap-2">
-  {Array.from({ length: 6 }).map((_, index) => (
-    <Input
-      key={index}
-      maxLength={1}
-      className="w-12 h-12 text-center text-lg"
-      value={otp[index] || ""}
-      onChange={(e) => {
-        const value = e.target.value;
-        if (!/^[0-9]?$/.test(value)) return;
-
-        const newOtp = otp.split("");
-        newOtp[index] = value;
-        setOtp(newOtp.join(""));
-
-        // 👉 auto focus next
-        if (value && e.target.nextSibling) {
-          (e.target.nextSibling as HTMLInputElement).focus();
-        }
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Backspace" && !otp[index] && e.currentTarget.previousSibling) {
-          (e.currentTarget.previousSibling as HTMLInputElement).focus();
-        }
-      }}
-    />
-  ))}
-</div>
-
-  <Button
-    type="button"
-    className="w-full h-11 bg-green-600 hover:bg-green-700"
-    onClick={handleVerifyOtp}
-  >
-    Verify OTP
-  </Button>
-
-  {/* 🔁 RESEND OTP */}
-  <Button
-    type="button"
-    variant="outline"
-    disabled={!canResend}
-    className={`w-full ${
-      !canResend ? "opacity-50 cursor-not-allowed" : ""
-    }`}
-    onClick={() => handleSendOtp(otpEmail)}
-  >
-    {canResend
-      ? "Resend OTP"
-      : `Resend in ${resendTimer}s`}
-  </Button>
-</>
-)}
+                        </Button>
 
 
-{/* 🔥 FORGOT PASSWORD UI */}
+                      ) : (
+                        <>
+                          <div className="flex justify-between gap-2">
+                            {Array.from({ length: 6 }).map((_, index) => (
+                              <Input
+                                key={index}
+                                maxLength={1}
+                                className="w-12 h-12 text-center text-lg"
+                                value={otp[index] || ""}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  if (!/^[0-9]?$/.test(value)) return;
 
-{forgotStep && !resetStep && (
-  <div className="space-y-3 mt-4">
-    <Input
-      placeholder="Enter your email"
-      onChange={(e) => setResetEmail(e.target.value)}
-    />
+                                  const newOtp = otp.split("");
+                                  newOtp[index] = value;
+                                  setOtp(newOtp.join(""));
 
-    <Button
-      type="button"
-      disabled={forgotLoading}
-      className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
-      onClick={() => handleForgotPassword(resetEmail)}
-    >
-      <>
-  {forgotLoading && (
-    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-  )}
-  {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
-</>
-    </Button>
-  </div>
-)}
+                                  // 👉 auto focus next
+                                  if (value && e.target.nextSibling) {
+                                    (e.target.nextSibling as HTMLInputElement).focus();
+                                  }
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Backspace" && !otp[index] && e.currentTarget.previousSibling) {
+                                    (e.currentTarget.previousSibling as HTMLInputElement).focus();
+                                  }
+                                }}
+                              />
+                            ))}
+                          </div>
 
-{resetStep && (
-  <div className="space-y-3 mt-4">
-    <Input
-      placeholder="Enter OTP"
-      value={otp}
-      onChange={(e) => setOtp(e.target.value)}
-    />
+                          <Button
+                            type="button"
+                            className="w-full h-11 bg-green-600 hover:bg-green-700"
+                            onClick={handleVerifyOtp}
+                          >
+                            Verify OTP
+                          </Button>
 
-    <Input
-      type="password"
-      placeholder="Enter new password"
-      onChange={(e) => setNewPassword(e.target.value)}
-    />
+                          {/* 🔁 RESEND OTP */}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            disabled={!canResend}
+                            className={`w-full ${!canResend ? "opacity-50 cursor-not-allowed" : ""
+                              }`}
+                            onClick={() => handleSendOtp(otpEmail)}
+                          >
+                            {canResend
+                              ? "Resend OTP"
+                              : `Resend in ${resendTimer}s`}
+                          </Button>
+                        </>
+                      )}
 
-    <Button onClick={handleResetPassword}>
-      Reset Password
-    </Button>
-  </div>
-)}
+
+                      {/* 🔥 FORGOT PASSWORD UI */}
+
+                      {forgotStep && !resetStep && (
+                        <div className="space-y-3 mt-4">
+                          <Input
+                            placeholder="Enter your email"
+                            onChange={(e) => setResetEmail(e.target.value)}
+                          />
+
+                          <Button
+                            type="button"
+                            disabled={forgotLoading}
+                            className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
+                            onClick={() => handleForgotPassword(resetEmail)}
+                          >
+                            <>
+                              {forgotLoading && (
+                                <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                              )}
+                              {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
+                            </>
+                          </Button>
+                        </div>
+                      )}
+
+                      {resetStep && (
+                        <div className="space-y-3 mt-4">
+                          <Input
+                            placeholder="Enter OTP"
+                            value={otp}
+                            onChange={(e) => setOtp(e.target.value)}
+                          />
+
+                          <Input
+                            type="password"
+                            placeholder="Enter new password"
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+
+                          <Button onClick={handleResetPassword}>
+                            Reset Password
+                          </Button>
+                        </div>
+                      )}
                     </form>
                   </TabsContent>
 
                   {/* Faculty Login */}
-        
-<TabsContent value="faculty" className="space-y-4 mt-6">
-  <form onSubmit={handleLogin} className="space-y-4">
 
-    <div className="space-y-2">
-      <Label htmlFor="faculty-id">Faculty Email</Label>
-      <Input 
-        id="faculty-id" 
-        name="identifier"
-        placeholder="Enter your email"
-        className="h-11"
-        required
-      />
-    </div>
+                  <TabsContent value="faculty" className="space-y-4 mt-6">
+                    <form onSubmit={handleLogin} className="space-y-4">
 
-<div className={`space-y-2 ${roleShake ? "animate-shake" : ""}`}>
-  <Label>Select Role</Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="faculty-id">Faculty Email</Label>
+                        <Input
+                          id="faculty-id"
+                          name="identifier"
+                          placeholder="Enter your email"
+                          className="h-11"
+                          required
+                        />
+                      </div>
 
-  <Select
-    value={facultyRole}
-    onValueChange={(value) => {
-      setFacultyRole(value as any);
-      setRoleError(""); // clear error when changed
-    }}
-  >
-    <SelectTrigger>
-      <SelectValue placeholder="Select role" />
-    </SelectTrigger>
+                      <div className={`space-y-2 ${roleShake ? "animate-shake" : ""}`}>
+                        <Label>Select Role</Label>
 
-    <SelectContent>
-      <SelectItem value="class-incharge">Class Incharge</SelectItem>
-      <SelectItem value="hod">HOD</SelectItem>
-    </SelectContent>
-  </Select>
+                        <Select
+                          value={facultyRole}
+                          onValueChange={(value) => {
+                            setFacultyRole(value as any);
+                            setRoleError(""); // clear error when changed
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select role" />
+                          </SelectTrigger>
 
-  {/* 🔴 ERROR MESSAGE */}
-  {roleError && (
-    <p className="text-sm text-red-600 animate-pulse">
-      {roleError}
-    </p>
-  )}
-</div>
+                          <SelectContent>
+                            <SelectItem value="class-incharge">Class Incharge</SelectItem>
+                            <SelectItem value="hod">HOD</SelectItem>
+                          </SelectContent>
+                        </Select>
 
-<div className={`space-y-2 ${passwordShake ? "animate-shake" : ""}`}>  <Label htmlFor="faculty-password">Password</Label>
+                        {/* 🔴 ERROR MESSAGE */}
+                        {roleError && (
+                          <p className="text-sm text-red-600 animate-pulse">
+                            {roleError}
+                          </p>
+                        )}
+                      </div>
 
-  <div className="relative">
-  <Input 
-    id="faculty-password"
-    name="password"
-    type={showFacultyPassword ? "text" : "password"}
-    placeholder="Enter Password"
-    className="h-11 pr-10"
-    required
-    onChange={() => setPasswordError("")}
-  />
+                      <div className={`space-y-2 ${passwordShake ? "animate-shake" : ""}`}>  <Label htmlFor="faculty-password">Password</Label>
 
-    <button
-      type="button"
-      onClick={() => setShowFacultyPassword((prev) => !prev)}
-      className="absolute right-3 top-1/2 -translate-y-1/2"
-    >
-      {showFacultyPassword ? (
-        <DoorOpen className="text-green-500 rotate-12" size={20} />
-      ) : (
-        <DoorClosed className="text-gray-500" size={20} />
-      )}
-    </button>
-  </div>
+                        <div className="relative">
+                          <Input
+                            id="faculty-password"
+                            name="password"
+                            type={showFacultyPassword ? "text" : "password"}
+                            placeholder="Enter Password"
+                            className="h-11 pr-10"
+                            required
+                            onChange={() => setPasswordError("")}
+                          />
 
-  {/* 🔴 ERROR MESSAGE */}
-  {passwordError && (
-    <p className="text-sm text-red-600 animate-pulse">
-      {passwordError}
-    </p>
-  )}
-</div>
+                          <button
+                            type="button"
+                            onClick={() => setShowFacultyPassword((prev) => !prev)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2"
+                          >
+                            {showFacultyPassword ? (
+                              <DoorOpen className="text-green-500 rotate-12" size={20} />
+                            ) : (
+                              <DoorClosed className="text-gray-500" size={20} />
+                            )}
+                          </button>
+                        </div>
 
-    {!otpStep ? (
-  
-<Button
-  type="button"
-  disabled={otpLoading}
-  className={`w-full h-11 bg-blue-600 hover:bg-blue-700 ${
-    otpLoading ? "opacity-50 cursor-not-allowed" : ""
-  }`}
-  onClick={() => {
-    const emailInput = document.getElementById("faculty-id") as HTMLInputElement;
+                        {/* 🔴 ERROR MESSAGE */}
+                        {passwordError && (
+                          <p className="text-sm text-red-600 animate-pulse">
+                            {passwordError}
+                          </p>
+                        )}
+                      </div>
 
-    if (!emailInput?.value) {
-      alert("Enter email");
-      return;
-    }
+                      {!otpStep ? (
 
-    if (!facultyRole) {
-      setRoleError("Please select role first");
+                        <Button
+                          type="button"
+                          disabled={otpLoading}
+                          className={`w-full h-11 bg-blue-600 hover:bg-blue-700 ${otpLoading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
+                          onClick={() => {
+                            const emailInput = document.getElementById("faculty-id") as HTMLInputElement;
 
-      setRoleShake(true);
-      setTimeout(() => setRoleShake(false), 500);
+                            if (!emailInput?.value) {
+                              alert("Enter email");
+                              return;
+                            }
 
-      return;
-    }
+                            if (!facultyRole) {
+                              setRoleError("Please select role first");
 
-    const passwordInput = document.getElementById("faculty-password") as HTMLInputElement;
+                              setRoleShake(true);
+                              setTimeout(() => setRoleShake(false), 500);
 
-    if (!passwordInput?.value) {
-      alert("Enter password");
-      return;
-    }
+                              return;
+                            }
 
-    handleSendOtp(emailInput.value);
-  }}
->
-  <>
-  {otpLoading && (
-    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-  
-  )}
-  {otpLoading ? "Sending OTP..." : "Send OTP"}
-</>
+                            const passwordInput = document.getElementById("faculty-password") as HTMLInputElement;
 
+                            if (!passwordInput?.value) {
+                              alert("Enter password");
+                              return;
+                            }
 
-</Button>
+                            handleSendOtp(emailInput.value);
+                          }}
+                        >
+                          <>
+                            {otpLoading && (
+                              <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
 
-///Changes
-) : (
- <>
-  {/* 🔢 OTP BOXES */}
-  <div className="flex justify-between mt-6 px-2">
-    {[...Array(6)].map((_, i) => (
-      <input
-        key={i}
-        maxLength={1}
-        className="w-12 h-12 text-center text-lg border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
-        value={otp[i] || ""}
-        
-        onChange={(e) => {
-          const val = e.target.value;
-          if (!/^[0-9]?$/.test(val)) return;
-
-          const newOtp = otp.split("");
-          newOtp[i] = val;
-          setOtp(newOtp.join(""));
-
-    
-
-          // 👉 MOVE TO NEXT BOX
-          if (val && e.target.nextSibling) {
-            (e.target.nextSibling as HTMLInputElement).focus();
-          }
-        }}
-
-        onKeyDown={(e) => {
-          // 👉 BACKSPACE → MOVE PREVIOUS
-          if (e.key === "Backspace" && !otp[i] && e.currentTarget.previousSibling) {
-            (e.currentTarget.previousSibling as HTMLInputElement).focus();
-          }
-        }}
-      />
-    ))}
-  </div>
-
-  {/* ✅ VERIFY BUTTON */}
-  <Button
-    type="button"
-    className="w-full h-12 bg-green-600 hover:bg-green-700 mt-6 text-lg font-semibold rounded-xl"
-    onClick={handleVerifyOtp}
-  >
-    Verify OTP
-  </Button>
+                            )}
+                            {otpLoading ? "Sending OTP..." : "Send OTP"}
+                          </>
 
 
-  {/* 🔁 RESEND BUTTON */}
-  <Button
-    type="button"
-    variant="outline"
-    className="w-full h-11 mt-4 rounded-xl"
-    onClick={() => handleSendOtp(otpEmail)}
-  >
-    Resend OTP
-  </Button>
-</>
-)}
+                        </Button>
 
-  </form>
+                        ///Changes
+                      ) : (
+                        <>
+                          {/* 🔢 OTP BOXES */}
+                          <div className="flex justify-between mt-6 px-2">
+                            {[...Array(6)].map((_, i) => (
+                              <input
+                                key={i}
+                                maxLength={1}
+                                className="w-12 h-12 text-center text-lg border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 transition"
+                                value={otp[i] || ""}
 
-{forgotStep && !resetStep && (
-  <div className="space-y-3 mt-4">
-    <Input
-      placeholder="Enter your email"
-      onChange={(e) => setResetEmail(e.target.value)}
-    />
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  if (!/^[0-9]?$/.test(val)) return;
 
-    <Button
-      type="button"
-      disabled={forgotLoading}
-      className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
-      onClick={() => handleForgotPassword(resetEmail)}
-    >
-      <>
-  {forgotLoading && (
-    <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-  )}
-  {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
-</>
-    </Button>
-  </div>
-)}
-
-{resetStep && (
-  <div className="space-y-3 mt-4">
-    <Input
-      placeholder="Enter OTP"
-      value={otp}
-      onChange={(e) => setOtp(e.target.value)}
-    />
-
-    <Input
-      type="password"
-      placeholder="Enter new password"
-      onChange={(e) => setNewPassword(e.target.value)}
-    />
-
-    <Button onClick={handleResetPassword}>
-      Reset Password
-    </Button>
-  </div>
-)}
+                                  const newOtp = otp.split("");
+                                  newOtp[i] = val;
+                                  setOtp(newOtp.join(""));
 
 
-</TabsContent>
+
+                                  // 👉 MOVE TO NEXT BOX
+                                  if (val && e.target.nextSibling) {
+                                    (e.target.nextSibling as HTMLInputElement).focus();
+                                  }
+                                }}
+
+                                onKeyDown={(e) => {
+                                  // 👉 BACKSPACE → MOVE PREVIOUS
+                                  if (e.key === "Backspace" && !otp[i] && e.currentTarget.previousSibling) {
+                                    (e.currentTarget.previousSibling as HTMLInputElement).focus();
+                                  }
+                                }}
+                              />
+                            ))}
+                          </div>
+
+                          {/* ✅ VERIFY BUTTON */}
+                          <Button
+                            type="button"
+                            className="w-full h-12 bg-green-600 hover:bg-green-700 mt-6 text-lg font-semibold rounded-xl"
+                            onClick={handleVerifyOtp}
+                          >
+                            Verify OTP
+                          </Button>
+
+
+                          {/* 🔁 RESEND BUTTON */}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            className="w-full h-11 mt-4 rounded-xl"
+                            onClick={() => handleSendOtp(otpEmail)}
+                          >
+                            Resend OTP
+                          </Button>
+                        </>
+                      )}
+
+                    </form>
+
+                    {forgotStep && !resetStep && (
+                      <div className="space-y-3 mt-4">
+                        <Input
+                          placeholder="Enter your email"
+                          onChange={(e) => setResetEmail(e.target.value)}
+                        />
+
+                        <Button
+                          type="button"
+                          disabled={forgotLoading}
+                          className={forgotLoading ? "opacity-50 cursor-not-allowed" : ""}
+                          onClick={() => handleForgotPassword(resetEmail)}
+                        >
+                          <>
+                            {forgotLoading && (
+                              <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                            )}
+                            {forgotLoading ? "Sending OTP..." : "Send Reset OTP"}
+                          </>
+                        </Button>
+                      </div>
+                    )}
+
+                    {resetStep && (
+                      <div className="space-y-3 mt-4">
+                        <Input
+                          placeholder="Enter OTP"
+                          value={otp}
+                          onChange={(e) => setOtp(e.target.value)}
+                        />
+
+                        <Input
+                          type="password"
+                          placeholder="Enter new password"
+                          onChange={(e) => setNewPassword(e.target.value)}
+                        />
+
+                        <Button onClick={handleResetPassword}>
+                          Reset Password
+                        </Button>
+                      </div>
+                    )}
+
+
+                  </TabsContent>
 
                   {/* Admin Login */}
-<TabsContent value="admin" className="space-y-4 mt-6">
-  <form onSubmit={handleLogin} className="space-y-4">
+                  <TabsContent value="admin" className="space-y-4 mt-6">
+                    <form onSubmit={handleLogin} className="space-y-4">
 
-    <div className="space-y-2">
-      <Label htmlFor="admin-id">Admin Email</Label>
-      <Input 
-        id="admin-id" 
-        name="identifier"
-        placeholder="Enter your email"
-        className="h-11"
-        required
-      />
-    </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="admin-id">Admin Email</Label>
+                        <Input
+                          id="admin-id"
+                          name="identifier"
+                          placeholder="Enter your email"
+                          className="h-11"
+                          required
+                        />
+                      </div>
 
-    <div className="space-y-2">
-      <Label htmlFor="admin-password">Password</Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="admin-password">Password</Label>
 
-      <div className="relative">
-        <Input 
-          id="admin-password" 
-          name="password"
-          type={showAdminPassword ? "text" : "password"}
-          placeholder="Enter your password"
-          className="h-11 pr-10"
-          required
-        />
+                        <div className="relative">
+                          <Input
+                            id="admin-password"
+                            name="password"
+                            type={showAdminPassword ? "text" : "password"}
+                            placeholder="Enter your password"
+                            className="h-11 pr-10"
+                            required
+                          />
 
-        <button
-          type="button"
-          onClick={() => setShowAdminPassword((prev) => !prev)}
-          className="absolute right-3 top-1/2 -translate-y-1/2"
-        >
-          {showAdminPassword ? (
-            <DoorOpen className="text-green-500 rotate-12" size={20} />
-          ) : (
-            <DoorClosed className="text-gray-500" size={20} />
-          )}
-        </button>
-      </div>
-    </div>
+                          <button
+                            type="button"
+                            onClick={() => setShowAdminPassword((prev) => !prev)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2"
+                          >
+                            {showAdminPassword ? (
+                              <DoorOpen className="text-green-500 rotate-12" size={20} />
+                            ) : (
+                              <DoorClosed className="text-gray-500" size={20} />
+                            )}
+                          </button>
+                        </div>
+                      </div>
 
-    <Button 
-      type="submit" 
-      className="w-full h-11 bg-blue-600 hover:bg-blue-700"
-    >
-      Login as Admin
-    </Button>
+                      <Button
+                        type="submit"
+                        className="w-full h-11 bg-blue-600 hover:bg-blue-700"
+                      >
+                        Login as Admin
+                      </Button>
 
-  </form>
-</TabsContent>
-        
-                    {/* Register */}
-<TabsContent value="register" className="space-y-4 mt-6">
-  <form onSubmit={handleRegister} className="space-y-4">
+                    </form>
+                  </TabsContent>
 
-    {/* NAME */}
-    <div className="space-y-2">
-  <label>Name</label>
+                  {/* Register */}
+                  <TabsContent value="register" className="space-y-4 mt-6">
+                    <form onSubmit={handleRegister} className="space-y-4">
 
-  <Input
-  name="name"
-  placeholder="Enter Name"
-  required
-/>
-</div>
+                      {/* NAME */}
+                      <div className="space-y-2">
+                        <label>Name</label>
 
-    {/* EMAIL */}
-    <div>
-  <Label>Email</Label>
-  <Input
-    name="email"
-    type="email"
-    placeholder="Enter Email"   // ✅ ADDED
-    required
-  />
-</div>
+                        <Input
+                          name="name"
+                          placeholder="Enter Name"
+                          required
+                        />
+                      </div>
 
-    {/* PASSWORD WITH 🚪 */}
-    <div>
-  <Label>Password</Label>
+                      {/* EMAIL */}
+                      <div>
+                        <Label>Email</Label>
+                        <Input
+                          name="email"
+                          type="email"
+                          placeholder="Enter Email"   // ✅ ADDED
+                          required
+                        />
+                      </div>
 
-  <div className="relative mt-1">
-    <Input
-      name="password"
-      type={showRegisterPassword ? "text" : "password"}
-      placeholder="Enter Password"
-      required
-      className="pr-10"
-    />
+                      {/* PASSWORD WITH 🚪 */}
+                      <div>
+                        <Label>Password</Label>
 
-    <button
-  type="button"
-  onClick={() => setShowRegisterPassword((prev) => !prev)}
-  className="absolute right-3 top-1/2 -translate-y-1/2"
->
-  {showRegisterPassword ? (
-    <DoorOpen className="text-green-500 rotate-12" size={20} />
-  ) : (
-    <DoorClosed className="text-gray-500" size={20} />
-  )}
-</button>
-  </div>
-</div>
-  
-  <div className="grid grid-cols-2 gap-4">
+                        <div className="relative mt-1">
+                          <Input
+                            name="password"
+                            type={showRegisterPassword ? "text" : "password"}
+                            placeholder="Enter Password"
+                            required
+                            className="pr-10"
+                          />
 
-  {/* ROLE */}
-  <div>
-    <Label className="font-normal text-sm">Role</Label>
-    <select
-      className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-      value={registerRole}
-      onChange={(e) => {
-        setRegisterRole(e.target.value);
-        setSection("");
-      }}
-    >
-      <option value="">Select role</option>
-      <option value="STUDENT">Student</option>
-      <option value="CLASS_INCHARGE">Class Incharge</option>
-      <option value="HOD">HOD</option>
-    </select>
-  </div>
-</div>
-  {/* BRANCH */}
-  {(
-    registerRole === "CLASS_INCHARGE" ||
-    registerRole === "HOD" ||
-    course === "B.Tech" ||
-    course === "M.Tech"
-  ) && (
-  <div>
-    <Label className="font-normal text-sm">Branch</Label>
+                          <button
+                            type="button"
+                            onClick={() => setShowRegisterPassword((prev) => !prev)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2"
+                          >
+                            {showRegisterPassword ? (
+                              <DoorOpen className="text-green-500 rotate-12" size={20} />
+                            ) : (
+                              <DoorClosed className="text-gray-500" size={20} />
+                            )}
+                          </button>
+                        </div>
+                      </div>
 
-    <select
-      name="branch"
-      required={course === "B.Tech" || course === "M.Tech"}
-      className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-      value={branch}
-      onChange={(e) => setBranch(e.target.value)}
-    >
-      <option value="">Select Branch</option>
+                      <div className="grid grid-cols-2 gap-4">
 
-      <option value="Computer Science and Engineering">
-        Computer Science and Engineering (CSE)
-      </option>
+                        {/* ROLE */}
+                        <div>
+                          <Label className="font-normal text-sm">Role</Label>
+                          <select
+                            className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+                            value={registerRole}
+                            onChange={(e) => {
+                              setRegisterRole(e.target.value);
+                              setSection("");
+                            }}
+                          >
+                            <option value="">Select role</option>
+                            <option value="STUDENT">Student</option>
+                            <option value="CLASS_INCHARGE">Class Incharge</option>
+                            <option value="HOD">HOD</option>
+                          </select>
+                        </div>
+                      </div>
+                      {/* BRANCH */}
+                      {(
+                        registerRole === "CLASS_INCHARGE" ||
+                        registerRole === "HOD" ||
+                        course === "B.Tech" ||
+                        course === "M.Tech"
+                      ) && (
+                          <div>
+                            <Label className="font-normal text-sm">Branch</Label>
 
-      <option value="Artificial Intelligence and Data Science">
-        Artificial Intelligence and Data Science (AIDS)
-      </option>
+                            <select
+                              name="branch"
+                              required={course === "B.Tech" || course === "M.Tech"}
+                              className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+                              value={branch}
+                              onChange={(e) => setBranch(e.target.value)}
+                            >
+                              <option value="">Select Branch</option>
 
-      <option value="Information Technology">
-        Information Technology (IT)
-      </option>
+                              <option value="Computer Science and Engineering">
+                                Computer Science and Engineering (CSE)
+                              </option>
 
-      <option value="Electrical Engineering">
-        Electrical Engineering (EE)
-      </option>
+                              <option value="Artificial Intelligence and Data Science">
+                                Artificial Intelligence and Data Science (AIDS)
+                              </option>
 
-      <option value="Mechanical Engineering">
-        Mechanical Engineering (ME)
-      </option>
+                              <option value="Information Technology">
+                                Information Technology (IT)
+                              </option>
 
-      <option value="Civil Engineering">
-        Civil Engineering (CE)
-      </option>
-    </select>
-  </div>
-)}
+                              <option value="Electrical Engineering">
+                                Electrical Engineering (EE)
+                              </option>
+
+                              <option value="Mechanical Engineering">
+                                Mechanical Engineering (ME)
+                              </option>
+
+                              <option value="Civil Engineering">
+                                Civil Engineering (CE)
+                              </option>
+                            </select>
+                          </div>
+                        )}
 
 
-    {/* BUTTON */}
-    {registerRole === "STUDENT" && (
-  <>
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        <Label>Course</Label>
-        <select
-  name="course"
-  value={course}
-  onChange={(e) => {
-  setCourse(e.target.value);
+                      {/* BUTTON */}
+                      {registerRole === "STUDENT" && (
+                        <>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label>Course</Label>
+                              <select
+                                name="course"
+                                value={course}
+                                onChange={(e) => {
+                                  setCourse(e.target.value);
 
-  if (
-    e.target.value !== "B.Tech" &&
-    e.target.value !== "M.Tech"
-  ) {
-    setBranch("");
-  }
-}}
-  className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-  required
->
-          <option value="">Select Course</option>
-          <option value="B.Tech">B.Tech</option>
-          <option value="BCA">BCA</option>
-          <option value="BCOM">BCOM</option>
-          <option value="BBA">BBA</option>
-          <option value="MCA">MCA</option>
-          <option value="MBA">MBA</option>
-          <option value="M.Tech">M.Tech</option>
-        </select>
-      </div>
+                                  if (
+                                    e.target.value !== "B.Tech" &&
+                                    e.target.value !== "M.Tech"
+                                  ) {
+                                    setBranch("");
+                                  }
+                                }}
+                                className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+                                required
+                              >
+                                <option value="">Select Course</option>
+                                <option value="B.Tech">B.Tech</option>
+                                <option value="BCA">BCA</option>
+                                <option value="BCOM">BCOM</option>
+                                <option value="BBA">BBA</option>
+                                <option value="MCA">MCA</option>
+                                <option value="MBA">MBA</option>
+                                <option value="M.Tech">M.Tech</option>
+                              </select>
+                            </div>
 
-      <div>
-        <Label>Year of Study</Label>
-        <select
-          name="yearOfStudy"
-          className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-          required
-        >
-          <option value="">Select Year</option>
-          <option value="1st Year">1st Year</option>
-          <option value="2nd Year">2nd Year</option>
-          <option value="3rd Year">3rd Year</option>
-          <option value="4th Year">4th Year</option>
-        </select>
-      </div>
-    </div>
-    <div className="grid grid-cols-2 gap-4">
-      <div>
-        <Label>College ID</Label>
-        <Input
-          name="collegeId"
-          placeholder="e.g. CSE2025001"
-          maxLength={20}
-          required
-        />
-      </div>
+                            <div>
+                              <Label>Year of Study</Label>
+                              <select
+                                name="yearOfStudy"
+                                className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+                                required
+                              >
+                                <option value="">Select Year</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                                <option value="4th Year">4th Year</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <Label>College ID</Label>
+                              <Input
+                                name="collegeId"
+                                placeholder="e.g. KF12XYZ0123"
+                                maxLength={20}
+                                required
+                              />
+                            </div>
 
-      <div>
-        <Label>Roll Number</Label>
-        <Input
-          name="rollNumber"
-          placeholder="e.g. 23CSE001"
-          maxLength={20}
-          required
-        />
-      </div>
-    </div>
-    <div>
-      <Label>Section</Label>
-      <select
-        name="section"
-        className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-        value={section}
-        onChange={(e) => setSection(e.target.value)}
-        required
-      >
-        <option value="">Select Section</option>
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-      </select>
-    </div>
-  </>
-)}
+                            <div>
+                              <Label>Roll Number</Label>
+                              <Input
+                                name="rollNumber"
+                                placeholder="e.g.001"
+                                maxLength={20}
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <Label>Section</Label>
+                            <select
+                              name="section"
+                              className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+                              value={section}
+                              onChange={(e) => setSection(e.target.value)}
+                              required
+                            >
+                              <option value="">Select Section</option>
+                              <option value="A">A</option>
+                              <option value="B">B</option>
+                              <option value="C">C</option>
+                              <option value="D">D</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
 
-{registerRole === "CLASS_INCHARGE" && (
-  <>
-    <div>
-      <Label>Employee ID</Label>
-      <Input
-        name="employeeId"
-        placeholder="Enter Employee ID"
-        required
-      />
-    </div>
+                      {registerRole === "CLASS_INCHARGE" && (
+                        <>
+                          <div>
+                            <Label>Employee ID</Label>
+                            <Input
+                              name="employeeId"
+                              placeholder="Enter Employee ID"
+                              required
+                            />
+                          </div>
 
-    <div>
-      <Label>Section</Label>
-      <select
-        name="section"
-        className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
-        value={section}
-        onChange={(e) => setSection(e.target.value)}
-        required
-      >
-        <option value="">Select Section</option>
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-      </select>
-    </div>
-  </>
-)}
+                          <div>
+                            <Label>Section</Label>
+                            <select
+                              name="section"
+                              className="w-full h-10 border rounded-md px-2 text-sm text-gray-700 bg-white"
+                              value={section}
+                              onChange={(e) => setSection(e.target.value)}
+                              required
+                            >
+                              <option value="">Select Section</option>
+                              <option value="A">A</option>
+                              <option value="B">B</option>
+                              <option value="C">C</option>
+                              <option value="D">D</option>
+                            </select>
+                          </div>
+                        </>
+                      )}
 
-{registerRole === "HOD" && (
-  <div>
-    <Label>Employee ID</Label>
-    <Input
-      name="employeeId"
-      placeholder="Enter Employee ID"
-      required
-    />
-  </div>
-)}
-    <Button type="submit" className="w-full" disabled={loading}>
-  {loading ? "Registering..." : "Register"}
-</Button>
+                      {registerRole === "HOD" && (
+                        <div>
+                          <Label>Employee ID</Label>
+                          <Input
+                            name="employeeId"
+                            placeholder="Enter Employee ID"
+                            required
+                          />
+                        </div>
+                      )}
+                      <Button type="submit" className="w-full" disabled={loading}>
+                        {loading ? "Registering..." : "Register"}
+                      </Button>
 
-  </form>
-</TabsContent>
+                    </form>
+                  </TabsContent>
                 </Tabs>
 
                 {/* Additional Links */}
@@ -1456,11 +1453,11 @@ onChange={(e) => {
                   </p>
                   <div className="flex justify-center space-x-4 text-xs">
                     <button
-  className="text-blue-600 hover:underline"
-  onClick={() => setForgotStep(true)}
->
-  Forgot Password?
-</button>
+                      className="text-blue-600 hover:underline"
+                      onClick={() => setForgotStep(true)}
+                    >
+                      Forgot Password?
+                    </button>
                     <span className="text-gray-300">|</span>
                     <button
                       type="button"
@@ -1507,7 +1504,7 @@ onChange={(e) => {
               © {new Date().getFullYear()} KDK College of Engineering, Nagpur. All rights reserved.
             </p>
             <p className="text-sm text-gray-500 mt-2">
-            CollegeDocs | Secure • Efficient • Paperless  
+              CollegeDocs | Secure • Efficient • Paperless
             </p>
             {/* Developer Credit */}
             <div className="mt-8 flex flex-col items-center gap-2">
@@ -1525,7 +1522,7 @@ onChange={(e) => {
                   <Linkedin className="w-5 h-5" />
                 </a>
                 <a
-                
+
                   href="https://github.com/iyumtush"
                   target="_blank"
                   rel="noopener noreferrer"
