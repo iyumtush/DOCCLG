@@ -639,7 +639,7 @@ export default function StudentDashboard({
                     } else if (request.status === "CLASS_INCHARGE_APPROVED") {
                       currentStage = 2; // active stage is HOD
                     } else if (request.status === "HOD_APPROVED" || request.status === "COMPLETED") {
-                      currentStage = 3; // Done
+                      currentStage = 4; // All stages completed
                     } else if (isRejected) {
                       currentStage = request.hodComments ? 2 : 1;
                     }
@@ -647,7 +647,7 @@ export default function StudentDashboard({
                     const getLineWidth = () => {
                       if (currentStage === 1) return "33.33%";
                       if (currentStage === 2) return "66.66%";
-                      if (currentStage === 3) return "99%";
+                      if (currentStage === 4) return "100%";
                       return "0%";
                     };
 
@@ -683,8 +683,6 @@ export default function StudentDashboard({
 
                               {/* Horizontal connector line wrapper (spans exact center-to-center distance) */}
                               <div className="absolute top-[20px] left-5 right-5 h-0.5 md:block hidden">
-                                {/* Gray background line */}
-                                <div className="w-full h-full bg-gray-200 rounded-full" />
                                 {/* Active progress fill line */}
                                 <div
                                   className={`absolute top-0 left-0 h-full rounded-full transition-all duration-500 ${isRejected ? "bg-red-500" : "bg-green-500"
@@ -720,8 +718,6 @@ export default function StudentDashboard({
                                     stepState = "completed";
                                   } else if (idx === currentStage) {
                                     stepState = "active";
-                                  } else if (idx === 3 && (request.status === "HOD_APPROVED" || request.status === "COMPLETED")) {
-                                    stepState = "completed";
                                   } else {
                                     stepState = "pending";
                                   }
