@@ -652,7 +652,7 @@ export default function StudentDashboard({
                     };
 
                     return (
-                      <Card key={request.id} className="overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-md transition-all duration-300 bg-white rounded-2xl">
+                      <Card key={request.id} className="overflow-hidden border border-gray-100 hover:border-gray-198 hover:shadow-md transition-all duration-300 bg-white rounded-2xl">
                         <CardHeader className="pb-4">
                           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                             <div>
@@ -728,12 +728,12 @@ export default function StudentDashboard({
                                     {/* Icon container */}
                                     <div
                                       className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300 ${stepState === "completed"
-                                          ? "bg-green-600 border-green-600 text-white shadow-sm"
-                                          : stepState === "active"
-                                            ? "bg-white border-green-500 text-green-600 animate-stepper-pulse"
-                                            : stepState === "rejected"
-                                              ? "bg-red-500 border-red-500 text-white animate-stepper-pulse-rejected"
-                                              : "bg-white border-gray-200 text-gray-400"
+                                        ? "bg-green-600 border-green-600 text-white shadow-sm"
+                                        : stepState === "active"
+                                          ? "bg-white border-green-500 text-green-600 animate-stepper-pulse"
+                                          : stepState === "rejected"
+                                            ? "bg-red-500 border-red-500 text-white animate-stepper-pulse-rejected"
+                                            : "bg-white border-gray-200 text-gray-400"
                                         }`}
                                     >
                                       {stepState === "rejected" ? (
@@ -747,12 +747,12 @@ export default function StudentDashboard({
 
                                     <div className="flex flex-col md:items-center">
                                       <span className={`text-xs font-bold ${stepState === "rejected"
-                                          ? "text-red-600"
-                                          : stepState === "completed"
-                                            ? "text-green-700"
-                                            : stepState === "active"
-                                              ? "text-green-600"
-                                              : "text-gray-500"
+                                        ? "text-red-600"
+                                        : stepState === "completed"
+                                          ? "text-green-700"
+                                          : stepState === "active"
+                                            ? "text-green-600"
+                                            : "text-gray-500"
                                         }`}>
                                         {step.label}
                                       </span>
