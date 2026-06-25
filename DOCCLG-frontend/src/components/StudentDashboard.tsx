@@ -137,6 +137,8 @@ export default function StudentDashboard({
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [formData, setFormData] = useState(emptyFormData);
   const [creating, setCreating] = useState(false);
+  const [isCustomSession, setIsCustomSession] = useState(false);
+  const [customSessionVal, setCustomSessionVal] = useState("");
 
   // Track previous request statuses for notifications
   const [previousStatuses, setPreviousStatuses] = useState<Record<string, string>>({});
@@ -153,6 +155,14 @@ export default function StudentDashboard({
       email: activeUser.email,
     });
   }, [user]);
+
+  useEffect(() => {
+    if (!isCreateDialogOpen) {
+      setFormData(emptyFormData);
+      setIsCustomSession(false);
+      setCustomSessionVal("");
+    }
+  }, [isCreateDialogOpen]);
 
   const fetchRequests = async () => {
     if (!finalToken) return;
@@ -252,7 +262,7 @@ export default function StudentDashboard({
       setCreating(true);
       // Refactored validation: always require course, yearOfStudy, academicSession, semester
       if (
-        !formData.academicSession ||
+        !formData.academicSession?.trim() ||
         !formData.semester
       ) {
         toast.error("Please fill in Academic Session and Semester.");
@@ -1089,19 +1099,28 @@ export default function StudentDashboard({
 
               {/* Move Course/Year/Session block here */}
               {formData.documentType && (
-                <div>
+                <div className="space-y-4">
 
 
                   <div className="space-y-2">
                     <Label>Academic Session</Label>
                     <Select
-                      value={formData.academicSession || ""}
-                      onValueChange={(value) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          academicSession: value,
-                        }))
-                      }
+                      value={isCustomSession ? "CUSTOM" : (formData.academicSession || "")}
+                      onValueChange={(value) => {
+                        if (value === "CUSTOM") {
+                          setIsCustomSession(true);
+                          setFormData((prev) => ({
+                            ...prev,
+                            academicSession: customSessionVal,
+                          }));
+                        } else {
+                          setIsCustomSession(false);
+                          setFormData((prev) => ({
+                            ...prev,
+                            academicSession: value,
+                          }));
+                        }
+                      }}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select Academic Session" />
@@ -1113,9 +1132,33 @@ export default function StudentDashboard({
                             {session}
                           </SelectItem>
                         ))}
+                        <SelectItem value="CUSTOM">Other (Enter custom session)</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
+
+                  {isCustomSession && (
+                    <div className="space-y-2">
+                      <Label htmlFor="customAcademicSession">Custom Academic Session</Label>
+                      <Input
+                        id="customAcademicSession"
+                        value={customSessionVal}
+                        onChange={(event) => {
+                          const val = event.target.value;
+                          setCustomSessionVal(val);
+                          setFormData((prev) => ({
+                            ...prev,
+                            academicSession: val,
+                          }));
+                        }}
+                        placeholder="e.g. 2024-2025"
+                        required
+                      />
+                      <p className="text-xs text-gray-500">
+                        Format as YYYY-YYYY or YYYY-YY (e.g., 2025-2026 or 2025-26) for correct document generation.
+                      </p>
+                    </div>
+                  )}
                   {/* Semester Selector */}
                   <div className="space-y-2">
                     <Label>Current Semester</Label>
