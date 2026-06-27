@@ -1,4 +1,4 @@
-🎓 CollegeDocs - Digital Document Management System
+🎓 CollegeDocs - Automated Document Generation System 
 
 CollegeDocs is a full-stack web application developed to automate and simplify the college document request and approval process. The system allows students to request certificates online, track their status in real time, and receive approved documents digitally without visiting administrative offices.
 
